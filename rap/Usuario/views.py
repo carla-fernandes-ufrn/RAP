@@ -55,6 +55,7 @@ class Cadastrar(generic.CreateView):
     template_name = 'Usuario/cadastrar.html'
     success_url = reverse_lazy('usuario:login')
 
+@login_required
 def completar_cadastro(request):
 
     disciplinas = Disciplina.objects.filter(status='Ativo')
@@ -110,6 +111,7 @@ class Editar(LoginRequiredMixin, generic.UpdateView):
            pk = self.kwargs["pk"]
            return reverse_lazy("usuario:editar", kwargs={"pk": pk})
 
+@login_required
 def alterar_avatar(request, pk, novo):
     if (novo == 0):
         usuario = Usuario.objects.get(pk=pk)

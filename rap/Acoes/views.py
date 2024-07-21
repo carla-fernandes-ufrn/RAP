@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.views import generic
 from django.views.generic.edit import FormMixin
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse, reverse_lazy
 
 from django.db import transaction
@@ -14,7 +16,7 @@ from Acoes.forms import FormNovaMensagem, FormNovaMidia
 from Usuario.models import Usuario
 from Acoes.filters import AcoesFiltro
 
-class CriarAcao(generic.CreateView):
+class CriarAcao(LoginRequiredMixin, generic.CreateView):
     model = Acoes
     fields = ['titulo', 'tipo', 'data_inicio', 'data_fim', 'local', 'descricao']
     template_name = "Acoes/criar.html"
@@ -27,7 +29,7 @@ class CriarAcao(generic.CreateView):
     def get_success_url(self):
         return reverse_lazy('acoes:listar_usuario', kwargs={'pk': self.request.user.id})
 
-class EditarAcao(generic.UpdateView):
+class EditarAcao(LoginRequiredMixin, generic.UpdateView):
     model = Acoes
     fields = ['titulo', 'tipo', 'data_inicio', 'data_fim', 'local', 'descricao', 'status']
     template_name = "Acoes/editar.html"
@@ -47,6 +49,7 @@ class EditarAcao(generic.UpdateView):
         context['form_nova_midia'] = FormNovaMidia()
         return context
     
+@login_required
 def editar_midia(request, pk):
 
     acao = Acoes.objects.get(id=pk)
@@ -70,13 +73,14 @@ def editar_midia(request, pk):
 
     return render(request, "Acoes/editar_midias.html", informacoes)
 
+@login_required
 def deletar_midia(request,pk):
     midia=Midia.objects.get(id=pk)
     acao=midia.acao
     midia.delete()
     return redirect('acoes:editar_midia', pk=acao.pk)
 
-class EditarMidia(generic.DetailView):
+class EditarMidia(LoginRequiredMixin, generic.DetailView):
     model = Midia
     template_name = "Acoes/editar_midias.html"
 
@@ -102,7 +106,7 @@ class EditarMidia(generic.DetailView):
         context['form_nova_midia'] = FormNovaMidia()
         return context
 
-class DetalhesAcao(FormMixin, generic.DetailView):
+class DetalhesAcao(LoginRequiredMixin, FormMixin, generic.DetailView):
     model = Acoes
     template_name = 'Acoes/detalhes.html'
     context_object_name = 'acao'
@@ -139,6 +143,7 @@ class DetalhesAcao(FormMixin, generic.DetailView):
         form.save()
         return super(DetalhesAcao, self).form_valid(form)
 
+@login_required
 def deletar(request, pk):
     acao = Acoes.objects.get(pk=pk)
     acao.deletada = True
@@ -146,6 +151,7 @@ def deletar(request, pk):
 
     return redirect('acoes:listar')
 
+@login_required
 def deletar_mensagem(request, pk):
     mensagem = MensagemAcoes.objects.get(id=pk)
     acao_id = mensagem.acao.id
@@ -153,7 +159,7 @@ def deletar_mensagem(request, pk):
 
     return HttpResponseRedirect(reverse('acoes:detalhes', kwargs={'pk': acao_id}))
     
-class ListarTodasAcoes(generic.ListView):
+class ListarTodasAcoes(LoginRequiredMixin, generic.ListView):
     model = Acoes
     template_name = 'Acoes/listar.html'
     context_object_name = 'lista_acoes'
@@ -173,7 +179,7 @@ class ListarTodasAcoes(generic.ListView):
         context['exibir_todos'] = True
         return context
     
-class ListarAcoesUsuario(generic.ListView):
+class ListarAcoesUsuario(LoginRequiredMixin, generic.ListView):
     model = Acoes
     template_name = 'Acoes/listar.html'
     context_object_name = 'lista_acoes'
@@ -193,12 +199,14 @@ class ListarAcoesUsuario(generic.ListView):
         context['exibir_todos'] = False
         return context
 
+@login_required
 def alterar_status_acao(request, pk):
     acao = Acoes.objects.get(pk=pk)
     acao.status = not acao.status
     acao.save()
     return finalizar_requisicao_api(acao.status)
 
+@login_required
 def finalizar_requisicao_api(response_data):
     response_data = response_data
 

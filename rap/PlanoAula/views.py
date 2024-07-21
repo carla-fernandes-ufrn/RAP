@@ -47,6 +47,7 @@ def home(request):
 
     # return render(request, "Base/home.html")
 
+@login_required
 class Criar(generic.CreateView, LoginRequiredMixin):
     model = PlanoAula
     fields = ['titulo', 'contextualizacao', 'descricao_atividade', 'conteudos']
@@ -201,7 +202,7 @@ def listar_todos(request):
 
     return render(request, "PlanoAula/listar.html", informacoes)
 
-class ListarPlanosAulaFiltrados(generic.ListView):
+class ListarPlanosAulaFiltrados(LoginRequiredMixin, generic.ListView):
     model = PlanoAula
     template_name = 'PlanoAula/listar.html'
     context_object_name = 'lista_planos_aula'
@@ -221,7 +222,7 @@ class ListarPlanosAulaFiltrados(generic.ListView):
         context['tipo'] = "todos"
         return context
 
-class ListarPlanosAulaFiltradosUsuario(generic.ListView):
+class ListarPlanosAulaFiltradosUsuario(LoginRequiredMixin, generic.ListView):
     model = PlanoAula
     template_name = 'PlanoAula/listar.html'
     context_object_name = 'lista_planos_aula'
@@ -243,7 +244,7 @@ class ListarPlanosAulaFiltradosUsuario(generic.ListView):
         context['tipo'] = "usuario"
         return context
 
-class ListarPlanosAulaFiltradosFavoritos(generic.ListView):
+class ListarPlanosAulaFiltradosFavoritos(LoginRequiredMixin, generic.ListView):
     model = PlanoAula
     template_name = 'PlanoAula/listar.html'
     context_object_name = 'lista_planos_aula'
@@ -267,7 +268,7 @@ class ListarPlanosAulaFiltradosFavoritos(generic.ListView):
         context['tipo'] = "favoritos"
         return context
 
-class ListarPlanosAulaFiltradosExecutados(generic.ListView):
+class ListarPlanosAulaFiltradosExecutados(LoginRequiredMixin, generic.ListView):
     model = PlanoAula
     template_name = 'PlanoAula/listar.html'
     context_object_name = 'lista_planos_aula'
@@ -307,7 +308,7 @@ def espaco_usuario(request):
 
     return render(request, 'PlanoAula/espaco_usuario.html', informacoes)
 
-class EspacoUsuario(generic.ListView):
+class EspacoUsuario(LoginRequiredMixin, generic.ListView):
     model = PlanoAula
     template_name = 'PlanoAula/espaco_usuario.html'
     context_object_name = 'lista_planos_aula'
@@ -327,7 +328,7 @@ class EspacoUsuario(generic.ListView):
         context['form_meus_planos_aula_filtro'] = meus_planos_aula_filtrado.form
         return context
 
-class ListarPlanosAula(FilterView):
+class ListarPlanosAula(LoginRequiredMixin, FilterView):
     model = PlanoAula
     template_name = 'PlanoAula/listar.html'
     context_object_name = 'lista_planos_aula'
@@ -406,14 +407,14 @@ def listar_usuario(request, pk):
     return render(request, "PlanoAula/listar.html", informacoes)
 
 
-class Editar(generic.UpdateView):
+class Editar(LoginRequiredMixin, generic.UpdateView):
     model = PlanoAula
     form_class = forms.FormEditarPlano_aula
     template_name = 'PlanoAula/editar.html'
     success_url = reverse_lazy('plano_aula:listar')
     fieelds = ["titulo", "contextualizacao", "descricao_atividade"]
 
-class Detalhe(generic.DetailView):
+class Detalhe(LoginRequiredMixin, generic.DetailView):
    model = PlanoAula
    template_name = "PlanoAula/detalhes.html"
    context_object_name = "plano_aula"
@@ -430,16 +431,17 @@ class Detalhe(generic.DetailView):
         context['execucao_videos'] = execucao_videos
         return context
 
-class Deletar(generic.DeleteView):
+class Deletar(LoginRequiredMixin, generic.DeleteView):
     model = PlanoAula
     template_name = 'PlanoAula/deletar.html'
     success_url = reverse_lazy('plano_aula:listar')
 
-class Programacao(generic.DetailView):
+class Programacao(LoginRequiredMixin, generic.DetailView):
    model = PlanoAula
    template_name = "PlanoAula/programacao.html"
    context_object_name = "plano_aula"
 
+@login_required
 def marcar_favorito(request, plano_aula, usuario):
     plano_aula_obj = PlanoAula.objects.get(id=plano_aula)
     usuario_obj = Usuario.objects.get(id=usuario)
@@ -451,7 +453,7 @@ def marcar_favorito(request, plano_aula, usuario):
         like[0].delete()
         return finalizar_requisicao_api(0)
 
-
+@login_required
 def marcar_executado(request, plano_aula, usuario):
     plano_aula_obj = PlanoAula.objects.get(id=plano_aula)
     usuario_obj = Usuario.objects.get(id=usuario)
@@ -463,6 +465,7 @@ def marcar_executado(request, plano_aula, usuario):
         execucao[0].delete()
         return finalizar_requisicao_api(0)
 
+@login_required
 def finalizar_requisicao_api(response_data):
     response_data = response_data
 
