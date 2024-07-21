@@ -4,8 +4,11 @@ from django.contrib import messages
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import UserPassesTestMixin
 
 from django.http import HttpResponse 
+
+from django.core.exceptions import PermissionDenied
 import json
 from django.http import JsonResponse
 import datetime
@@ -407,12 +410,16 @@ def listar_usuario(request, pk):
     return render(request, "PlanoAula/listar.html", informacoes)
 
 
-class Editar(LoginRequiredMixin, generic.UpdateView):
+class Editar(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = PlanoAula
     form_class = forms.FormEditarPlano_aula
     template_name = 'PlanoAula/editar.html'
     success_url = reverse_lazy('plano_aula:listar')
     fieelds = ["titulo", "contextualizacao", "descricao_atividade"]
+
+    def test_func(self):
+        plano_aula = PlanoAula.objects.get(pk=int(self.kwargs['pk']))
+        return self.request.user.id == plano_aula.criador.id
 
 class Detalhe(LoginRequiredMixin, generic.DetailView):
    model = PlanoAula
@@ -431,10 +438,14 @@ class Detalhe(LoginRequiredMixin, generic.DetailView):
         context['execucao_videos'] = execucao_videos
         return context
 
-class Deletar(LoginRequiredMixin, generic.DeleteView):
+class Deletar(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
     model = PlanoAula
     template_name = 'PlanoAula/deletar.html'
     success_url = reverse_lazy('plano_aula:listar')
+
+    def test_func(self):
+        plano_aula = PlanoAula.objects.get(pk=int(self.kwargs['pk']))
+        return self.request.user.id == plano_aula.criador.id
 
 class Programacao(LoginRequiredMixin, generic.DetailView):
    model = PlanoAula
@@ -443,27 +454,45 @@ class Programacao(LoginRequiredMixin, generic.DetailView):
 
 @login_required
 def marcar_favorito(request, plano_aula, usuario):
-    plano_aula_obj = PlanoAula.objects.get(id=plano_aula)
-    usuario_obj = Usuario.objects.get(id=usuario)
-    like = LikePlanoAula.objects.filter(plano_aula__id = plano_aula, usuario__id = usuario)
-    if len(like) == 0:
-        LikePlanoAula.objects.create(plano_aula = plano_aula_obj, usuario = usuario_obj)
-        return finalizar_requisicao_api(1)
+    if (request.user.pk == usuario):
+        plano_aula_obj = PlanoAula.objects.get(id=plano_aula)
+        usuario_obj = Usuario.objects.get(id=usuario)
+        like = LikePlanoAula.objects.filter(plano_aula__id = plano_aula, usuario__id = usuario)
+        if len(like) == 0:
+            LikePlanoAula.objects.create(plano_aula = plano_aula_obj, usuario = usuario_obj)
+            return HttpResponse(
+                json.dumps(1),
+                content_type="application/json"
+            )
+        else:
+            like[0].delete()
+            return HttpResponse(
+                json.dumps(0),
+                content_type="application/json"
+            )
     else:
-        like[0].delete()
-        return finalizar_requisicao_api(0)
+        raise PermissionDenied()
 
 @login_required
 def marcar_executado(request, plano_aula, usuario):
-    plano_aula_obj = PlanoAula.objects.get(id=plano_aula)
-    usuario_obj = Usuario.objects.get(id=usuario)
-    execucao = ExecucaoPlanoAula.objects.filter(plano_aula__id = plano_aula, usuario__id = usuario)
-    if len(execucao) == 0:
-        ExecucaoPlanoAula.objects.create(plano_aula = plano_aula_obj, usuario = usuario_obj)
-        return finalizar_requisicao_api(1)
+    if (request.user.pk == usuario):
+        plano_aula_obj = PlanoAula.objects.get(id=plano_aula)
+        usuario_obj = Usuario.objects.get(id=usuario)
+        execucao = ExecucaoPlanoAula.objects.filter(plano_aula__id = plano_aula, usuario__id = usuario)
+        if len(execucao) == 0:
+            ExecucaoPlanoAula.objects.create(plano_aula = plano_aula_obj, usuario = usuario_obj)
+            return HttpResponse(
+                json.dumps(1),
+                content_type="application/json"
+            )
+        else:
+            execucao[0].delete()
+            return HttpResponse(
+                json.dumps(0),
+                content_type="application/json"
+            )
     else:
-        execucao[0].delete()
-        return finalizar_requisicao_api(0)
+        raise PermissionDenied()
 
 @login_required
 def finalizar_requisicao_api(response_data):
