@@ -1,0 +1,187 @@
+{% extends "Base/base.html" %}
+{% load static %}
+
+{% block breadcrumb1 %}
+Disciplina
+{% endblock %}
+
+{% block breadcrumb2 %}
+Conteúdo
+{% endblock %}
+
+{% block titulo %}
+Listar
+{% endblock %}
+
+{% block conteudo %}
+
+<div class="p-3 text-center">
+  <button id="btn_disciplina" class="btn btn-success" onclick="mostrar_disciplinas()">Disciplinas</button>
+  <button id="btn_conteudo" class="btn btn-light" onclick="mostrar_conteudos()">Conteúdos</button>
+</div>
+
+<div id="div_disciplina">
+<div class="row mt-4">
+  <div class="col-lg-8 col-md-12 mb-lg-0 mb-4">
+    <div class="card container">
+      <div class="card-header pb-0 p-3">
+        <div class="d-flex justify-content-between">
+          <h6 class="mb-2">Disciplinas</h6>
+        </div>
+      </div>
+      <div class="table-responsive">
+          <table id="tabela_disciplinas" class="table align-items-center" cellspacing="0">
+            <thead>
+              <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">#Aulas</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for disciplina in lista_disciplinas %}
+                    <tr>
+                        <td><p class="text-sm mb-0">{{disciplina.nome}}</p></td>
+                        <td><p class="text-xs font-weight-bold mb-0">-</p></td>
+                        <td><span class="text-secondary text-xs font-weight-bold">ícones</span></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 mb-lg-0 mb-4">
+    <div class="card">
+
+      <form id="form_disciplina">
+        {% csrf_token %}
+        <div class="card-header pb-0 p-3">
+          <h6 class="mb-0">Sugestão de disciplina</h6>
+        </div>
+        <div class="card-body p-3">
+          <div class="d-flex justify-content-between">
+            <div class="col-md-9 form-group">
+                <label for="example-text-input" class="form-control-label">Nome: </label>
+                <input id="disciplina_text" class="form-control" type="text">
+            </div>
+            <div class="col-md-2">
+              <a onclick="sugerir_disciplina()">
+                <i class="fa fa-check h2 font-weight-bolder text-primary"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </form>
+
+    </div>
+    <div align="right">
+      <a href="{% url 'disciplina:listar_sugestoes_usuario' pk=user.id %}">Minhas sugestões</a>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="div_conteudo" style="display: none">
+<div class="row mt-4">
+  <div class="col-lg-8 col-md-12 mb-lg-0 mb-4">
+    <div class="card container">
+      <div class="card-header pb-0 p-3">
+        <div class="d-flex justify-content-between">
+          <h6 class="mb-2">Conteúdos</h6>
+        </div>
+      </div>
+      <div class="table-responsive">
+          <table id="tabela_conteudos" class="table align-items-center" cellspacing="0">
+            <thead>
+              <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Conteúdo</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">#Aulas</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for conteudo in lista_conteudos %}
+                    <tr>
+                        <td><h6 class="mb-0 text-sm">{{conteudo.disciplina}}</h6></td>
+                        <td><p class="text-sm mb-0">{{conteudo.nome}}</p></td>
+                        <td><p class="text-xs font-weight-bold mb-0">-</p></td>
+                        <td><span class="text-secondary text-xs font-weight-bold">ícones</span></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-4 mb-lg-0 mb-4">
+    <div class="card">
+
+      <form id="form_conteudo">
+        {% csrf_token %}
+        <div class="card-header pb-0 p-3">
+          <h6 class="mb-0">Sugestão de conteúdo</h6>
+        </div>
+        <div class="card-body p-3">
+          <div class="d-flex justify-content-between">
+            <div class="col-md-9 form-group">
+                <label for="example-text-input" class="form-control-label">Disciplina: </label>
+                <select class="form-select" id="disciplina_selecionada">
+                  <option selected></option>
+                  {% for disciplina in lista_disciplinas %}
+                    <option value="{{disciplina}}">{{disciplina}}</option>
+                  {% endfor %}
+                </select>
+                <label for="example-text-input" class="form-control-label">Nome: </label>
+                <input id="conteudo_text" class="form-control" type="text">
+            </div>
+            <div class="col-md-2">
+              <a onclick="sugerir_conteudo()">
+                <i class="fa fa-check h2 font-weight-bolder text-primary"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+    <div align="right">
+      <a href="{% url 'disciplina:listar_sugestoes_usuario' pk=user.id %}">Minhas sugestões</a>
+    </div>
+  </div>
+</div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'assets/js/custom/listar_disciplinas.js' %}"></script>
+
+<script>
+
+$(document).ready(function () {
+    $('#tabela_disciplinas').DataTable( {
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+        },
+        "columnDefs": [ {
+          "targets": 2,
+          "orderable": false
+          } ]
+    } );
+    $('#tabela_conteudos').DataTable( {
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+        },
+        "columnDefs": [ {
+          "targets": 3,
+          "orderable": false
+          } ]
+    } );
+  });
+</script>
+
+{% endblock %}

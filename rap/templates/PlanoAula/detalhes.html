@@ -1,0 +1,375 @@
+{% extends "Base/base.html" %}
+
+{% load static %}
+{% load bootstrap5 %} 
+{% load string_tags %} 
+
+{% block breadcrumb1 %}
+ Plano de aula 
+{% endblock %}
+
+{% block breadcrumb2 %}
+ Informações
+{% endblock %}
+
+{% block titulo %} 
+ {{plano_aula}}
+{% endblock %}
+
+{% block conteudo %}
+<br>
+
+
+
+{{images}}
+
+{% for image in images %}
+    <img src ="data:image/jpeg;base64,{{ image }}" style="width:304px;height:228px;">
+{% endfor%} 
+
+<div class="p-3 text-center">
+  <button id="btn_inf_gerais" class="btn btn-success" onclick="mostrar_inf_gerais()">Informações gerais</button>
+  <button id="btn_programacao" class="btn btn-light" onclick="mostrar_programacao()">Programação</button>
+</div>
+
+<div>
+  <div id="div_inf_gerais">
+    <div class="row">
+      <div class="col-lg-4 col-md-0">
+                <div class="card">
+                    <div class="card-body pt-2 p-2">
+                        <!---Fotos-->
+                        {% if robo_fotos or robo_videos %}
+                            <div id="midias_robo" class="carousel slide" data-bs-ride="carousel">
+                                <div class="carousel-indicators">
+                                    {% for foto in robo_fotos %}
+                                        {% if forloop.counter == 1 %}
+                                            <button type="button" data-bs-target="#midias_robo" data-bs-slide-to="{{forloop.counter0}}" class="active" aria-current="true" aria-label="Slide {{forloop.counter}}"></button>
+                                        {% else %}
+                                            <button type="button" data-bs-target="#midias_robo" data-bs-slide-to="{{forloop.counter0}}" aria-label="Slide {{forloop.counter}}"></button>
+                                        {% endif %}
+                                    {% endfor %}
+                                    {% for video in robo_videos %}
+                                        {% if forloop.counter == 1 and not robo_fotos %}
+                                            <button type="button" data-bs-target="#midias_robo" data-bs-slide-to="{{forloop.counter0}}" class="active" aria-current="true" aria-label="Slide {{forloop.counter}}"></button>
+                                        {% else %}
+                                            <button type="button" data-bs-target="#midias_robo" data-bs-slide-to="{{forloop.counter0|add:robo_fotos.count}}" aria-label="Slide {{forloop.counter|add:robo_fotos.count}}"></button>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <div class="carousel-inner">
+                                    {% for foto in robo_fotos %}
+                                        {% if forloop.counter == 1 %}
+                                            <div class="carousel-item active">
+                                        {% else %}
+                                            <div class="carousel-item ">
+                                        {% endif %}
+                                                <img class="d-block w-100" src="{{foto.robo_foto.url}}">
+                                            </div>
+                                    {% endfor %}
+                                    {% for video in robo_videos %}
+                                        {% if forloop.counter == 1 and not robo_fotos %}
+                                            <div class="carousel-item active embed-responsive embed-responsive-16by9">
+                                        {% else %}
+                                            <div class="carousel-item embed-responsive embed-responsive-16by9">
+                                        {% endif %}
+                                                <video name='demo' controls width='100%' height='100%'>
+                                                    <source src="{{video.robo_video.url}}" type="video/mp4"></source>
+                                                </video>
+                                            </div>
+                                    {% endfor %}
+                                </div>
+                                <button class="carousel-control-prev" type="button" data-bs-target="#midias_robo" data-bs-slide="prev">
+                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Previous</span>
+                                </button>
+                                <button class="carousel-control-next" type="button" data-bs-target="#midias_robo" data-bs-slide="next">
+                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                    <span class="visually-hidden">Next</span>
+                                </button>
+                            </div>
+                        {% else %}
+                            <img src="{% static 'assets/img/carousel-2.jpg' %}" alt="" class="img-fluid">
+                        {% endif %}
+                        <!--fim de foto inicio de materiais usado-->
+                        <br>
+
+                        <div class="d-flex flex-column">
+                            <h6 class="mb-3 text-sm text-uppercase">Equipamento Usado</h6>
+                            {% if plano_aula.robo_equipamento %}
+                                <span class="mb-2 text-xs">{{plano_aula.robo_equipamento|linebreaks}}</span>
+                            {% else %}
+                                <span class="mb-2 text-xs">Não informado</span>
+                            {% endif %}
+                        </div>
+
+                    </div>
+
+                </div>
+                <br>
+            {% if plano_aula.robo_descricao or plano_aula.robo_link %}
+                <div class="card">
+                    <div class="card-header bg-gradient-primary pb-0 p-3">
+                        <p class="text-sm mb-0 text-uppercase text-white font-weight-bold" class="text-center">Montando o Robô</p>
+                    </div>
+                    <div class="card-body pt-4 p-3">
+                        <ul class="list-group">
+                            {% if plano_aula.robo_descricao %}
+                                <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                                    <div class="d-flex flex-column">
+                                        <h6 class="mb-3 text-sm text-uppercase">Descrição</h6>
+                                        <span class="mb-2 text-xs">{{plano_aula.robo_descricao|linebreaks}}</span>
+                                    </div>
+                                </li>
+                            {% endif %}
+                            {% if plano_aula.robo_link %}
+                                <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                                    <div class="d-flex flex-column">
+                                        <h6 class="mb-3 text-sm text-uppercase">Link</h6>
+                                        <span class="mb-2 text-xs">{{plano_aula.robo_link}}</span>
+                                    </div>
+                                </li>
+                            {% endif %}
+
+                        </ul>
+
+                    </div>
+                </div>
+            {% endif %}
+
+        </div>
+
+        <br>
+        <!--Sobre o projeto-->
+        <div class="col-lg-8 col-md-0">
+            <div class="card">
+                <div class="card-header bg-gradient-primary pb-0 p-3">
+                    <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">{{plano_aula.titulo}}</span>
+                    <div class="float-end">
+                        <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3">
+                            <i class="fas fa-thumbs-up text-white px-3"></i>
+                            {{ plano_aula.likes.count }}
+                        </span>
+                        <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3">
+                            <i class="fas fa-play text-white px-3"></i>
+                            {{ plano_aula.execucoes.count }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="card-body pt-4 p-3">
+                    <ul class="list-group">
+                        <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                            <div class="d-flex flex-column">
+                                <h6 class="mb-3 text-sm text-uppercase">Conteúdo</h6>
+                                {% for conteudo in plano_aula.conteudos.all %}
+                                    <span class="mb-2 text-s">{{ conteudo.disciplina}} - {{ conteudo }}</span> 
+                                {% empty %}
+                                    <span class="mb-2 text-s">-</span> 
+                                {% endfor %}
+                            </div>
+                        </li>
+                        <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                            <div class="d-flex flex-column">
+                                <h6 class="mb-3 text-sm text-uppercase">Contextualização</h6>
+                                <span class="mb-2 text-xs">{{ plano_aula.contextualizacao|linebreaks }}</span>
+                            </div>
+                        </li>
+                        <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                            <div class="d-flex flex-column">
+                                <h6 class="mb-3 text-sm text-uppercase">Descrição</h6>
+                                <span class="mb-2 text-xs">{{ plano_aula.descricao_atividade|linebreaks }}</span>
+                            </div>
+                        </li>
+                        {% if plano_aula.avaliacao %}
+                            <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                                <div class="d-flex flex-column">
+                                    <h6 class="mb-3 text-sm text-uppercase">Avaliação</h6>
+                                    <span class="mb-2 text-xs">{{ plano_aula.avaliacao|linebreaks }}</span>
+                                </div>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+              </div>
+        </div>
+
+        
+ <!-- <br> -->
+
+    </div>
+  <!-- </div> -->
+<!-- </div> -->
+
+<!-- <br> -->
+
+<!--Sobre fim-->
+    </div>
+<!-- </div> -->
+    <!--Programação inicio-->
+<div id="div_programacao" style="display: none">
+  <div class="row" >
+    <!---Fotos-->
+    <div class="col-lg-4 col-md-0">
+            <div class="card">
+            
+                <div class="card-body pt-2 p-2">
+                    {% if execucao_fotos or execucao_videos %}
+                        <div id="midias_execucao" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-indicators">
+                                {% for foto in execucao_fotos %}
+                                    {% if forloop.counter == 1 %}
+                                        <button type="button" data-bs-target="#midias_execucao" data-bs-slide-to="{{forloop.counter0}}" class="active" aria-current="true" aria-label="Slide {{forloop.counter}}"></button>
+                                    {% else %}
+                                        <button type="button" data-bs-target="#midias_execucao" data-bs-slide-to="{{forloop.counter0}}" aria-label="Slide {{forloop.counter}}"></button>
+                                    {% endif %}
+                                {% endfor %}
+                                {% for video in execucao_videos %}
+                                    {% if forloop.counter == 1 and not execucao_fotos %}
+                                        <button type="button" data-bs-target="#midias_execucao" data-bs-slide-to="{{forloop.counter0}}" class="active" aria-current="true" aria-label="Slide {{forloop.counter}}"></button>
+                                    {% else %}
+                                        <button type="button" data-bs-target="#midias_execucao" data-bs-slide-to="{{forloop.counter0|add:execucao_fotos.count}}" aria-label="Slide {{forloop.counter|add:execucao_fotos.count}}"></button>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="carousel-inner">
+                                {% for foto in execucao_fotos %}
+                                    {% if forloop.counter == 1 %}
+                                        <div class="carousel-item active">
+                                    {% else %}
+                                        <div class="carousel-item ">
+                                    {% endif %}
+                                            <img class="d-block w-100" src="{{foto.execucao_foto.url}}">
+                                        </div>
+                                {% endfor %}
+                                {% for video in execucao_videos %}
+                                    {% if forloop.counter == 1 and not execucao_fotos %}
+                                        <div class="carousel-item active embed-responsive embed-responsive-16by9">
+                                    {% else %}
+                                        <div class="carousel-item embed-responsive embed-responsive-16by9">
+                                    {% endif %}
+                                            <video name='demo' controls width='100%' height='100%'>
+                                                <source src="{{video.execucao_video.url}}" type="video/mp4"></source>
+                                            </video>
+                                        </div>
+                                {% endfor %}
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#midias_execucao" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#midias_execucao" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    {% else %}
+                        <img src="{% static 'assets/img/carousel-2.jpg' %}" alt="" class="img-fluid">
+                    {% endif %}
+
+                
+                    <!--Foto fim Inicio pdf-->
+                </div>
+            </div>
+        <br>
+
+      {% if plano_aula.prog_codigos%}
+        <div class="card">
+            <div class="card-header bg-gradient-primary pb-0 p-3">
+                <p class="text-sm mb-0 text-uppercase text-white font-weight-bold">Códigos da programação</p>
+            </div>
+            <div class="card-body p-3 overflow-auto">
+                <p>
+                    <a href="{{ plano_aula.prog_codigos.url }}" download>{{ plano_aula.prog_codigos.url|nome_arquivo:'/' }}</a>
+                </p>
+            </div>
+        </div>
+      {% endif %}
+      
+</div>
+      
+          <div class="col-lg-8 col-md-0">
+            <div class="card">
+              <!-- <div class="card-body pt-2 p-2"> aqui vc afasta de lado -->
+                <div class="card-header bg-gradient-primary pb-0 p-3">
+                    <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">{{plano_aula.titulo}}</span>
+                    <div class="float-end">
+                        <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3">
+                            <i class="fas fa-thumbs-up text-white px-3"></i>
+                            {{ plano_aula.likes.count }}
+                        </span>
+                        <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3">
+                            <i class="fas fa-play text-white px-3"></i>
+                            {{ plano_aula.execucoes.count }}
+                        </span>
+                    </div>
+                </div>
+                <div class="card-body pt-4 p-3">
+                    <ul class="list-group">
+                    <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg" >
+                        <div class="d-flex flex-column">
+                        <h6 class="mb-3 text-sm text-uppercase">Linguagem Usada</h6>
+                        {% if plano_aula.prog_linguagem %}
+                            <span class="mb-2 text-xs">{{plano_aula.prog_linguagem|linebreaks}}</span>
+                        {% else %}
+                            <span class="mb-2 text-xs">Não informado</span>
+                        {% endif %}
+                        </div>
+                    </li>
+                    {% if plano_aula.prog_linguagem %}
+                        <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg" >
+                            <div class="d-flex flex-column">
+                            <h6 class="mb-3 text-sm text-uppercase">Descrição</h6>
+                            <span class="mb-2 text-xs">{{ plano_aula.prog_descricao|linebreaks }}</span>
+                            </div>
+                        </li>
+                    {% endif %}
+                    {% if plano_aula.prog_link %}
+                    <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                        <div class="d-flex flex-column">
+                        <h6 class="mb-3 text-sm text-uppercase">Link</h6>
+                        <span class="mb-2 text-xs">{{ plano_aula.prog_link }}</span>
+                        </div>
+                    </li>
+                    {% endif %} 
+                    </ul> 
+                </div>      
+            </div>
+          </div>
+  
+
+</div>
+      <!--Bloco Programação fim-->
+
+</div>
+{% endblock %} {% block scripts %}
+
+<script>
+
+    function mostrar_inf_gerais() {
+        // titulo = document.getElementById("id_titulo").value
+        // console.log(titulo)
+        document.getElementById("div_inf_gerais").style.display = 'block';
+        document.getElementById("div_programacao").style.display = 'none';
+        
+        trocar_cor("btn_inf_gerais", "btn_programacao");
+    }
+
+    function mostrar_programacao() {
+        document.getElementById("div_inf_gerais").style.display = 'none';
+        document.getElementById("div_programacao").style.display = 'block';
+        
+        trocar_cor("btn_programacao", "btn_inf_gerais");
+    }
+
+   
+    function trocar_cor(nova, antiga1) {
+        document.getElementById(nova).classList.remove('btn-light');
+        document.getElementById(nova).classList.add('btn-success');
+        document.getElementById(antiga1).classList.remove('btn-success');
+        document.getElementById(antiga1).classList.add('btn-light');
+       
+    }
+</script>
+
+    {% endblock %}

@@ -1,0 +1,93 @@
+{% load static %}
+
+{% load info_usuario %}
+
+<div class="header">
+    <!-- navbar -->
+    <nav class="navbar-classic navbar navbar-expand-lg">
+        <a href="{% url 'home' %}" style="color:#624BFF; font-weight: bold; font-size: 20px">
+            <img src="{% static 'src/assets/images/robo_icone.png' %}" width="40" alt=""> Robótica
+        </a>
+        <div class="ms-lg-3 d-none d-md-none d-lg-block">
+            <a href="{% url 'plano_aula:listar_usuario' pk=user.pk %}">Minhas aulas</a>
+        </div>
+        <div class="ms-lg-3 d-none d-md-none d-lg-block">
+            <a href="">Favoritos</a>
+        </div>
+
+      <ul class="navbar-nav navbar-right-wrap ms-auto d-flex nav-top-wrap">
+        <form class="d-flex align-items-center">
+          <input type="search" class="form-control" placeholder="Pesquisar" />
+        </form>
+        
+        <li class="dropdown ms-2">
+          <a class="rounded-circle" href="#" role="button" id="dropdownUser"
+            data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <div class="avatar avatar-md avatar-indicators avatar-online">
+              <img alt="avatar" src="{% usuario_avatar user.username %}" class="rounded-circle" />
+            </div>
+          </a>
+          <div class="dropdown-menu dropdown-menu-end"
+            aria-labelledby="dropdownUser">
+            <div class="px-4 pb-0 pt-2">
+  
+  
+              <div class="lh-1 ">
+                <h5 class="mb-1">{{ user.first_name }} {{ user.last_name }}</h5>
+                <a href="#" class="text-inherit fs-6">Ver meu perfil</a>
+              </div>
+              <div class=" dropdown-divider mt-3 mb-2"></div>
+            </div>
+  
+            <ul class="list-unstyled">
+  
+              <li>
+                <a class="dropdown-item" href="{% url 'usuario:editar' pk=user.pk %}">
+                  <i class="me-2 icon-xxs dropdown-item-icon fas fa-user"></i>Editar meu perfil
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item"
+                  href="#">
+                  <i class="me-2 icon-xxs dropdown-item-icon fas fa-tools"></i>Minhas configurações
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="{% url 'usuario:logout' %}">
+                  <i class="me-2 icon-xxs dropdown-item-icon fas fa-sign-out-alt"></i>Sair
+                </a>
+                <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownUser">
+                    <div class="px-4 pb-0 pt-2">
+
+
+                        <div class="lh-1 ">
+                            <h5 class="mb-1">{{ user.first_name }} {{ user.last_name }}</h5>
+                            <a href="#" class="text-inherit fs-6">Ver meu perfil</a>
+                        </div>
+                        <div class=" dropdown-divider mt-3 mb-2"></div>
+                    </div>
+
+                    <ul class="list-unstyled">
+
+                        <li>
+                            <a class="dropdown-item" href="{% url 'usuario:editar' pk=user.pk %}">
+                                <i class="me-2 icon-xxs dropdown-item-icon fas fa-user"></i>Editar meu perfil
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="#">
+                                <i class="me-2 icon-xxs dropdown-item-icon fas fa-tools"></i>Minhas configurações
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" href="{% url 'usuario:logout' %}">
+                                <i class="me-2 icon-xxs dropdown-item-icon fas fa-sign-out-alt"></i>Sair
+                            </a>
+                        </li>
+                    </ul>
+
+                </div>
+            </li>
+        </ul>
+    </nav>
+</div>

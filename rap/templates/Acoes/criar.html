@@ -1,0 +1,50 @@
+{% extends "Base/base.html" %} 
+
+{% load static %} 
+{% load bootstrap5 %} 
+{% load crispy_forms_tags %} 
+
+{% block conteudo %}
+
+<br>
+
+<div class="container">
+    <p class="text-uppercase font-weight-bold">Cadastrar nova ação</p>
+
+    <div class="card">
+        <div class="card-body p-3 overflow-auto">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="col-8">
+                        {{ form.titulo|as_crispy_field }}
+                    </div>
+                    <div class="col-4">
+                        {{ form.tipo|as_crispy_field }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-4">
+                        {{ form.data_inicio|as_crispy_field }}
+                    </div>
+                    <div class="col-4">
+                        {{ form.data_fim|as_crispy_field }}
+                    </div>
+                    <div class="col-4">
+                        {{ form.local|as_crispy_field }}
+                    </div>
+                </div>
+
+                {{ form.descricao|as_crispy_field }}
+                <input class="btn btn-info col-lg-2" type="submit" value="Cadastrar" />
+            </form>
+        </div>
+    </div>
+
+    
+</div>
+
+
+{% endblock %} 

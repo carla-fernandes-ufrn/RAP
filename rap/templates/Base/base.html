@@ -1,0 +1,84 @@
+<!--
+=========================================================
+* Argon Dashboard 2 - v2.0.2
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/argon-dashboard
+* Copyright 2022 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT (https://www.creative-tim.com/license)
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+-->
+<!DOCTYPE html>
+<html lang="pt-br">
+  {% load static %}
+
+<head>
+    {% include "Base/cabecalho.html" %}
+</head>
+
+<body class="g-sidenav-show bg-gray-100">
+  <!-- <div class="min-height-100 bg-primary position-absolute w-100" 
+      style="background-image: url('{% static 'assets/img/bg-site.jpeg' %}');
+            background-size: cover;">
+  </div> -->
+  <!-- <div class="min-height-300 bg-primary position-absolute w-100" 
+      style="background-image: url('{% static 'assets/img/bg-site.jpeg' %}');
+            background-size: cover;">
+  </div> -->
+  <main class="main-content position-relative border-radius-lg ">
+    
+    <nav class="navbar navbar-main navbar-expand-lg px-0 shadow-none bg-gradient-danger" id="navbarBlur" data-scroll="false">
+        <div class="container-fluid py-1 px-3">
+          
+          {% include "Base/navbar-horizontal.html" %}
+        </div>
+    </nav>
+    <div class="container-fluid">
+
+     <!-- {% block cabecalho %}
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+                <li class="breadcrumb-item text-sm">
+                {% block breadcrumb1 %}
+                {% endblock %}
+                </li>
+                <li class="breadcrumb-item text-sm text-white active" aria-current="page">
+                {% block breadcrumb2 %}
+                {% endblock %}
+                </li>
+            </ol>
+            <h6 class="font-weight-bolder mb-0">
+                {% block titulo %}
+                {% endblock %}
+            </h6>
+        </nav>
+      {% endblock %} -->
+
+        {% block conteudo %}
+        {% endblock %}
+
+        {% include "Base/rodape.html" %}
+    </div>
+
+    {% block scripts %}
+    {% endblock %}
+  </main>
+  
+  {% include "Base/scripts.html" %}
+
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+  </script>
+</body>
+
+</html>

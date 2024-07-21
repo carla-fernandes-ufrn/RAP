@@ -1,0 +1,219 @@
+{% extends "Base/base.html" %}
+{% load static %}
+
+{% block breadcrumb1 %}
+Disciplina
+{% endblock %}
+
+{% block breadcrumb2 %}
+Conteúdo
+{% endblock %}
+
+{% block titulo %}
+Listar sugestões
+{% endblock %}
+
+{% block conteudo %}
+
+<div class="p-3 text-center">
+  <button id="btn_disciplina" class="btn btn-success" onclick="mostrar_disciplinas()">Disciplinas</button>
+  <button id="btn_conteudo" class="btn btn-light" onclick="mostrar_conteudos()">Conteúdos</button>
+</div>
+
+<div id="div_disciplina">
+  <div class="row mt-4">
+  <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
+    <div class="card container">
+      <div class="card-header pb-0 p-3">
+        <div class="d-flex justify-content-between">
+          <h6 class="mb-2">Disciplinas</h6>
+        </div>
+      </div>
+      <div class="table-responsive">
+          <table id="tabela_disciplinas" class="table align-items-center" cellspacing="0">
+            <thead>
+              <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for disciplina in lista_disciplinas %}
+                    <tr>
+                        <td><p class="text-sm mb-0">{{disciplina.nome}}</p></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6 mb-lg-0 mb-4">
+    <div class="card container">
+      <form id="form_disciplina">
+        {% csrf_token %}
+        <div class="card-header pb-0 p-3 row">
+          <div class="col-10">
+            <h6 class="mb-0">Sugestões de disciplinas</h6>
+          </div>
+          <div class="col-2">
+            <input type="submit" class="btn btn-primary" value="Validar" />
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table id="tabela_sugestao_disciplina" class="table align-items-center" cellspacing="0">
+            <thead>
+              <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Usuário</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for sugestao in sugestoes_disciplina %}
+                    <tr>
+                        <td><h6 class="mb-0 text-sm">{{sugestao.nome}}</h6></td>
+                        <td><p class="text-sm mb-0">{{sugestao.usuario}}</p></td>
+                        <td class="align-items-center">
+                            <a onclick="aceitar_disciplina({{sugestao.pk}})">
+                              <i id="aceitar_disciplina_{{sugestao.pk}}" class="fa fa-check text-success"></i>
+                            </a>
+                            <a onclick="negar_disciplina({{sugestao.pk}})">
+                              <i id="negar_disciplina_{{sugestao.pk}}" class="fa fa-times text-danger"></i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+
+<div id="div_conteudo" style="display: none">
+  <div class="row mt-4">
+  <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
+    <div class="card container">
+      <div class="card-header pb-0 p-3">
+        <div class="d-flex justify-content-between">
+          <h6 class="mb-2">Conteúdos</h6>
+        </div>
+      </div>
+      <div class="table-responsive">
+          <table id="tabela_conteudos" class="table align-items-center" cellspacing="0">
+            <thead>
+              <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Conteúdo</th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for conteudo in lista_conteudos %}
+                    <tr>
+                        <td><h6 class="mb-0 text-sm">{{conteudo.disciplina}}</h6></td>
+                        <td><p class="text-sm mb-0">{{conteudo.nome}}</p></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+          </table>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div class="col-lg-6 mb-lg-0 mb-4">
+    <div class="card container">
+      <form id="form_conteudo">
+        {% csrf_token %}
+        <div class="card-header pb-0 p-3 row">
+          <div class="col-10">
+            <h6 class="mb-0">Sugestões de conteúdos</h6>
+          </div>
+          <div class="col-2">
+            <input type="submit" class="btn btn-primary" value="Validar" />
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table id="tabela_sugestao_conteudo" class="table align-items-center" cellspacing="0">
+            <thead>
+              <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Conteúdo</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Usuário</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for sugestao in sugestoes_conteudo %}
+                    <tr>
+                      <td><h6 class="mb-0 text-sm">{{sugestao.disciplina}}</h6></td>
+                        <td><h6 class="mb-0 text-sm">{{sugestao.nome}}</h6></td>
+                        <td><p class="text-sm mb-0">{{sugestao.usuario}}</p></td>
+                        <td class="align-items-center">
+                          <a onclick="aceitar_conteudo({{sugestao.pk}})">
+                            <i id="aceitar_conteudo_{{sugestao.pk}}" class="fa fa-check text-success"></i>
+                          </a>
+                          <a onclick="negar_conteudo({{sugestao.pk}})">
+                            <i id="negar_conteudo_{{sugestao.pk}}" class="fa fa-times text-danger"></i>
+                          </a>
+                      </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        </div>
+        </form>
+      </div>
+  </div>
+</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'assets/js/custom/sugestao_disciplina.js' %}"></script>
+
+<script>
+
+window.onload = function() {
+    if ( {{tipo}}  == 1) {
+        mostrar_conteudos();
+    }
+    alerta_sugestoes();
+  };
+
+$(document).ready(function () {
+    $('#tabela_disciplinas').DataTable( {
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+        }
+    } );
+    $('#tabela_conteudos').DataTable( {
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+        }
+    } );
+    $('#tabela_sugestao_disciplina').DataTable( {
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+        },
+        "columnDefs": [ {
+          "targets": 2,
+          "orderable": false
+          } ]
+    } );
+    $('#tabela_sugestao_conteudo').DataTable( {
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+        },
+        "columnDefs": [ {
+          "targets": 3,
+          "orderable": false
+          } ]
+    } );
+  });
+</script>
+
+{% endblock %}

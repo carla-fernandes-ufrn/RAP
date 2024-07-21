@@ -1,0 +1,236 @@
+{% extends "Base/base.html" %}
+{% load static %}
+
+{% block breadcrumb1 %}
+Disciplina
+{% endblock %}
+
+{% block breadcrumb2 %}
+Conteúdo
+{% endblock %}
+
+{% block titulo %}
+Minhas sugestões
+{% endblock %}
+
+{% block conteudo %}
+
+<div class="p-3 text-center">
+  <button id="btn_em_aberto" class="btn btn-success" onclick="mostrar_em_aberto()">Em aberto</button>
+  <button id="btn_aceitos" class="btn btn-light" onclick="mostrar_aceitos()">Aceitos</button>
+  <button id="btn_negados" class="btn btn-light" onclick="mostrar_negados()">Negados</button>
+</div>
+
+<div id="div_em_aberto">
+  <div class="row mt-4">
+    <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
+        <div class="card container">
+            <div class="card-header pb-0 p-3">
+                <div class="d-flex justify-content-between">
+                <h6 class="mb-2">Disciplinas</h6>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table id="tabela_s_disciplinas_em_aberto" class="table align-items-center" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for disciplina in sugestoes_disciplina_em_aberto %}
+                            <tr>
+                                <td><p class="text-sm mb-0">{{disciplina.nome}}</p></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
+        <div class="card container">
+            <div class="card-header pb-0 p-3">
+                <div class="d-flex justify-content-between">
+                <h6 class="mb-2">Conteúdos</h6>
+                </div>
+            </div>
+            <div class="table-responsive">
+                <table id="tabela_s_conteudos_em_aberto" class="table align-items-center" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Conteúdo</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for conteudo in sugestoes_conteudo_em_aberto %}
+                            <tr>
+                                <td><p class="text-sm mb-0">{{conteudo.disciplina}}</p></td>
+                                <td><p class="text-sm mb-0">{{conteudo.nome}}</p></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>
+
+<div id="div_aceitos" style="display: none">
+    <div class="row mt-4">
+        <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
+            <div class="card container">
+                <div class="card-header pb-0 p-3">
+                <div class="d-flex justify-content-between">
+                    <h6 class="mb-2">Disciplinas</h6>
+                </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="tabela_s_disciplinas_aceitas" class="table align-items-center" cellspacing="0">
+                    <thead>
+                        <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for disciplina in sugestoes_disciplina_aceita %}
+                            <tr>
+                                <td><p class="text-sm mb-0">{{disciplina.nome}}</p></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
+            <div class="card container">
+                <div class="card-header pb-0 p-3">
+                <div class="d-flex justify-content-between">
+                    <h6 class="mb-2">Conteúdos</h6>
+                </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="tabela_s_conteudos_aceitos" class="table align-items-center" cellspacing="0">
+                    <thead>
+                        <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Conteúdo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for conteudo in sugestoes_conteudo_aceito %}
+                            <tr>
+                                <td><p class="text-sm mb-0">{{conteudo.disciplina}}</p></td>
+                                <td><p class="text-sm mb-0">{{conteudo.nome}}</p></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+  </div>
+</div>
+
+<div id="div_negados" style="display: none">
+    <div class="row mt-4">
+        <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
+            <div class="card container">
+                <div class="card-header pb-0 p-3">
+                <div class="d-flex justify-content-between">
+                    <h6 class="mb-2">Disciplinas</h6>
+                </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="tabela_s_disciplinas_negadas" class="table align-items-center" cellspacing="0">
+                    <thead>
+                        <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for disciplina in sugestoes_disciplina_negada %}
+                            <tr>
+                                <td><p class="text-sm mb-0">{{disciplina.nome}}</p></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
+            <div class="card container">
+                <div class="card-header pb-0 p-3">
+                <div class="d-flex justify-content-between">
+                    <h6 class="mb-2">Conteúdos</h6>
+                </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="tabela_s_conteudos_negados" class="table align-items-center" cellspacing="0">
+                    <thead>
+                        <tr>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Conteúdo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for conteudo in sugestoes_conteudo_negado %}
+                            <tr>
+                                <td><p class="text-sm mb-0">{{conteudo.disciplina}}</p></td>
+                                <td><p class="text-sm mb-0">{{conteudo.nome}}</p></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+
+<script src="{% static 'assets/js/custom/sugestao_disciplina_usuario.js' %}"></script>
+
+<script>
+
+$(document).ready(function () {
+    $('#tabela_s_disciplinas_em_aberto').DataTable( {
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+        }
+    } );
+    $('#tabela_s_disciplinas_aceitas').DataTable( {
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+        }
+    } );
+    $('#tabela_s_disciplinas_negadas').DataTable( {
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+        }
+    } );
+    $('#tabela_s_conteudos_em_aberto').DataTable( {
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+        }
+    } );
+    $('#tabela_s_conteudos_aceitos').DataTable( {
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+        }
+    } );
+    $('#tabela_s_conteudos_negados').DataTable( {
+        "language": {
+            "url": "//cdn.datatables.net/plug-ins/9dcbecd42ad/i18n/Portuguese-Brasil.json"
+        }
+    } );
+  });
+</script>
+
+{% endblock %}
