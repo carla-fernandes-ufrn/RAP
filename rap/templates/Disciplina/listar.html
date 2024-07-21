@@ -55,6 +55,10 @@ Listar
   <div class="col-lg-4 mb-lg-0 mb-4">
     <div class="card">
 
+      <div id="div-alert-disciplina" class="alert alert-success alert-dismissible" role="alert" style="display:none;">
+        <p id="text-alert-disciplina" class="text-white"></p>
+      </div>
+
       <form id="form_disciplina">
         {% csrf_token %}
         <div class="card-header pb-0 p-3">
@@ -119,6 +123,10 @@ Listar
   </div>
   <div class="col-lg-4 mb-lg-0 mb-4">
     <div class="card">
+
+      <div id="div-alert-conteudo" class="alert alert-success alert-dismissible" role="alert" style="display:none;">
+        <p id="text-alert-conteudo" class="text-white"></p>
+      </div>
 
       <form id="form_conteudo">
         {% csrf_token %}
