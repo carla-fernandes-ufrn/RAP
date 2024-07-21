@@ -1,5 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
+
+from django.core.exceptions import PermissionDenied
 import json
 from django.http import JsonResponse
 
@@ -8,6 +10,7 @@ from django.urls import reverse_lazy
 
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import user_passes_test
 
 from Disciplina.models import Disciplina, Conteudo, SugestaoDisciplina, SugestaoConteudo
 from Usuario.models import Usuario
@@ -40,41 +43,47 @@ def listar_conteudos(request):
 
 @login_required
 def listar_sugestoes(request, tipo):
-    sugestoes_disciplina = SugestaoDisciplina.objects.filter(status="A")
-    sugestoes_conteudo = SugestaoConteudo.objects.filter(status="A")
-    disciplinas = Disciplina.objects.filter(status="Ativo")
-    conteudos = Conteudo.objects.filter(status="Ativo")
+    if (request.user.is_superuser):
+        sugestoes_disciplina = SugestaoDisciplina.objects.filter(status="A")
+        sugestoes_conteudo = SugestaoConteudo.objects.filter(status="A")
+        disciplinas = Disciplina.objects.filter(status="Ativo")
+        conteudos = Conteudo.objects.filter(status="Ativo")
 
-    informacoes = {
-        'sugestoes_disciplina': sugestoes_disciplina,
-        'sugestoes_conteudo': sugestoes_conteudo,
-        'lista_disciplinas': disciplinas,
-        'lista_conteudos': conteudos,
-        'tipo': tipo,
-    }
+        informacoes = {
+            'sugestoes_disciplina': sugestoes_disciplina,
+            'sugestoes_conteudo': sugestoes_conteudo,
+            'lista_disciplinas': disciplinas,
+            'lista_conteudos': conteudos,
+            'tipo': tipo,
+        }
 
-    return render(request, "Disciplina/listar_sugestoes.html", informacoes)
+        return render(request, "Disciplina/listar_sugestoes.html", informacoes)
+    else:
+        raise PermissionDenied
 
 @login_required
 def listar_sugestoes_usuario(request, pk):
-    usuario = Usuario.objects.get(pk=pk)
-    sugestoes_disciplina_em_aberto = SugestaoDisciplina.objects.filter(status="A", usuario = usuario)
-    sugestoes_disciplina_aceita = SugestaoDisciplina.objects.filter(status="B", usuario = usuario)
-    sugestoes_disciplina_negada = SugestaoDisciplina.objects.filter(status="C", usuario = usuario)
-    sugestoes_conteudo_em_aberto = SugestaoConteudo.objects.filter(status="A", usuario = usuario)
-    sugestoes_conteudo_aceito = SugestaoConteudo.objects.filter(status="B", usuario = usuario)
-    sugestoes_conteudo_negado = SugestaoConteudo.objects.filter(status="C", usuario = usuario)
+    if (request.user.id == pk):
+        usuario = Usuario.objects.get(pk=pk)
+        sugestoes_disciplina_em_aberto = SugestaoDisciplina.objects.filter(status="A", usuario = usuario)
+        sugestoes_disciplina_aceita = SugestaoDisciplina.objects.filter(status="B", usuario = usuario)
+        sugestoes_disciplina_negada = SugestaoDisciplina.objects.filter(status="C", usuario = usuario)
+        sugestoes_conteudo_em_aberto = SugestaoConteudo.objects.filter(status="A", usuario = usuario)
+        sugestoes_conteudo_aceito = SugestaoConteudo.objects.filter(status="B", usuario = usuario)
+        sugestoes_conteudo_negado = SugestaoConteudo.objects.filter(status="C", usuario = usuario)
 
-    informacoes = {
-        'sugestoes_disciplina_em_aberto': sugestoes_disciplina_em_aberto,
-        'sugestoes_disciplina_aceita': sugestoes_disciplina_aceita,
-        'sugestoes_disciplina_negada': sugestoes_disciplina_negada,
-        'sugestoes_conteudo_em_aberto': sugestoes_conteudo_em_aberto,
-        'sugestoes_conteudo_aceito': sugestoes_conteudo_aceito,
-        'sugestoes_conteudo_negado': sugestoes_conteudo_negado,
-    }
+        informacoes = {
+            'sugestoes_disciplina_em_aberto': sugestoes_disciplina_em_aberto,
+            'sugestoes_disciplina_aceita': sugestoes_disciplina_aceita,
+            'sugestoes_disciplina_negada': sugestoes_disciplina_negada,
+            'sugestoes_conteudo_em_aberto': sugestoes_conteudo_em_aberto,
+            'sugestoes_conteudo_aceito': sugestoes_conteudo_aceito,
+            'sugestoes_conteudo_negado': sugestoes_conteudo_negado,
+        }
 
-    return render(request, "Disciplina/listar_sugestoes_usuario.html", informacoes)
+        return render(request, "Disciplina/listar_sugestoes_usuario.html", informacoes)
+    else:
+        raise PermissionDenied()
 
 @csrf_exempt
 @login_required
@@ -148,19 +157,22 @@ def sugerir_conteudo(request):
 
 @login_required
 def definir_status_sugestao_disciplina(request, aceitar, id):
-    sugestao_disciplina = SugestaoDisciplina.objects.get(id=id)
+    if (request.user.is_superuser):
+        sugestao_disciplina = SugestaoDisciplina.objects.get(id=id)
 
-    if (aceitar == 1):
-        sugestao_disciplina.status = "B"
-        sugestao_disciplina.save()
+        if (aceitar == 1):
+            sugestao_disciplina.status = "B"
+            sugestao_disciplina.save()
 
-        disciplina = Disciplina(nome = sugestao_disciplina.nome)
-        disciplina.save()
+            disciplina = Disciplina(nome = sugestao_disciplina.nome)
+            disciplina.save()
+        else:
+            sugestao_disciplina.status = "C"
+            sugestao_disciplina.save()
+
+        return redirect('disciplina:listar_sugestoes')
     else:
-        sugestao_disciplina.status = "C"
-        sugestao_disciplina.save()
-
-    return redirect('disciplina:listar_sugestoes')
+        raise PermissionDenied()
 
 @login_required
 def ler_numero_sugestoes(request):
