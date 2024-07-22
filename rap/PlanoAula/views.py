@@ -27,7 +27,7 @@ from PlanoAula import forms, filters
 def home(request):
 
     if (not request.user.first_name or not request.user.last_name):
-        return redirect('usuario:completar_cadastro', pk = request.user.pk)
+        return redirect('usuario:completar_cadastro')
     
     planos_aula = PlanoAula.objects.all()
     conteudos = list(Conteudo.objects.filter(status='Ativo'))
