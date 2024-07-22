@@ -6,17 +6,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{% static 'assets/css/403.css' %}">
     <script src="{% static 'assets/js/403.js' %}"></script>
-    <title>Acesso negado</title>
+    <title>RAP - 404</title>
 </head>
 <body>
     <svg xmlns="http://www.w3.org/2000/svg" id="robot-error" viewBox="0 0 260 118.9" role="img">
-        <title xml:lang="en">403 Error</title>
+        <title xml:lang="en">404 Error</title>
       
         <defs>
           <clipPath id="white-clip">
             <circle id="white-eye" fill="#cacaca" cx="130" cy="65" r="20" />
           </clipPath>
-          <text id="text-s" class="error-text" y="106"> 403 </text>
+          <text id="text-s" class="error-text" y="106"> 404 </text>
         </defs>
         <path class="alarm" fill="#e62326" d="M120.9 19.6V9.1c0-5 4.1-9.1 9.1-9.1h0c5 0 9.1 4.1 9.1 9.1v10.6" />
         <use xlink:href="#text-s" x="-0.5px" y="-1px" fill="black"></use>
@@ -33,7 +33,7 @@
           <use xlink:href="#tornillo" y="60"></use>
         </g>
       </svg>
-      <h1>Você não pode acessar essa página!</h1>
+      <h1>Página não encontrada!</h1>
       <h2>Se redirecione para a <a target="_blank" href="{% url 'home' %}">Home!</a></h2>
 </body>
 
