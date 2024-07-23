@@ -46,9 +46,9 @@ function trocar_cor(tipo, id, returndata) {
     const str = "icon_" + tipo + "_" + id.toString()
     const elemento = document.getElementById(str)
     if (returndata == 0) {
-        elemento.style = 'color: white;';
+        elemento.style = 'color: gray;';
     }
     else {
-        elemento.style = 'color: var(--bs-success); -webkit-text-stroke: 1px white;';
+        elemento.style = 'color: var(--bs-success);';
     }
 }

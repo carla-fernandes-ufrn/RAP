@@ -20,10 +20,11 @@ from django.conf.urls.static import static
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from PlanoAula import views as plano_aula_views
+from rap import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', plano_aula_views.home, name='home'),
+    path('', views.home, name='home'),
     path('plano-aula/', include('PlanoAula.urls')),
     path('usuario/', include('Usuario.urls')),
     path('disciplina/', include('Disciplina.urls')),
