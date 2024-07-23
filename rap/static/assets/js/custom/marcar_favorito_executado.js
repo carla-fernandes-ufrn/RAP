@@ -17,14 +17,12 @@ function marcar_executado(plano_aula, usuario, funcao_listar) {
         url : "/plano-aula/marcar-executado/"+plano_aula+"/"+usuario,
         method : "GET",
         success: function (returndata) {
-            alterar_contador("play", plano_aula, returndata)
+            alterar_contador("play", plano_aula, returndata);
             trocar_cor("play", plano_aula, returndata);
             if (funcao_listar==='executados' && returndata === 0) {
                 document.getElementById("card_plano_aula_"+plano_aula).remove()
                 var main_div = document.getElementById("main_div")
                 var cards = document.getElementsByClassName("card")
-                alert(cards)
-                alert(cards.length)
             }
         }
     });
@@ -33,7 +31,6 @@ function marcar_executado(plano_aula, usuario, funcao_listar) {
 function alterar_contador(tipo, id, returndata) {
     const str = "contador_" + tipo + "_" + id.toString()
     const elemento = document.getElementById(str)
-    console.log('{{tipo}}')
     if (returndata == 0) {
         elemento.textContent = (parseInt(elemento.textContent) - 1).toString();
     }
@@ -43,6 +40,7 @@ function alterar_contador(tipo, id, returndata) {
 }
 
 function trocar_cor(tipo, id, returndata) {
+    console.log("Entrei")
     const str = "icon_" + tipo + "_" + id.toString()
     const elemento = document.getElementById(str)
     if (returndata == 0) {
