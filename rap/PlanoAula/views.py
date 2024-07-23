@@ -209,7 +209,7 @@ class ListarPlanosAulaFiltrados(LoginRequiredMixin, generic.ListView):
     model = PlanoAula
     template_name = 'PlanoAula/listar.html'
     context_object_name = 'lista_planos_aula'
-    paginate_by = 15
+    paginate_by = 10
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -229,7 +229,7 @@ class ListarPlanosAulaFiltradosUsuario(LoginRequiredMixin, generic.ListView):
     model = PlanoAula
     template_name = 'PlanoAula/listar.html'
     context_object_name = 'lista_planos_aula'
-    paginate_by = 15
+    paginate_by = 10
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -251,7 +251,7 @@ class ListarPlanosAulaFiltradosFavoritos(LoginRequiredMixin, generic.ListView):
     model = PlanoAula
     template_name = 'PlanoAula/listar.html'
     context_object_name = 'lista_planos_aula'
-    paginate_by = 15
+    paginate_by = 10
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -275,7 +275,7 @@ class ListarPlanosAulaFiltradosExecutados(LoginRequiredMixin, generic.ListView):
     model = PlanoAula
     template_name = 'PlanoAula/listar.html'
     context_object_name = 'lista_planos_aula'
-    paginate_by = 15
+    paginate_by = 10
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -315,7 +315,7 @@ class EspacoUsuario(LoginRequiredMixin, generic.ListView):
     model = PlanoAula
     template_name = 'PlanoAula/espaco_usuario.html'
     context_object_name = 'lista_planos_aula'
-    paginate_by = 15
+    paginate_by = 10
 
     def get_queryset(self):
         qs = super().get_queryset()
