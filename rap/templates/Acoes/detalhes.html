@@ -36,6 +36,12 @@
                 <span>{{acao.data_fim|date:"d/m/Y"}}</span>
             </div>
         {% endif %}
+        {% if acao.responsavel.id == user.id %}
+            <br>
+            <a href="{% url 'acoes:editar' pk=acao.pk %}" class="float-end" tool><i class="fa fa-pencil text-warning"></i></a>
+            <br>
+            <a href="{% url 'acoes:editar_midia' pk=acao.pk %}" class="float-end"><i class="fa fa-camera text-warning"></i></a>
+        {% endif %}
     </div>
 </div>
 <br>
@@ -75,9 +81,6 @@
                     <span class="visually-hidden">Next</span>
                 </button>
             </div>
-            {% if acao.responsavel.username == user.username %}
-                <a href="{% url 'acoes:editar_midia' pk=acao.pk %}" class="btn btn-outline-warning">Editar Mídias</a>
-            {% endif %}
         </div>
         <div class="col-8">
             <p>{{acao.descricao|linebreaks}}</p>

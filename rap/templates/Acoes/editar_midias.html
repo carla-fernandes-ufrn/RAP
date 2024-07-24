@@ -10,7 +10,10 @@
 
 <div class="container">
 
-    <p class="text-uppercase font-weight-bold">Mídias</p>
+    <div class="d-flex main justify-content-between">
+        <h4 class="text-uppercase font-weight-bold">Mídias</h4>
+        <a class="float-end btn btn-outline-success" href="{% url 'acoes:detalhes' pk=acao.pk %}">Voltar</a>
+    </div>
     
 
     <div class="card">
@@ -18,9 +21,12 @@
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{form_nova_midia.midia}}
-                <input class="btn btn-info col-lg-2" type="submit" value="Inserir" />
+                <br>
+                <br>
+                <input class="btn btn-success col-lg-2" type="submit" value="Inserir" />
             </form>
         </div>
+        <hr class="hr hr-blurry" />
         <div class="container row">
             {% for midia in midias_acao %}
                 <div class="col-lg-2 col-md-4 col-6">
@@ -34,9 +40,6 @@
             {% endfor %}
         </div>
     </div>
-    <br>
-    <a class="btn btn-success" href="{% url 'acoes:detalhes' pk=acao.pk %}">Voltar</a>
-
     
 </div>
 

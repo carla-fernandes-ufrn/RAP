@@ -45,7 +45,7 @@
                 </div>
 
                 {{ form.descricao|as_crispy_field }}
-                <input class="btn btn-info col-lg-2" type="submit" value="Atualizar" />
+                <input class="btn btn-success col-lg-2" type="submit" value="Atualizar" />
             </form>
         </div>
     </div>
@@ -63,8 +63,8 @@
                     <p>Deseja deletar a ação <strong>{{object.titulo}}</strong>?</p>
                 </div>
                 <div class="modal-footer">
-                    <a href="{% url 'acoes:deletar' pk=object.pk %}" class="btn btn-primary">Deletar</a>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <a href="{% url 'acoes:deletar' pk=object.pk %}" class="btn btn-success">Deletar</a>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>

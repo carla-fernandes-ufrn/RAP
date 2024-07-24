@@ -11,7 +11,7 @@
 <div class="row">
     <div class="col-md-4 col-lg-4">
         <div class="card border-primary"> <!--Por borda-->
-            <div class="card-header pb-0 p-3 bg-gradient-warning">
+            <div class="card-header pb-0 p-3 bg-gradient-secondary">
                 <p class="text-sm mb-0 text-uppercase text-white font-weight-bold">Filtros</p>
             </div>
             <div class="card-body p-3 overflow-auto">
@@ -73,13 +73,13 @@
     <div class="col-md-8 col-lg-8">
 
         {% if exibir_todos %}
-            <a href="{% url 'acoes:listar' %}" class="btn btn-success me-2">Todas as ações</a>
-            <a href="{% url 'acoes:listar_usuario' pk=user.pk %}" class="btn btn-light me-2">Minhas ações</a>
+            <a href="{% url 'acoes:listar' %}" class="btn btn-outline-success me-2">Todas as ações</a>
+            <a href="{% url 'acoes:listar_usuario' pk=user.pk %}" class="btn btn-outline-secondary me-2">Minhas ações</a>
         {% else %}
-            <a href="{% url 'acoes:listar' %}" class="btn btn-light me-2">Todas as ações</a>
-            <a href="{% url 'acoes:listar_usuario' pk=user.pk %}" class="btn btn-success me-2">Minhas ações</a>
+            <a href="{% url 'acoes:listar' %}" class="btn btn-outline-secondary me-2">Todas as ações</a>
+            <a href="{% url 'acoes:listar_usuario' pk=user.pk %}" class="btn btn-outline-success me-2">Minhas ações</a>
 
-            <a href="{% url 'acoes:criar' %}" class="btn btn-info me-2 float-end"><i class="fa fa-plus"></i></a>
+            <a href="{% url 'acoes:criar' %}" class="btn btn-success me-2 float-end"><i class="fa fa-plus"></i></a>
         {% endif %}
 
         <br>
@@ -89,7 +89,7 @@
                 {% if acao.data_fim is not None and todays_date > acao.data_fim|date:"Y-m-d" or acao.status is False %}
                     <div id="card_header_informacoes" class="card-header bg-gradient-secondary pb-0 p-3">
                 {% else %}
-                    <div id="card_header_informacoes" class="card-header bg-gradient-primary pb-0 p-3">
+                    <div id="card_header_informacoes" class="card-header bg-gradient-warning pb-0 p-3">
                 {% endif %}
                 
                     <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">
