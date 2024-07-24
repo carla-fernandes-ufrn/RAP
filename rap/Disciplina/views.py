@@ -39,7 +39,10 @@ def listar_conteudos(request):
     disciplina = Disciplina.objects.get(nome=nome)
     conteudos = Conteudo.objects.filter(disciplina=disciplina).values_list()
 
-    return finalizar_requisicao_api(list(conteudos))
+    return HttpResponse(
+        json.dumps(list(conteudos)),
+        content_type="application/json"
+    )
 
 @login_required
 def listar_sugestoes(request, tipo):
