@@ -10,7 +10,7 @@
     <div>
         <button id="btn_inf_gerais" class="btn btn-outline-success me-2" onclick="mostrar_inf_gerais()">Informações gerais</button>
         <button id="btn_montagem_programacao" class="btn btn-outline-secondary me-2" onclick="mostrar_montagem_programacao()">Montagem e Programação</button>
-        <button id="btn_midias" class="btn btn-outline-secondary me-2" onclick="mostrar_execucao()">Mídias</button>
+        <!-- <button id="btn_midias" class="btn btn-outline-secondary me-2" onclick="mostrar_execucao()">Mídias</button> -->
     </div>
     <input class="btn btn-success me-2" form="form_plano_aula" type="submit" value="Cadastrar" />
 </div>
@@ -121,38 +121,6 @@
             </div>
         </div>
 
-        <div id="div_midias" style="display: none">
-            <div class="row mt-4">
-                <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
-                    <div class="card">
-                        <div class="card-header pb-0 p-3">
-                            <div class="d-flex justify-content-between">
-                                <h6 class="text-uppercase text-sm">Robô</h6>
-                            </div>
-                        </div>
-                        <div class="card-body p-3 overflow-auto">
-                            {% bootstrap_form form_midias_robo_fotos %}
-                            {% bootstrap_form form_midias_robo_videos %}
-                            {% bootstrap_form form_midias_robo %}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
-                    <div class="card">
-                        <div class="card-header pb-0 p-3">
-                            <div class="d-flex justify-content-between">
-                                <h6 class="text-uppercase text-sm">Execução</h6>
-                            </div>
-                        </div>
-                        <div class="card-body p-3 overflow-auto">
-                            {% bootstrap_form form_midias_execucao_fotos %}
-                            {% bootstrap_form form_midias_execucao_videos %}
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
     </div>
 </form>
 {% endblock %} {% block scripts %}
@@ -176,12 +144,12 @@
         trocar_cor("btn_montagem_programacao", "btn_inf_gerais", "btn_midias");
     }
 
-    function mostrar_execucao() {
-        document.getElementById("div_inf_gerais").style.display = 'none';
-        document.getElementById("div_montagem_programacao").style.display = 'none';
-        document.getElementById("div_midias").style.display = 'block';
-        trocar_cor("btn_midias", "btn_inf_gerais", "btn_montagem_programacao");
-    }
+    // function mostrar_execucao() {
+    //     document.getElementById("div_inf_gerais").style.display = 'none';
+    //     document.getElementById("div_montagem_programacao").style.display = 'none';
+    //     document.getElementById("div_midias").style.display = 'block';
+    //     trocar_cor("btn_midias", "btn_inf_gerais", "btn_montagem_programacao");
+    // }
 
     function trocar_cor(nova, antiga1, antiga2) {
         document.getElementById(nova).classList.remove('btn-outline-secondary');
