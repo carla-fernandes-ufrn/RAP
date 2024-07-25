@@ -1,24 +1,22 @@
 {% extends "Base/base.html" %}
 {% load static %}
 
-{% block breadcrumb1 %}
-Disciplina
-{% endblock %}
-
-{% block breadcrumb2 %}
-Conteúdo
-{% endblock %}
-
-{% block titulo %}
-Listar
-{% endblock %}
-
 {% block conteudo %}
 
-<div class="p-3 text-center">
-  <button id="btn_disciplina" class="btn btn-success" onclick="mostrar_disciplinas()">Disciplinas</button>
-  <button id="btn_conteudo" class="btn btn-light" onclick="mostrar_conteudos()">Conteúdos</button>
+<br>
+<div class="d-flex justify-content-between">
+  <div>
+    <button id="btn_disciplina" class="btn btn-outline-success" onclick="mostrar_disciplinas()">Disciplinas</button>
+    <button id="btn_conteudo" class="btn btn-outline-secondary" onclick="mostrar_conteudos()">Conteúdos</button>
+  </div>
+  <div>
+    <a href="{% url 'disciplina:listar_sugestoes_usuario' pk=user.id %}" class="btn btn-outline-danger">Minhas sugestões</a>
+    {% if user.is_superuser %}
+      <a href="{% url 'disciplina:listar_sugestoes' %}" class="btn btn-outline-warning">Analisar sugestões</a>
+    {% endif %}
+  </div>
 </div>
+  
 
 <div id="div_disciplina">
 <div class="row mt-4">
@@ -72,18 +70,13 @@ Listar
             </div>
             <div class="col-md-2">
               <a onclick="sugerir_disciplina()">
-                <i class="fa fa-check h2 font-weight-bolder text-primary"></i>
+                <i class="fa fa-check h2 font-weight-bolder text-danger"></i>
               </a>
             </div>
           </div>
         </div>
       </form>
 
-    </div>
-    <div align="right">
-      <a href="{% url 'disciplina:listar_sugestoes_usuario' pk=user.id %}" class="btn btn-info">
-        Minhas sugestões
-      </a>
     </div>
   </div>
 </div>
@@ -150,17 +143,12 @@ Listar
             </div>
             <div class="col-md-2">
               <a onclick="sugerir_conteudo()">
-                <i class="fa fa-check h2 font-weight-bolder text-primary"></i>
+                <i class="fa fa-check h2 font-weight-bolder text-danger"></i>
               </a>
             </div>
           </div>
         </div>
       </form>
-    </div>
-    <div align="right">
-      <a href="{% url 'disciplina:listar_sugestoes_usuario' pk=user.id %}" class="btn btn-info">
-        Minhas sugestões
-      </a>
     </div>
   </div>
 </div>

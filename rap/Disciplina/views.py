@@ -45,7 +45,7 @@ def listar_conteudos(request):
     )
 
 @login_required
-def listar_sugestoes(request, tipo):
+def listar_sugestoes(request):
     if (request.user.is_superuser):
         sugestoes_disciplina = SugestaoDisciplina.objects.filter(status="A")
         sugestoes_conteudo = SugestaoConteudo.objects.filter(status="A")
@@ -57,12 +57,11 @@ def listar_sugestoes(request, tipo):
             'sugestoes_conteudo': sugestoes_conteudo,
             'lista_disciplinas': disciplinas,
             'lista_conteudos': conteudos,
-            'tipo': tipo,
         }
 
         return render(request, "Disciplina/listar_sugestoes.html", informacoes)
     else:
-        raise PermissionDenied
+        raise PermissionDenied()
 
 @login_required
 def listar_sugestoes_usuario(request, pk):
@@ -110,7 +109,7 @@ def analisar_sugestoes_disciplina(request):
         sugestao.status = 'C'
         sugestao.save()
 
-    return redirect('disciplina:listar_sugestoes', tipo=0)
+    return redirect('disciplina:listar_sugestoes')
 
 @csrf_exempt
 @login_required
@@ -134,7 +133,7 @@ def analisar_sugestoes_conteudo(request):
         sugestao.status = 'C'
         sugestao.save()
 
-    return redirect('disciplina:listar_sugestoes', tipo=1)
+    return redirect('disciplina:listar_sugestoes')
 
 @csrf_exempt
 @login_required
@@ -144,7 +143,10 @@ def sugerir_disciplina(request):
     sugestao_disciplina = SugestaoDisciplina(nome = nome, usuario = usuario)
     sugestao_disciplina.save()
     
-    return finalizar_requisicao_api('Sucesso')
+    return HttpResponse(
+        json.dumps("Sucesso"),
+        content_type="application/json"
+    )
 
 @csrf_exempt
 @login_required
@@ -156,7 +158,10 @@ def sugerir_conteudo(request):
     sugestao_conteudo = SugestaoConteudo(nome = nome, usuario = usuario, disciplina = disciplina)
     sugestao_conteudo.save()
     
-    return finalizar_requisicao_api('Sucesso')
+    return HttpResponse(
+        json.dumps("Sucesso"),
+        content_type="application/json"
+    )
 
 @login_required
 def definir_status_sugestao_disciplina(request, aceitar, id):

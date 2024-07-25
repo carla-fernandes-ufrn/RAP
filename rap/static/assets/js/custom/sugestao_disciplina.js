@@ -57,7 +57,7 @@ $("#form_disciplina").submit(function (e) {
         data : { lista_disciplinas_aceitas : lista_disciplinas_aceitas,
             lista_disciplinas_negadas : lista_disciplinas_negadas },
         success: function (returndata) {
-            window.location.href = '/disciplina/listar-sugestoes/0'; 
+            window.location.href = '/disciplina/listar-sugestoes/'; 
         }
     });
 });
@@ -72,7 +72,7 @@ $("#form_conteudo").submit(function (e) {
         data : { lista_conteudos_aceitos : lista_conteudos_aceitos,
             lista_conteudos_negados : lista_conteudos_negados },
         success: function (returndata) {
-            window.location.href = '/disciplina/listar-sugestoes/1'; 
+            window.location.href = '/disciplina/listar-sugestoes/'; 
         }
     });
 });
@@ -90,10 +90,10 @@ function mostrar_conteudos() {
 }
 
 function trocar_cor(nova, antiga) {
-    document.getElementById(nova).classList.remove('btn-light');
-    document.getElementById(nova).classList.add('btn-success');
-    document.getElementById(antiga).classList.remove('btn-success');
-    document.getElementById(antiga).classList.add('btn-light');
+    document.getElementById(nova).classList.remove('btn-outline-secondary');
+    document.getElementById(nova).classList.add('btn-outline-success');
+    document.getElementById(antiga).classList.remove('btn-outline-success');
+    document.getElementById(antiga).classList.add('btn-outline-secondary');
 }
 
 // function finalizar_sugestoes_disciplina() {

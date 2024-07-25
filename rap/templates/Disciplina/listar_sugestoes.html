@@ -15,9 +15,15 @@ Listar sugestões
 
 {% block conteudo %}
 
-<div class="p-3 text-center">
-  <button id="btn_disciplina" class="btn btn-success" onclick="mostrar_disciplinas()">Disciplinas</button>
-  <button id="btn_conteudo" class="btn btn-light" onclick="mostrar_conteudos()">Conteúdos</button>
+<br>
+<div class="d-flex justify-content-between bd-highlight">
+    <div class="p-2 bd-highlight">
+        <a id="btn_voltar" class="btn btn-outline-danger" href="{% url 'disciplina:listar' %}">Voltar</a>
+    </div>
+    <div class="p-2 bd-highlight">
+        <button id="btn_disciplina" class="btn btn-outline-success" onclick="mostrar_disciplinas()">Disciplinas</button>
+        <button id="btn_conteudo" class="btn btn-outline-secondary" onclick="mostrar_conteudos()">Conteúdos</button>
+    </div>
 </div>
 
 <div id="div_disciplina">
@@ -57,7 +63,7 @@ Listar sugestões
             <h6 class="mb-0">Sugestões de disciplinas</h6>
           </div>
           <div class="col-2">
-            <input type="submit" class="btn btn-primary" value="Validar" />
+            <input type="submit" class="btn btn-danger" value="Validar" />
           </div>
         </div>
         <div class="table-responsive">
@@ -132,7 +138,7 @@ Listar sugestões
             <h6 class="mb-0">Sugestões de conteúdos</h6>
           </div>
           <div class="col-2">
-            <input type="submit" class="btn btn-primary" value="Validar" />
+            <input type="submit" class="btn btn-danger" value="Validar" />
           </div>
         </div>
         <div class="table-responsive">
@@ -176,13 +182,6 @@ Listar sugestões
 <script src="{% static 'assets/js/custom/sugestao_disciplina.js' %}"></script>
 
 <script>
-
-window.onload = function() {
-    if ( {{tipo}}  == 1) {
-        mostrar_conteudos();
-    }
-    alerta_sugestoes();
-  };
 
 $(document).ready(function () {
     $('#tabela_disciplinas').DataTable( {

@@ -11,7 +11,7 @@ urlpatterns = [
     path('sugerir-conteudo/', views.sugerir_conteudo, name="sugerir_conteudo"),
 
     # Admin
-    path('listar-sugestoes/<int:tipo>', views.listar_sugestoes, name="listar_sugestoes"),
+    path('listar-sugestoes/', views.listar_sugestoes, name="listar_sugestoes"),
     path('analisar-disciplinas/', views.analisar_sugestoes_disciplina, name="analisar_disciplinas"),
     path('analisar-conteudos/', views.analisar_sugestoes_conteudo, name="analisar_conteudos"),
     path('definir-status-sugestao-disciplina/<int:aceitar>/<int:id>', views.definir_status_sugestao_disciplina, name="definir_status_sugestao_disciplina"),

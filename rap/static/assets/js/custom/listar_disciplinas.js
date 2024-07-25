@@ -13,10 +13,10 @@ function mostrar_conteudos() {
 }
 
 function trocar_cor(nova, antiga) {
-    document.getElementById(nova).classList.remove('btn-light');
-    document.getElementById(nova).classList.add('btn-success');
-    document.getElementById(antiga).classList.remove('btn-success');
-    document.getElementById(antiga).classList.add('btn-light');
+    document.getElementById(nova).classList.remove('btn-outline-secondary');
+    document.getElementById(nova).classList.add('btn-outline-success');
+    document.getElementById(antiga).classList.remove('btn-outline-success');
+    document.getElementById(antiga).classList.add('btn-outline-secondary');
 }
 
 function sugerir_disciplina() {
