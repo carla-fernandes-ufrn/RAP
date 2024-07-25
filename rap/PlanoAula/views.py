@@ -1,6 +1,7 @@
 from audioop import reverse
 from django import forms
 from django.contrib import messages 
+from django.core import serializers
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -22,20 +23,6 @@ from Disciplina.models import Disciplina, Conteudo
 from PlanoAula.models import PlanoAula, FotoRobo, VideoRobo, FotoExecucao, VideoExecucao, LikePlanoAula, ExecucaoPlanoAula
 from Usuario.models import Usuario
 from PlanoAula import forms, filters
-
-@login_required
-class Criar(generic.CreateView, LoginRequiredMixin):
-    model = PlanoAula
-    fields = ['titulo', 'contextualizacao', 'descricao_atividade', 'conteudos']
-    template_name = 'PlanoAula/criar.html'
-    success_url = reverse_lazy('plano_aula:listar')
-
-    def form_valid(self, form):
-        usuario = Usuario.objects.get(username=self.request.user.username)
-        form.instance.responsavel = usuario
-        return super().form_valid(form)
-
-    # Cria no HTML um objeto "form"
 
 @login_required
 def criar(request):
@@ -64,8 +51,8 @@ def criar(request):
                 plano_aula.robo_descricao = form_montagem.cleaned_data['robo_descricao']
             if (form_montagem.cleaned_data['robo_link'] != ""):
                 plano_aula.robo_link = form_montagem.cleaned_data['robo_link']
-            if (form_programacao.cleaned_data['robo_pdf'] != ""):
-                plano_aula.prog_codigos = form_programacao.cleaned_data['robo_pdf']
+            if (form_montagem.cleaned_data['robo_pdf'] != ""):
+                plano_aula.robo_pdf = form_montagem.cleaned_data['robo_pdf']
 
             # Programação
             if (form_programacao.cleaned_data['prog_linguagem'] != ""):
@@ -104,22 +91,22 @@ def criar(request):
 
         return render(request, "PlanoAula/criar.html", informacoes)
 
-@login_required
-def deletar_midia(request,tipo, pk):
-    if (tipo == 1):
-        objeto_deletado = FotoRobo.objects.get(pk=pk)
-    elif (tipo == 2):
-        objeto_deletado = VideoRobo.objects.get(pk=pk)
-    elif (tipo == 3):
-        objeto_deletado = FotoExecucao.objects.get(pk=pk)
-    elif (tipo == 4):
-        objeto_deletado = VideoExecucao.objects.get(pk=pk)
-    plano_aula = objeto_deletado.plano_aula
-    if (request.user.id == plano_aula.criador.id):
-        objeto_deletado.delete()
-        return redirect('plano_aula:editar_midia', pk=plano_aula.pk)
-    else:
-        raise PermissionDenied()
+class Detalhe(LoginRequiredMixin, generic.DetailView):
+   model = PlanoAula
+   template_name = "PlanoAula/detalhes.html"
+   context_object_name = "plano_aula"
+
+   def get_context_data(self,**kwargs):
+        context = super(Detalhe,self).get_context_data(**kwargs)
+        robo_fotos = FotoRobo.objects.filter(plano_aula = self.get_object().pk)
+        context['robo_fotos'] = robo_fotos
+        robo_videos = VideoRobo.objects.filter(plano_aula = self.get_object().pk)
+        context['robo_videos'] = robo_videos
+        execucao_fotos = FotoExecucao.objects.filter(plano_aula = self.get_object().pk)
+        context['execucao_fotos'] = execucao_fotos
+        execucao_videos = VideoExecucao.objects.filter(plano_aula = self.get_object().pk)
+        context['execucao_videos'] = execucao_videos
+        return context
 
 @login_required
 def editar_midia(request, pk):
@@ -165,6 +152,118 @@ def editar_midia(request, pk):
         return render(request, "PlanoAula/editar_midias.html", informacoes)
     else:
         raise PermissionDenied()
+
+@login_required
+def deletar_midia(request,tipo, pk):
+    if (tipo == 1):
+        objeto_deletado = FotoRobo.objects.get(pk=pk)
+    elif (tipo == 2):
+        objeto_deletado = VideoRobo.objects.get(pk=pk)
+    elif (tipo == 3):
+        objeto_deletado = FotoExecucao.objects.get(pk=pk)
+    elif (tipo == 4):
+        objeto_deletado = VideoExecucao.objects.get(pk=pk)
+    plano_aula = objeto_deletado.plano_aula
+    if (request.user.id == plano_aula.criador.id):
+        objeto_deletado.delete()
+        return redirect('plano_aula:editar_midia', pk=plano_aula.pk)
+    else:
+        raise PermissionDenied()
+
+@login_required
+def editar(request, pk):
+    plano_aula = PlanoAula.objects.get(pk=pk)
+    if (plano_aula.criador.pk == request.user.pk):
+        if (request.method == 'POST'):
+            form_inf_gerais = forms.FormInfGerais(request.POST)
+            form_montagem = forms.FormMontagem(request.POST, request.FILES)
+            form_programacao = forms.FormProgramacao(request.POST, request.FILES)
+            if (form_inf_gerais.is_valid() and form_montagem.is_valid() and form_programacao.is_valid()):
+
+                conteudos = request.POST.get('lista_id_conteudos','').split(',')
+
+                # Informações gerais
+                plano_aula.titulo = form_inf_gerais.cleaned_data['titulo']
+                plano_aula.contextualizacao = form_inf_gerais.cleaned_data['contextualizacao']
+                plano_aula.descricao_atividade = form_inf_gerais.cleaned_data['descricao_atividade']
+                if (form_inf_gerais.cleaned_data['avaliacao'] != ""):
+                    plano_aula.avaliacao = form_inf_gerais.cleaned_data['avaliacao']
+
+                # Montagem
+                if (form_montagem.cleaned_data['robo_equipamento'] != ""):
+                    plano_aula.robo_equipamento = form_montagem.cleaned_data['robo_equipamento']
+                if (form_montagem.cleaned_data['robo_descricao'] != ""):
+                    plano_aula.robo_descricao = form_montagem.cleaned_data['robo_descricao']
+                if (form_montagem.cleaned_data['robo_link'] != ""):
+                    plano_aula.robo_link = form_montagem.cleaned_data['robo_link']
+                if (form_montagem.cleaned_data['robo_pdf'] != ""):
+                    plano_aula.robo_pdf = form_montagem.cleaned_data['robo_pdf']
+
+                # Programação
+                if (form_programacao.cleaned_data['prog_linguagem'] != ""):
+                    plano_aula.prog_linguagem = form_programacao.cleaned_data['prog_linguagem']
+                if (form_programacao.cleaned_data['prog_descricao'] != ""):
+                    plano_aula.prog_descricao = form_programacao.cleaned_data['prog_descricao']
+                if (form_programacao.cleaned_data['prog_link'] != ""):
+                    plano_aula.prog_link = form_programacao.cleaned_data['prog_link']
+                if (form_programacao.cleaned_data['prog_codigos'] != ""):
+                    plano_aula.prog_codigos = form_programacao.cleaned_data['prog_codigos']
+                
+                plano_aula.save()
+
+                # Adicionar conteúdos
+
+                conteudos_plano_aula = list(plano_aula.conteudos.all().values_list('pk', flat=True))
+
+                if(conteudos != ['']):
+                    for conteudo in conteudos:
+                        if (int(conteudo) not in conteudos_plano_aula):
+                            plano_aula.conteudos.add(Conteudo.objects.get(id=int(conteudo)))
+                    for conteudo in conteudos_plano_aula:
+                        if (str(conteudo) not in conteudos):
+                            plano_aula.conteudos.remove(Conteudo.objects.get(id=int(conteudo)))
+                else:
+                    for conteudo in plano_aula.conteudos.all():
+                        plano_aula.conteudos.remove(conteudo)
+                    
+                # Salvar
+                plano_aula.save()
+
+                return redirect('plano_aula:detalhes', pk=pk)
+        else:
+            form_inf_gerais = forms.FormInfGerais(instance=plano_aula)
+            form_montagem = forms.FormMontagem(instance=plano_aula)
+            form_programacao = forms.FormProgramacao(instance=plano_aula)
+
+            lista_disciplinas = Disciplina.objects.filter(status="Ativo")
+            lista_conteudos = Conteudo.objects.filter(status="Ativo")
+
+            print(list(plano_aula.conteudos.all()))
+
+            informacoes = {
+                'form_inf_gerais': form_inf_gerais,
+                'form_montagem': form_montagem,
+                'form_programacao': form_programacao,
+                'lista_disciplinas': lista_disciplinas,
+                'lista_conteudos': lista_conteudos,
+                'conteudos_plano_aula': serializers.serialize("json", plano_aula.conteudos.all()),
+                'plano_aula': plano_aula,
+            }
+
+            return render(request, "PlanoAula/editar.html", informacoes)
+    else:
+        raise PermissionDenied()
+    
+class Editar(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+    model = PlanoAula
+    form_class = forms.FormEditarPlano_aula
+    template_name = 'PlanoAula/editar.html'
+    success_url = reverse_lazy('plano_aula:listar')
+    fieelds = ["titulo", "contextualizacao", "descricao_atividade"]
+
+    def test_func(self):
+        plano_aula = PlanoAula.objects.get(pk=int(self.kwargs['pk']))
+        return self.request.user.id == plano_aula.criador.id
 
 @login_required
 def listar(request):
@@ -338,33 +437,6 @@ def listar_usuario(request, pk):
     return render(request, "PlanoAula/listar.html", informacoes)
 
 
-class Editar(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
-    model = PlanoAula
-    form_class = forms.FormEditarPlano_aula
-    template_name = 'PlanoAula/editar.html'
-    success_url = reverse_lazy('plano_aula:listar')
-    fieelds = ["titulo", "contextualizacao", "descricao_atividade"]
-
-    def test_func(self):
-        plano_aula = PlanoAula.objects.get(pk=int(self.kwargs['pk']))
-        return self.request.user.id == plano_aula.criador.id
-
-class Detalhe(LoginRequiredMixin, generic.DetailView):
-   model = PlanoAula
-   template_name = "PlanoAula/detalhes.html"
-   context_object_name = "plano_aula"
-
-   def get_context_data(self,**kwargs):
-        context = super(Detalhe,self).get_context_data(**kwargs)
-        robo_fotos = FotoRobo.objects.filter(plano_aula = self.get_object().pk)
-        context['robo_fotos'] = robo_fotos
-        robo_videos = VideoRobo.objects.filter(plano_aula = self.get_object().pk)
-        context['robo_videos'] = robo_videos
-        execucao_fotos = FotoExecucao.objects.filter(plano_aula = self.get_object().pk)
-        context['execucao_fotos'] = execucao_fotos
-        execucao_videos = VideoExecucao.objects.filter(plano_aula = self.get_object().pk)
-        context['execucao_videos'] = execucao_videos
-        return context
 
 class Deletar(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
     model = PlanoAula

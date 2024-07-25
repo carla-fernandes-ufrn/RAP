@@ -10,9 +10,11 @@
     <div>
         <button id="btn_inf_gerais" class="btn btn-outline-success me-2" onclick="mostrar_inf_gerais()">Informações gerais</button>
         <button id="btn_montagem_programacao" class="btn btn-outline-secondary me-2" onclick="mostrar_montagem_programacao()">Montagem e Programação</button>
-        <!-- <button id="btn_midias" class="btn btn-outline-secondary me-2" onclick="mostrar_execucao()">Mídias</button> -->
     </div>
-    <input class="btn btn-success me-2" form="form_plano_aula" type="submit" value="Cadastrar" />
+    <div>
+        <input class="btn btn-success me-2" form="form_plano_aula" type="submit" value="Atualizar" />
+        <a class="float-end btn btn-outline-success" href="{% url 'plano_aula:detalhes' pk=plano_aula.pk %}">Voltar</a>
+    </div>
 </div>
 
 <form id="form_plano_aula" method="POST" enctype="multipart/form-data">
@@ -63,6 +65,12 @@
                                 <!-- Coluna de conteúdos selecionados -->
                                 <div class="col-6" style="box-shadow: .5px 0 0 #000;">
                                     <div id="div_conteudos_selecionados" class="row">
+                                        {% for conteudo in plano_aula.conteudos.all %}
+                                            <a onclick="remover_conteudo({{conteudo.id}})" id="conteudo_selecionado_{{conteudo.id}}">
+                                                <i class="fas fa-minus font-weight-bolder text-danger"></i>
+                                                {{conteudo.disciplina}} : {{conteudo}}
+                                            </a>
+                                        {% endfor %}
                                     </div>
                                 </div>
                                 <!-- Coluna com todos os conteúdos -->
@@ -128,36 +136,31 @@
 <script>
     var conteudos_selecionados = []
 
+    window.addEventListener("load", (event) => {
+        var plano_aula = "{{plano_aula | safe}}"
+        var conteudos = JSON.parse('{{ conteudos_plano_aula | safe }}')
+        for (var i = 0; i < conteudos.length; i++) {
+            conteudos_selecionados.push(conteudos[i].pk);
+        }
+    });
+
     function mostrar_inf_gerais() {
-        // titulo = document.getElementById("id_titulo").value
-        // console.log(titulo)
         document.getElementById("div_inf_gerais").style.display = 'block';
         document.getElementById("div_montagem_programacao").style.display = 'none';
-        document.getElementById("div_midias").style.display = 'none';
-        trocar_cor("btn_inf_gerais", "btn_montagem_programacao", "btn_midias");
+        trocar_cor("btn_inf_gerais", "btn_montagem_programacao");
     }
 
     function mostrar_montagem_programacao() {
         document.getElementById("div_inf_gerais").style.display = 'none';
         document.getElementById("div_montagem_programacao").style.display = 'block';
-        document.getElementById("div_midias").style.display = 'none';
-        trocar_cor("btn_montagem_programacao", "btn_inf_gerais", "btn_midias");
+        trocar_cor("btn_montagem_programacao", "btn_inf_gerais");
     }
 
-    // function mostrar_execucao() {
-    //     document.getElementById("div_inf_gerais").style.display = 'none';
-    //     document.getElementById("div_montagem_programacao").style.display = 'none';
-    //     document.getElementById("div_midias").style.display = 'block';
-    //     trocar_cor("btn_midias", "btn_inf_gerais", "btn_montagem_programacao");
-    // }
-
-    function trocar_cor(nova, antiga1, antiga2) {
+    function trocar_cor(nova, antiga1) {
         document.getElementById(nova).classList.remove('btn-outline-secondary');
         document.getElementById(nova).classList.add('btn-outline-success');
         document.getElementById(antiga1).classList.remove('btn-outline-success');
         document.getElementById(antiga1).classList.add('btn-outline-secondary');
-        document.getElementById(antiga2).classList.remove('btn-outline-success');
-        document.getElementById(antiga2).classList.add('btn-outline-secondary');
     }
 
     function selecionar_conteudo(nome) {
@@ -221,6 +224,7 @@
     }
 
     function remover_conteudo(id) {
+        console.log(id)
         const index = conteudos_selecionados.indexOf(id);
         conteudos_selecionados.splice(index, 1);
         document.getElementById("lista_id_conteudos").value = conteudos_selecionados

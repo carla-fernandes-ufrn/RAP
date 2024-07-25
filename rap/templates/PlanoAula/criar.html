@@ -10,7 +10,6 @@
     <div>
         <button id="btn_inf_gerais" class="btn btn-outline-success me-2" onclick="mostrar_inf_gerais()">Informações gerais</button>
         <button id="btn_montagem_programacao" class="btn btn-outline-secondary me-2" onclick="mostrar_montagem_programacao()">Montagem e Programação</button>
-        <!-- <button id="btn_midias" class="btn btn-outline-secondary me-2" onclick="mostrar_execucao()">Mídias</button> -->
     </div>
     <input class="btn btn-success me-2" form="form_plano_aula" type="submit" value="Cadastrar" />
 </div>
@@ -129,35 +128,22 @@
     var conteudos_selecionados = []
 
     function mostrar_inf_gerais() {
-        // titulo = document.getElementById("id_titulo").value
-        // console.log(titulo)
         document.getElementById("div_inf_gerais").style.display = 'block';
         document.getElementById("div_montagem_programacao").style.display = 'none';
-        document.getElementById("div_midias").style.display = 'none';
-        trocar_cor("btn_inf_gerais", "btn_montagem_programacao", "btn_midias");
+        trocar_cor("btn_inf_gerais", "btn_montagem_programacao");
     }
 
     function mostrar_montagem_programacao() {
         document.getElementById("div_inf_gerais").style.display = 'none';
         document.getElementById("div_montagem_programacao").style.display = 'block';
-        document.getElementById("div_midias").style.display = 'none';
-        trocar_cor("btn_montagem_programacao", "btn_inf_gerais", "btn_midias");
+        trocar_cor("btn_montagem_programacao", "btn_inf_gerais");
     }
 
-    // function mostrar_execucao() {
-    //     document.getElementById("div_inf_gerais").style.display = 'none';
-    //     document.getElementById("div_montagem_programacao").style.display = 'none';
-    //     document.getElementById("div_midias").style.display = 'block';
-    //     trocar_cor("btn_midias", "btn_inf_gerais", "btn_montagem_programacao");
-    // }
-
-    function trocar_cor(nova, antiga1, antiga2) {
+    function trocar_cor(nova, antiga1) {
         document.getElementById(nova).classList.remove('btn-outline-secondary');
         document.getElementById(nova).classList.add('btn-outline-success');
         document.getElementById(antiga1).classList.remove('btn-outline-success');
         document.getElementById(antiga1).classList.add('btn-outline-secondary');
-        document.getElementById(antiga2).classList.remove('btn-outline-success');
-        document.getElementById(antiga2).classList.add('btn-outline-secondary');
     }
 
     function selecionar_conteudo(nome) {
