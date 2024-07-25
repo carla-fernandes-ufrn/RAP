@@ -41,21 +41,9 @@ class Criar(generic.CreateView, LoginRequiredMixin):
 def criar(request):
     if (request.method == 'POST'):
         form_inf_gerais = forms.FormInfGerais(request.POST)
-        form_montagem = forms.FormMontagem(request.POST)
+        form_montagem = forms.FormMontagem(request.POST, request.FILES)
         form_programacao = forms.FormProgramacao(request.POST, request.FILES)
-        # form_midias_robo_fotos = forms.FormMidiasRoboFotos(request.POST)
-        # robo_fotos = request.FILES.getlist('robo_foto')
-        # form_midias_robo_videos = forms.FormMidiasRoboVideos(request.POST)
-        # robo_videos = request.FILES.getlist('robo_video')
-        # form_midias_robo = forms.FormMidiasRobo(request.POST, request.FILES)
-        # form_midias_execucao_fotos = forms.FormMidiasExecucaoFotos(request.POST)
-        # execucao_fotos = request.FILES.getlist('execucao_foto')
-        # form_midias_execucao_videos = forms.FormMidiasExecucaoVideos(request.POST)
-        # execucao_videos = request.FILES.getlist('execucao_video')
         if (form_inf_gerais.is_valid() and form_montagem.is_valid() and form_programacao.is_valid()):
-                # and form_midias_robo.is_valid() and form_midias_robo_fotos.is_valid() 
-                # and form_midias_robo_videos.is_valid() and form_midias_execucao_fotos.is_valid() 
-                # and form_midias_execucao_videos.is_valid()):
 
             conteudos = request.POST.get('lista_id_conteudos','').split(',')
 
@@ -76,6 +64,8 @@ def criar(request):
                 plano_aula.robo_descricao = form_montagem.cleaned_data['robo_descricao']
             if (form_montagem.cleaned_data['robo_link'] != ""):
                 plano_aula.robo_link = form_montagem.cleaned_data['robo_link']
+            if (form_programacao.cleaned_data['robo_pdf'] != ""):
+                plano_aula.prog_codigos = form_programacao.cleaned_data['robo_pdf']
 
             # Programação
             if (form_programacao.cleaned_data['prog_linguagem'] != ""):
@@ -86,33 +76,8 @@ def criar(request):
                 plano_aula.prog_link = form_programacao.cleaned_data['prog_link']
             if (form_programacao.cleaned_data['prog_codigos'] != ""):
                 plano_aula.prog_codigos = form_programacao.cleaned_data['prog_codigos']
-
-            # if (form_midias_robo.cleaned_data['robo_pdf'] != ""):
-            #     plano_aula.robo_pdf = form_midias_robo.cleaned_data['robo_pdf']
             
             plano_aula.save()
-
-            # # Midias robo
-                
-            # if (robo_fotos != []):
-            #     for foto in robo_fotos:
-            #         print(plano_aula)
-            #         print(foto)
-            #         FotoRobo(plano_aula=plano_aula, robo_foto=foto).save()
-                
-            # if (robo_videos != []):
-            #     for video in robo_videos:
-            #         VideoRobo(plano_aula=plano_aula, robo_video=video).save()
-
-            # # Midias execução
-                
-            # if (execucao_fotos != []):
-            #     for foto in execucao_fotos:
-            #         FotoExecucao(plano_aula=plano_aula, execucao_foto=foto).save()
-                
-            # if (execucao_videos != []):
-            #     for video in execucao_videos:
-            #         VideoExecucao(plano_aula=plano_aula, execucao_video=video).save()
 
             # Adicionar conteúdos
             if (conteudos != ['']):
@@ -127,22 +92,12 @@ def criar(request):
         form_inf_gerais = forms.FormInfGerais()
         form_montagem = forms.FormMontagem()
         form_programacao = forms.FormProgramacao()
-        # form_midias_robo_fotos = forms.FormMidiasRoboFotos()
-        # form_midias_robo_videos = forms.FormMidiasRoboVideos()
-        # form_midias_robo = forms.FormMidiasRobo()
-        # form_midias_execucao_fotos = forms.FormMidiasExecucaoFotos()
-        # form_midias_execucao_videos = forms.FormMidiasExecucaoVideos()
         lista_disciplinas = Disciplina.objects.filter(status="Ativo")
         lista_conteudos = Conteudo.objects.filter(status="Ativo")
         informacoes = {
             'form_inf_gerais': form_inf_gerais,
             'form_montagem': form_montagem,
             'form_programacao': form_programacao,
-            # 'form_midias_robo_fotos': form_midias_robo_fotos,
-            # 'form_midias_robo_videos': form_midias_robo_videos,
-            # 'form_midias_robo': form_midias_robo,
-            # 'form_midias_execucao_fotos': form_midias_execucao_fotos,
-            # 'form_midias_execucao_videos': form_midias_execucao_videos,
             'lista_disciplinas': lista_disciplinas,
             'lista_conteudos': lista_conteudos,
         }
@@ -191,13 +146,11 @@ def editar_midia(request, pk):
 
         robo_fotos = plano_aula.fotos_robo
         robo_videos = plano_aula.videos_robo
-        robo_pdf = plano_aula.robo_pdf
         execucao_fotos = plano_aula.fotos_execucao
         execucao_videos = plano_aula.videos_execucao
 
         informacoes =  {
             'plano_aula': plano_aula,
-            'robo_pdf': robo_pdf,
             'robo_fotos': robo_fotos,
             'robo_videos': robo_videos,
             'execucao_fotos': execucao_fotos,

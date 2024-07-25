@@ -22,7 +22,7 @@ class FormMontagem(ModelForm):
 
     class Meta:
         model = PlanoAula
-        fields = ('robo_equipamento', 'robo_descricao', 'robo_link')
+        fields = ('robo_equipamento', 'robo_descricao', 'robo_link', 'robo_pdf')
 
 class FormProgramacao(ModelForm):
     
@@ -47,12 +47,6 @@ class FormMidiasRoboVideos(ModelForm):
         widgets = {
             'robo_video': forms.ClearableFileInput(attrs={'allow_multiple_selected': True, 'accept': ".mp4, .avi, .wmv, .wkv, .mov"}),
         }
-
-class FormMidiasRobo(ModelForm):
-    
-    class Meta:
-        model = PlanoAula
-        fields = ('robo_pdf',)
 
 class FormMidiasExecucaoFotos(ModelForm):
     
