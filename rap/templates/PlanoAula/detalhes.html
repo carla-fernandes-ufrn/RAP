@@ -63,9 +63,11 @@
         <button id="btn_comentarios" class="btn btn-outline-secondary ml-1" onclick="mostrar_comentarios()">Comentários</button>
         {% if plano_aula.criador.id == user.id %}
             <br>
-            <a href="{% url 'plano_aula:editar' pk=plano_aula.pk %}" class="float-end" tool><i class="fa fa-pencil text-info"></i></a>
-            <br>
-            <a href="{% url 'plano_aula:editar_midia' pk=plano_aula.pk %}" class="float-end"><i class="fa fa-camera text-info"></i></a>
+            <a href="{% url 'plano_aula:deletar' pk=plano_aula.pk %}" class="float-end px-3" data-bs-toggle="modal" data-bs-target="#modalDeletarPlanoAula" >
+                <i class="fa fa-trash text-danger"></i>
+            </a>
+            <a href="{% url 'plano_aula:editar_midia' pk=plano_aula.pk %}" class="float-end px-3"><i class="fa fa-camera text-info"></i></a>
+            <a href="{% url 'plano_aula:editar' pk=plano_aula.pk %}" class="float-end px-3" tool><i class="fa fa-pencil text-info"></i></a>
         {% endif %}
     </div>
 </div>
@@ -378,7 +380,7 @@
                         <div>
                             <span class="text-sm mb-0 text-uppercase font-weight-bold">{{reply.usuario}}</span>
                             {% if reply.usuario.id == request.user.id or mensagem.plano_aula.responsavel.id == request.user.id %}
-                                <a href="" data-bs-toggle="modal" data-bs-target="#modalDeletar" 
+                                <a href="" data-bs-toggle="modal" data-bs-target="#modalDeletarMensagem" 
                                         data-bs-mensagem="{{reply.texto}}" data-bs-mensagem-id="{{reply.pk}}" class="text-xxs">
                                     <span class="badge badge-sm bg-gradient-danger">Deletar</span>
                                 </a>
@@ -422,7 +424,7 @@
     </div>
 </div>
 
-<div id="modalDeletar" class="modal fade" role="dialog">
+<div id="modalDeletarMensagem" class="modal fade" role="dialog">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
             <div class="modal-header">
@@ -439,6 +441,29 @@
             <div class="modal-footer">
                 <a id="anchor_deletar_mensagem" href="" class="btn btn-success">Deletar</a>
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="modalDeletarPlanoAula" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Você deseja mesmo deletar este plano de aula?</h5>
+                <button type="button" class="btn close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>As mídias e comentários associados a esse plano de aula também serão deletados.</p>
+            </div>
+            <div class="modal-footer">
+                <form action="{% url 'plano_aula:deletar' pk=plano_aula.pk %}" method="POST">
+                    {% csrf_token %}
+                    <button href="" class="btn btn-success">Deletar</button>
+                </form>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
             </div>
         </div>
     </div>

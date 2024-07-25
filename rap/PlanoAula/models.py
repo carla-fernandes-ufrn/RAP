@@ -40,6 +40,8 @@ class PlanoAula(models.Model):
     # Mídias
     robo_pdf = models.FileField(upload_to=diretorio_plano_aula, blank=True, null=True, verbose_name="Manual de montagem do robô")
 
+    status = models.BooleanField(default=True)
+
     def __str__(self):
         return self.titulo
 
@@ -124,7 +126,7 @@ class MensagemPlanoAula(models.Model):
     texto = models.TextField(verbose_name="Texto")
     data = models.DateTimeField(verbose_name = "Data", auto_now_add=True)
     usuario = models.ForeignKey(Usuario, on_delete=models.RESTRICT,verbose_name="Usuário")
-    plano_aula = models.ForeignKey(PlanoAula, related_name='mensagens', on_delete=models.RESTRICT,verbose_name="Plano de aula")
+    plano_aula = models.ForeignKey(PlanoAula, related_name='mensagens', on_delete=models.CASCADE,verbose_name="Plano de aula")
     mensagem_original = models.ForeignKey('self', null=True, blank = True, related_name='replies', on_delete=models.CASCADE,verbose_name="Mensagem original")
 
     def __str__(self):

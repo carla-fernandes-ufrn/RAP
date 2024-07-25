@@ -299,6 +299,24 @@ def deletar_mensagem(request, pk):
         raise PermissionDenied()
 
 @login_required
+def desabilitar(request, pk):
+    plano_aula = PlanoAula.objects.get(pk=pk)
+    if (plano_aula.criador.pk == request.user.pk):
+        plano_aula.status = False
+        plano_aula.save()
+    else:
+        raise PermissionDenied()
+    
+class Deletar(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+    model = PlanoAula
+    template_name = 'PlanoAula/deletar.html'
+    success_url = reverse_lazy('plano_aula:listar')
+
+    def test_func(self):
+        plano_aula = PlanoAula.objects.get(pk=int(self.kwargs['pk']))
+        return self.request.user.id == plano_aula.criador.id
+
+@login_required
 def listar(request):
     planos_aula = PlanoAula.objects.all()
     principais_conteudos = Conteudo.objects.filter(status='Ativos')
@@ -470,15 +488,6 @@ def listar_usuario(request, pk):
     return render(request, "PlanoAula/listar.html", informacoes)
 
 
-
-class Deletar(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
-    model = PlanoAula
-    template_name = 'PlanoAula/deletar.html'
-    success_url = reverse_lazy('plano_aula:listar')
-
-    def test_func(self):
-        plano_aula = PlanoAula.objects.get(pk=int(self.kwargs['pk']))
-        return self.request.user.id == plano_aula.criador.id
 
 @login_required
 def marcar_favorito(request, plano_aula, usuario):
