@@ -149,6 +149,69 @@ def criar(request):
 
         return render(request, "PlanoAula/criar.html", informacoes)
 
+@login_required
+def deletar_midia(request,tipo, pk):
+    if (tipo == 1):
+        objeto_deletado = FotoRobo.objects.get(pk=pk)
+    elif (tipo == 2):
+        objeto_deletado = VideoRobo.objects.get(pk=pk)
+    elif (tipo == 3):
+        objeto_deletado = FotoExecucao.objects.get(pk=pk)
+    elif (tipo == 4):
+        objeto_deletado = VideoExecucao.objects.get(pk=pk)
+    plano_aula = objeto_deletado.plano_aula
+    if (request.user.id == plano_aula.criador.id):
+        objeto_deletado.delete()
+        return redirect('plano_aula:editar_midia', pk=plano_aula.pk)
+    else:
+        raise PermissionDenied()
+
+@login_required
+def editar_midia(request, pk):
+
+    plano_aula = PlanoAula.objects.get(id=pk)
+    if (request.user.id == plano_aula.criador.id):
+        if (request.method == 'POST'):
+            if ('submit-form_robo_foto' in request.POST):
+                form = forms.FormMidiasRoboFotos(request.POST, request.FILES)
+                if form.is_valid():
+                    FotoRobo.objects.create(plano_aula=plano_aula, robo_foto=form.cleaned_data.get('robo_foto'))
+            if ('submit-form_robo_video' in request.POST):
+                form = forms.FormMidiasRoboVideos(request.POST, request.FILES)
+                if form.is_valid():
+                    VideoRobo.objects.create(plano_aula=plano_aula, robo_video=form.cleaned_data.get('robo_video'))
+            if ('submit-form_execucao_foto' in request.POST):
+                form = forms.FormMidiasExecucaoFotos(request.POST, request.FILES)
+                if form.is_valid():
+                    FotoExecucao.objects.create(plano_aula=plano_aula, execucao_foto=form.cleaned_data.get('execucao_foto'))
+            if ('submit-form_execucao_video' in request.POST):
+                form = forms.FormMidiasExecucaoVideos(request.POST, request.FILES)
+                if form.is_valid():
+                    VideoExecucao.objects.create(plano_aula=plano_aula, execucao_video=form.cleaned_data.get('execucao_video'))
+
+        robo_fotos = plano_aula.fotos_robo
+        robo_videos = plano_aula.videos_robo
+        robo_pdf = plano_aula.robo_pdf
+        execucao_fotos = plano_aula.fotos_execucao
+        execucao_videos = plano_aula.videos_execucao
+
+        informacoes =  {
+            'plano_aula': plano_aula,
+            'robo_pdf': robo_pdf,
+            'robo_fotos': robo_fotos,
+            'robo_videos': robo_videos,
+            'execucao_fotos': execucao_fotos,
+            'execucao_videos': execucao_videos,
+            'form_robo_fotos': forms.FormMidiasRoboFotos(),
+            'form_robo_videos': forms.FormMidiasRoboVideos(),
+            'form_execucao_fotos': forms.FormMidiasExecucaoFotos(),
+            'form_execucao_videos': forms.FormMidiasExecucaoVideos(),
+            'form_robo_pdf': forms.FormMidiasRobo(),
+        }
+
+        return render(request, "PlanoAula/editar_midias.html", informacoes)
+    else:
+        raise PermissionDenied()
 
 @login_required
 def listar(request):

@@ -59,6 +59,12 @@
     <div class="col-4" style="float:right; text-align: right;">
         <button id="btn_inf_gerais" class="btn btn-outline-success ml-1" onclick="mostrar_inf_gerais()">Informações gerais</button>
         <button id="btn_programacao" class="btn btn-outline-secondary ml-1" onclick="mostrar_programacao()">Programação</button>
+        {% if plano_aula.criador.id == user.id %}
+            <br>
+            <a href="{% url 'plano_aula:editar' pk=plano_aula.pk %}" class="float-end" tool><i class="fa fa-pencil text-info"></i></a>
+            <br>
+            <a href="{% url 'plano_aula:editar_midia' pk=plano_aula.pk %}" class="float-end"><i class="fa fa-camera text-info"></i></a>
+        {% endif %}
     </div>
 </div>
 

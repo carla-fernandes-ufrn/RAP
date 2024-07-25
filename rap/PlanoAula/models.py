@@ -49,8 +49,8 @@ class PlanoAula(models.Model):
         verbose_name_plural = "Planos de aula"
 
 class FotoRobo(models.Model):
-    plano_aula = models.ForeignKey(PlanoAula, related_name='fotos_robo', on_delete=models.RESTRICT,null=True, verbose_name="Plano de aula")
-    robo_foto = models.ImageField(upload_to=diretorio_plano_aula_midias, blank=True, null=True, verbose_name="Fotos do robô")
+    plano_aula = models.ForeignKey(PlanoAula, related_name='fotos_robo', on_delete=models.RESTRICT, verbose_name="Plano de aula")
+    robo_foto = models.ImageField(upload_to=diretorio_plano_aula_midias, verbose_name="Fotos do robô")
 
     def __str__(self):
         return str(self.plano_aula)
@@ -61,8 +61,8 @@ class FotoRobo(models.Model):
         verbose_name_plural = "Fotos do robô"
 
 class VideoRobo(models.Model):
-    plano_aula = models.ForeignKey(PlanoAula, related_name='videos_robo', on_delete=models.RESTRICT,null=True, verbose_name="Plano de aula")
-    robo_video = models.FileField(upload_to=diretorio_plano_aula_midias, blank=True, null=True, verbose_name="Vídeos do robô")
+    plano_aula = models.ForeignKey(PlanoAula, related_name='videos_robo', on_delete=models.RESTRICT, verbose_name="Plano de aula")
+    robo_video = models.FileField(upload_to=diretorio_plano_aula_midias, verbose_name="Vídeos do robô")
 
     def __str__(self):
         return str(self.plano_aula)
@@ -73,8 +73,8 @@ class VideoRobo(models.Model):
         verbose_name_plural = "Vídeos do robô"
 
 class FotoExecucao(models.Model):
-    plano_aula = models.ForeignKey(PlanoAula, related_name='fotos_execucao', on_delete=models.RESTRICT,null=True, verbose_name="Plano de aula")
-    execucao_foto = models.ImageField(upload_to=diretorio_plano_aula_midias, blank=True, null=True, verbose_name="Fotos da execução da atividade")
+    plano_aula = models.ForeignKey(PlanoAula, related_name='fotos_execucao', on_delete=models.RESTRICT, verbose_name="Plano de aula")
+    execucao_foto = models.ImageField(upload_to=diretorio_plano_aula_midias, verbose_name="Fotos da execução da atividade")
 
     def __str__(self):
         return str(self.plano_aula)
@@ -85,8 +85,8 @@ class FotoExecucao(models.Model):
         verbose_name_plural = "Fotos da execução"
 
 class VideoExecucao(models.Model):
-    plano_aula = models.ForeignKey(PlanoAula, related_name='videos_execucao', on_delete=models.RESTRICT,null=True, verbose_name="Plano de aula")
-    execucao_video = models.FileField(upload_to=diretorio_plano_aula_midias, blank=True, null=True, verbose_name="Vídeos da execução da atividade")
+    plano_aula = models.ForeignKey(PlanoAula, related_name='videos_execucao', on_delete=models.RESTRICT, verbose_name="Plano de aula")
+    execucao_video = models.FileField(upload_to=diretorio_plano_aula_midias, verbose_name="Vídeos da execução da atividade")
 
     def __str__(self):
         return str(self.plano_aula)

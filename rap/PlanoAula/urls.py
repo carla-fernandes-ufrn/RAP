@@ -14,6 +14,10 @@ urlpatterns = [
     # Conferir o que é esse
     path('programacao/<int:pk>/', views.Programacao.as_view(), name='programacao'),
     path('editar/<int:pk>/', views.Editar.as_view(), name='editar'),
+
+    path('editar-midia/<int:pk>/', views.editar_midia, name='editar_midia'),
+    path('deletar-midia/<int:tipo>/<int:pk>/', views.deletar_midia, name='deletar_midia'),
+    
     path('listar/', views.ListarPlanosAulaFiltrados.as_view(), name='listar'),
     path('listar/<int:pk>', views.ListarPlanosAulaFiltradosUsuario.as_view(), name='listar_usuario'),
     path('listar-favoritos/<int:pk>', views.ListarPlanosAulaFiltradosFavoritos.as_view(), name='listar_favoritos'),
