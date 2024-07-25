@@ -119,3 +119,18 @@ class ExecucaoPlanoAula(models.Model):
         ordering = ['usuario']
         verbose_name = "Execução"
         verbose_name_plural = "Execuções"
+
+class MensagemPlanoAula(models.Model):
+    texto = models.TextField(verbose_name="Texto")
+    data = models.DateTimeField(verbose_name = "Data", auto_now_add=True)
+    usuario = models.ForeignKey(Usuario, on_delete=models.RESTRICT,verbose_name="Usuário")
+    plano_aula = models.ForeignKey(PlanoAula, related_name='mensagens', on_delete=models.RESTRICT,verbose_name="Plano de aula")
+    mensagem_original = models.ForeignKey('self', null=True, blank = True, related_name='replies', on_delete=models.CASCADE,verbose_name="Mensagem original")
+
+    def __str__(self):
+        return str(self.plano_aula) + " - " + str(self.data)
+
+    class Meta:
+        ordering = ['plano_aula', 'mensagem_original__pk', '-data']
+        verbose_name = "Mensagem"
+        verbose_name_plural = "Mensagens"

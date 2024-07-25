@@ -4,6 +4,7 @@
 {% load bootstrap5 %} 
 {% load string_tags %} 
 {% load attribute_tags %}
+{% load crispy_forms_tags %} 
 
 {% block breadcrumb1 %}
  Plano de aula 
@@ -22,7 +23,7 @@
 <br>
 
 <div class="row">
-    <div class="col-8">
+    <div class="col-6">
         <h3 class="text-uppercase font-weight-bold">{{plano_aula.titulo}}</h3>
         <span class="text-sm text-uppercase font-weight-bold">
             {% if plano_aula.likes.all|encontrar_usuario_lista:user.id %}
@@ -56,9 +57,10 @@
         </a>
         
     </div>
-    <div class="col-4" style="float:right; text-align: right;">
+    <div class="col-6" style="float:right; text-align: right;">
         <button id="btn_inf_gerais" class="btn btn-outline-success ml-1" onclick="mostrar_inf_gerais()">Informações gerais</button>
         <button id="btn_programacao" class="btn btn-outline-secondary ml-1" onclick="mostrar_programacao()">Programação</button>
+        <button id="btn_comentarios" class="btn btn-outline-secondary ml-1" onclick="mostrar_comentarios()">Comentários</button>
         {% if plano_aula.criador.id == user.id %}
             <br>
             <a href="{% url 'plano_aula:editar' pk=plano_aula.pk %}" class="float-end" tool><i class="fa fa-pencil text-info"></i></a>
@@ -71,9 +73,9 @@
 <br>
 
 <div>
-  <div id="div_inf_gerais">
-    <div class="row">
-      <div class="col-lg-4 col-md-0">
+    <div id="div_inf_gerais">
+        <div class="row">
+            <div class="col-lg-4 col-md-0">
                 <div class="card">
                     <div class="card-body pt-2 p-2">
                         <!---Fotos-->
@@ -219,28 +221,15 @@
                         {% endif %}
                     </ul>
                 </div>
-              </div>
+            </div>
         </div>
-
-        
- <!-- <br> -->
-
     </div>
-  <!-- </div> -->
-<!-- </div> -->
+</div>
 
-<!-- <br> -->
-
-<!--Sobre fim-->
-    </div>
-<!-- </div> -->
-    <!--Programação inicio-->
 <div id="div_programacao" style="display: none">
-  <div class="row" >
-    <!---Fotos-->
-    <div class="col-lg-4 col-md-0">
+    <div class="row" >
+        <div class="col-lg-4 col-md-0">
             <div class="card">
-            
                 <div class="card-body pt-2 p-2">
                     {% if execucao_fotos or execucao_videos %}
                         <div id="midias_execucao" class="carousel slide" data-bs-ride="carousel">
@@ -299,26 +288,24 @@
                     <!--Foto fim Inicio pdf-->
                 </div>
             </div>
-        <br>
-
-      {% if plano_aula.prog_codigos%}
-        <div class="card">
-            <div class="card-header bg-gradient-info pb-0 p-3">
-                <p class="text-sm mb-0 text-uppercase text-white font-weight-bold">Códigos da programação</p>
-            </div>
-            <div class="card-body p-3 overflow-auto">
-                <p>
-                    <a href="{{ plano_aula.prog_codigos.url }}" download>{{ plano_aula.prog_codigos.url|nome_arquivo:'/' }}</a>
-                </p>
-            </div>
+            <br>
+            {% if plano_aula.prog_codigos%}
+                <div class="card">
+                    <div class="card-header bg-gradient-info pb-0 p-3">
+                        <p class="text-sm mb-0 text-uppercase text-white font-weight-bold">Códigos da programação</p>
+                    </div>
+                    <div class="card-body p-3 overflow-auto">
+                        <p>
+                            <a href="{{ plano_aula.prog_codigos.url }}" download>{{ plano_aula.prog_codigos.url|nome_arquivo:'/' }}</a>
+                        </p>
+                    </div>
+                </div>
+            {% endif %}
+      
         </div>
-      {% endif %}
-      
-</div>
-      
-          <div class="col-lg-8 col-md-0">
+        <div class="col-lg-8 col-md-0">
             <div class="card">
-              <!-- <div class="card-body pt-2 p-2"> aqui vc afasta de lado -->
+                <!-- <div class="card-body pt-2 p-2"> aqui vc afasta de lado -->
                 <div class="card-header bg-gradient-info pb-0 p-3">
                     <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">Programação</span>
                 </div>
@@ -352,44 +339,174 @@
                     {% endif %} 
                     </ul> 
                 </div>      
+            </div>  
+        </div>
+    </div>
+</div>
+
+<div id="div_comentarios" style="display: none">
+    <div class="card">
+        <!-- <div class="card-body pt-2 p-2"> aqui vc afasta de lado -->
+        <div class="card-header bg-gradient-info pb-0 p-3">
+            <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">Comentários</span>
+            <div class="float-end">
+                <a href="" class="text-white" data-bs-toggle="modal" data-bs-target="#modalNovaMensagem"><i class="fa fa-plus"></i></a>
             </div>
-          </div>
-  
-
+        </div>
+        <div class="card-body pt-4 p-3 row">
+            {% for mensagem in plano_aula.mensagens.all %}
+                <div>
+                    <span class="text-sm mb-0 text-uppercase font-weight-bold">{{mensagem.usuario}}</span>
+                    {% if mensagem.usuario.id == request.user.id or mensagem.plano_aula.responsavel.id == request.user.id %}
+                        <a href="" data-bs-toggle="modal" data-bs-target="#modalDeletar" 
+                                data-bs-mensagem="{{mensagem.texto}}" data-bs-mensagem-id="{{mensagem.pk}}" class="text-xxs">
+                            <span class="badge badge-sm bg-gradient-danger">Deletar</span>
+                        </a>
+                    {% endif %}
+                    <div class="float-end">
+                        <span class="text-sm mb-0 text-uppercase font-weight-bold">{{mensagem.data|date:"d/m/Y H:i"}}</span>
+                        {% if mensagem.mensagem_original is None %}
+                            <a href="" class="text-xs" data-bs-mensagem-id="{{mensagem.pk}}" data-bs-toggle="modal" data-bs-target="#modalNovaMensagem"><i class="fa fa-reply"></i></a>
+                        {% endif %}
+                    </div>
+                    <br>
+                    <span class="text-xs">{{mensagem.texto|linebreaks}}</span>
+                </div>
+                {% for reply in mensagem.replies.all %}
+                    <div class="col-1"></div>
+                    <div class="col-11">
+                        <div>
+                            <span class="text-sm mb-0 text-uppercase font-weight-bold">{{reply.usuario}}</span>
+                            {% if reply.usuario.id == request.user.id or mensagem.plano_aula.responsavel.id == request.user.id %}
+                                <a href="" data-bs-toggle="modal" data-bs-target="#modalDeletar" 
+                                        data-bs-mensagem="{{reply.texto}}" data-bs-mensagem-id="{{reply.pk}}" class="text-xxs">
+                                    <span class="badge badge-sm bg-gradient-danger">Deletar</span>
+                                </a>
+                            {% endif %}
+                            <div class="float-end">
+                                <span class="text-sm mb-0 text-uppercase font-weight-bold">{{reply.data|date:"d/m/Y H:i"}}</span>
+                            </div>
+                            <br>
+                            <span class="text-xs">{{reply.texto|linebreaks}}</span>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% empty %}
+                Não há nenhuma mensagem.
+            {% endfor %}
+        </div>      
+    </div>
 </div>
-      <!--Bloco Programação fim-->
 
+<div id="modalNovaMensagem" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Nova mensagem</h5>
+                <button type="button" class="btn close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="POST">
+                <div class="modal-body">
+                    {%csrf_token%}
+                    {{ form_nome_mensagem.texto|as_crispy_field }}
+                    <input id="hidden_input" type="hidden" name="mensagem_original" />
+                </div>
+                <div class="modal-footer">
+                    <input class="btn btn-success" type="submit" value="Submeter"/>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
-{% endblock %} {% block scripts %}
+
+<div id="modalDeletar" class="modal fade" role="dialog">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Deletar mensagem</h5>
+                <button type="button" class="btn close" data-bs-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Deseja deletar a mensagem?</p>
+                <p id="mensagem_modal" class="text-xs"></p>
+                <p class="text-xxs">As respostas à essa mensagem também serão deletadas.</p>
+            </div>
+            <div class="modal-footer">
+                <a id="anchor_deletar_mensagem" href="" class="btn btn-success">Deletar</a>
+                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 
+
+{% block scripts %}
 
     <script src="{% static 'assets/js/custom/marcar_favorito_executado.js' %}"></script>
 
-<script>
+    <script>
 
-    function mostrar_inf_gerais() {
-        // titulo = document.getElementById("id_titulo").value
-        // console.log(titulo)
-        document.getElementById("div_inf_gerais").style.display = 'block';
-        document.getElementById("div_programacao").style.display = 'none';
+        function mostrar_inf_gerais() {
+            // titulo = document.getElementById("id_titulo").value
+            // console.log(titulo)
+            document.getElementById("div_inf_gerais").style.display = 'block';
+            document.getElementById("div_programacao").style.display = 'none';
+            document.getElementById("div_comentarios").style.display = 'none';
+            
+            trocar_cor("btn_inf_gerais", "btn_programacao", "btn_comentarios");
+        }
+
+        function mostrar_programacao() {
+            document.getElementById("div_inf_gerais").style.display = 'none';
+            document.getElementById("div_programacao").style.display = 'block';
+            document.getElementById("div_comentarios").style.display = 'none';
+            
+            trocar_cor("btn_programacao", "btn_inf_gerais", "btn_comentarios");
+        }
+
+        function mostrar_comentarios() {
+            document.getElementById("div_inf_gerais").style.display = 'none';
+            document.getElementById("div_programacao").style.display = 'none';
+            document.getElementById("div_comentarios").style.display = 'block';
+            
+            trocar_cor("btn_comentarios", "btn_inf_gerais", "btn_programacao");
+        }
+
+        function trocar_cor(selecionada, nao_selecionada1, nao_selecionada2) {
+            document.getElementById(selecionada).classList.remove('btn-outline-secondary');
+            document.getElementById(selecionada).classList.add('btn-outline-success');
+            document.getElementById(nao_selecionada1).classList.remove('btn-outline-success');
+            document.getElementById(nao_selecionada1).classList.add('btn-outline-secondary');
+            document.getElementById(nao_selecionada2).classList.remove('btn-outline-success');
+            document.getElementById(nao_selecionada2).classList.add('btn-outline-secondary');
+        }
+
+        var modalNovaMensagem = document.getElementById('modalNovaMensagem')
+        modalNovaMensagem.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget
+            var mensagemId = button.getAttribute('data-bs-mensagem-id')
+            var hiddenInput = document.getElementById('hidden_input')
+            hiddenInput.value = mensagemId
+        })
         
-        trocar_cor("btn_inf_gerais", "btn_programacao");
-    }
+        var modalDeletar = document.getElementById('modalDeletar')
+        modalDeletar.addEventListener('show.bs.modal', function (event) {
+            var button = event.relatedTarget
+            var mensagem = button.getAttribute('data-bs-mensagem')
+            var mensagem_modal = document.getElementById('mensagem_modal')
+            mensagem_modal.innerHTML = mensagem
 
-    function mostrar_programacao() {
-        document.getElementById("div_inf_gerais").style.display = 'none';
-        document.getElementById("div_programacao").style.display = 'block';
-        
-        trocar_cor("btn_programacao", "btn_inf_gerais");
-    }
+            var anchor = document.getElementById('anchor_deletar_mensagem')
+            var mensagemId = button.getAttribute('data-bs-mensagem-id')
+            var stringHref = "/plano-aula/deletar-mensagem/" + mensagemId
+            anchor.href = stringHref
+        })
 
-   
-    function trocar_cor(nova, antiga1) {
-        document.getElementById(nova).classList.remove('btn-outline-secondary');
-        document.getElementById(nova).classList.add('btn-outline-success');
-        document.getElementById(antiga1).classList.remove('btn-outline-success');
-        document.getElementById(antiga1).classList.add('btn-outline-secondary');
-       
-    }
-</script>
+    </script>
 
-    {% endblock %}
+{% endblock %}

@@ -13,13 +13,6 @@ class FormNovaMidia(ModelForm):
     class Meta:
         model = Midia
         fields = ('midia',)
-    
-    # def save(self, commit=True):
-    #     instance = super(FormNovaMidia, self).save(commit=False)
-        
-    #     if commit:
-    #         instance.save()
-    #     return instance
 
 class FormNovaMensagem(ModelForm):
 

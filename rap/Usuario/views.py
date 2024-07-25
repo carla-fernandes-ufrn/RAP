@@ -79,14 +79,17 @@ def completar_cadastro(request):
 
             interesses_novos = request.POST.get('lista_interesses','').split(',')
             interesses_anteriores = list(Interesses.objects.filter(usuario = Usuario.objects.get(id =request.user.pk)).values_list('disciplina', flat=True))
-            for interesse in interesses_novos:
-                if int(interesse) not in interesses_anteriores:
-                    disciplina = Disciplina.objects.get(id = int(interesse))
-                    usuario.interesses.add(disciplina)
-            for interesse in interesses_anteriores:
-                if str(interesse) not in interesses_novos:
-                    disciplina = Disciplina.objects.get(pk=interesse)
-                    Interesses.objects.get(usuario=usuario, disciplina=disciplina).delete()
+
+            if (interesses_novos != ['']):
+                for interesse in interesses_novos:
+                    if int(interesse) not in interesses_anteriores:
+                        disciplina = Disciplina.objects.get(id = int(interesse))
+                        usuario.interesses.add(disciplina)
+            if (interesses_anteriores != []):
+                for interesse in interesses_anteriores:
+                    if str(interesse) not in interesses_novos:
+                        disciplina = Disciplina.objects.get(pk=interesse)
+                        Interesses.objects.get(usuario=usuario, disciplina=disciplina).delete()
             return redirect('home')
         
     else:

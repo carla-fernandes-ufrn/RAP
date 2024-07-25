@@ -2,7 +2,7 @@ from django.contrib.auth import forms as auth_forms
 from django import forms
 from django.forms import ModelForm
 
-from PlanoAula.models import PlanoAula, FotoRobo, VideoRobo, FotoExecucao, VideoExecucao
+from PlanoAula.models import PlanoAula, FotoRobo, VideoRobo, FotoExecucao, VideoExecucao, MensagemPlanoAula
 
 class FormInfGerais(ModelForm):
         
@@ -66,21 +66,15 @@ class FormMidiasExecucaoVideos(ModelForm):
             'execucao_video': forms.ClearableFileInput(attrs={'allow_multiple_selected': True, 'accept': ".mp4, .avi, .wmv, .wkv, .mov"}),
         }
 
-
-class FormEditarPlano_aula(ModelForm):
-    titulo = forms.CharField(max_length=200, label='Titulo', widget=forms.Textarea)
-    contextualizacao = forms.CharField(max_length=200, label='Contextualizacao', widget=forms.Textarea)
-    descricao_atividade = forms.CharField(max_length=200, label='descricao da atividade', widget=forms.Textarea)
+class FormNovaMensagem(ModelForm):
 
     class Meta:
-        model = PlanoAula
-        fields = ('titulo', 'contextualizacao', 'descricao_atividade')
-
-
-
+        model = MensagemPlanoAula
+        fields = ('texto',)
+    
     def save(self, commit=True):
-        user = super(FormEditarPlano_aula, self).save(commit=False)
-
+        instance = super(FormNovaMensagem, self).save(commit=False)
+        
         if commit:
-            user.save()
-        return user
+            instance.save()
+        return instance

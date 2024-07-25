@@ -1,13 +1,14 @@
-from audioop import reverse
+from django.urls import reverse
 from django import forms
 from django.contrib import messages 
 from django.core import serializers
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.views.generic.edit import FormMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.mixins import UserPassesTestMixin
 
-from django.http import HttpResponse 
+from django.http import HttpResponse, HttpResponseRedirect
 
 from django.core.exceptions import PermissionDenied
 import json
@@ -20,7 +21,7 @@ from django.urls import reverse_lazy
 from django.views import generic
 from django_filters.views import BaseFilterView, FilterView
 from Disciplina.models import Disciplina, Conteudo
-from PlanoAula.models import PlanoAula, FotoRobo, VideoRobo, FotoExecucao, VideoExecucao, LikePlanoAula, ExecucaoPlanoAula
+from PlanoAula.models import PlanoAula, FotoRobo, VideoRobo, FotoExecucao, VideoExecucao, LikePlanoAula, ExecucaoPlanoAula, MensagemPlanoAula
 from Usuario.models import Usuario
 from PlanoAula import forms, filters
 
@@ -91,12 +92,16 @@ def criar(request):
 
         return render(request, "PlanoAula/criar.html", informacoes)
 
-class Detalhe(LoginRequiredMixin, generic.DetailView):
-   model = PlanoAula
-   template_name = "PlanoAula/detalhes.html"
-   context_object_name = "plano_aula"
+class Detalhe(LoginRequiredMixin, FormMixin, generic.DetailView):
+    model = PlanoAula
+    template_name = "PlanoAula/detalhes.html"
+    context_object_name = "plano_aula"
+    form_class = forms.FormNovaMensagem
 
-   def get_context_data(self,**kwargs):
+    def get_success_url(self):
+        return reverse('plano_aula:detalhes', kwargs={'pk': self.object.id})
+
+    def get_context_data(self,**kwargs):
         context = super(Detalhe,self).get_context_data(**kwargs)
         robo_fotos = FotoRobo.objects.filter(plano_aula = self.get_object().pk)
         context['robo_fotos'] = robo_fotos
@@ -106,7 +111,32 @@ class Detalhe(LoginRequiredMixin, generic.DetailView):
         context['execucao_fotos'] = execucao_fotos
         execucao_videos = VideoExecucao.objects.filter(plano_aula = self.get_object().pk)
         context['execucao_videos'] = execucao_videos
+
+        lista_mensagens = MensagemPlanoAula.objects.filter(plano_aula__id = self.kwargs['pk'], mensagem_original = None)
+        context['lista_mensagens'] = lista_mensagens
+        context['form_nome_mensagem'] = forms.FormNovaMensagem()
         return context
+   
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        usuario = Usuario.objects.get(pk=self.request.user.pk)
+        plano_aula = PlanoAula.objects.get(pk=self.object.id)
+
+        form.instance.usuario = usuario
+        form.instance.plano_aula = plano_aula
+        if (self.request.POST.get('mensagem_original') != ""):
+            mensagem_original = MensagemPlanoAula.objects.get(pk=self.request.POST.get('mensagem_original'))
+            form.instance.mensagem_original = mensagem_original
+
+        form.save()
+        return super(Detalhe, self).form_valid(form)
 
 @login_required
 def editar_midia(request, pk):
@@ -253,17 +283,20 @@ def editar(request, pk):
             return render(request, "PlanoAula/editar.html", informacoes)
     else:
         raise PermissionDenied()
-    
-class Editar(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
-    model = PlanoAula
-    form_class = forms.FormEditarPlano_aula
-    template_name = 'PlanoAula/editar.html'
-    success_url = reverse_lazy('plano_aula:listar')
-    fieelds = ["titulo", "contextualizacao", "descricao_atividade"]
 
-    def test_func(self):
-        plano_aula = PlanoAula.objects.get(pk=int(self.kwargs['pk']))
-        return self.request.user.id == plano_aula.criador.id
+@login_required
+def deletar_mensagem(request, pk):
+    mensagem = MensagemPlanoAula.objects.get(id=pk)
+    if (request.user.id == mensagem.usuario.id or 
+        request.user.id == mensagem.plano_aula.criador.id or
+        request.user.is_superuser or
+        (mensagem.mensagem_original is not None and request.user.id == mensagem.mensagem_original.usuario.id)):
+        plano_aula_id = mensagem.plano_aula.id
+        mensagem.delete()
+
+        return HttpResponseRedirect(reverse('plano_aula:detalhes', kwargs={'pk': plano_aula_id}))
+    else:
+        raise PermissionDenied()
 
 @login_required
 def listar(request):
@@ -446,11 +479,6 @@ class Deletar(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
     def test_func(self):
         plano_aula = PlanoAula.objects.get(pk=int(self.kwargs['pk']))
         return self.request.user.id == plano_aula.criador.id
-
-class Programacao(LoginRequiredMixin, generic.DetailView):
-   model = PlanoAula
-   template_name = "PlanoAula/programacao.html"
-   context_object_name = "plano_aula"
 
 @login_required
 def marcar_favorito(request, plano_aula, usuario):
