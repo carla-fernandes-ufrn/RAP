@@ -21,14 +21,6 @@
 </head>
 
 <body class="g-sidenav-show bg-gray-100">
-  <!-- <div class="min-height-100 bg-primary position-absolute w-100" 
-      style="background-image: url('{% static 'assets/img/bg-site.jpeg' %}');
-            background-size: cover;">
-  </div> -->
-  <!-- <div class="min-height-300 bg-primary position-absolute w-100" 
-      style="background-image: url('{% static 'assets/img/bg-site.jpeg' %}');
-            background-size: cover;">
-  </div> -->
   <main class="main-content position-relative border-radius-lg ">
     
     <nav class="navbar navbar-main navbar-expand-lg px-0 shadow-none bg-gradient-danger" id="navbarBlur" data-scroll="false">
@@ -38,25 +30,6 @@
         </div>
     </nav>
     <div class="container-fluid">
-
-     <!-- {% block cabecalho %}
-        <nav aria-label="breadcrumb">
-            <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                <li class="breadcrumb-item text-sm">
-                {% block breadcrumb1 %}
-                {% endblock %}
-                </li>
-                <li class="breadcrumb-item text-sm text-white active" aria-current="page">
-                {% block breadcrumb2 %}
-                {% endblock %}
-                </li>
-            </ol>
-            <h6 class="font-weight-bolder mb-0">
-                {% block titulo %}
-                {% endblock %}
-            </h6>
-        </nav>
-      {% endblock %} -->
 
         {% block conteudo %}
         {% endblock %}
