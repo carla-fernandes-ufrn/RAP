@@ -17,7 +17,7 @@ def diretorio_plano_aula_midias(instance, filename):
 class PlanoAula(models.Model):
 
     criador = models.ForeignKey(Usuario, on_delete=models.RESTRICT,null=True, verbose_name="Responsável")
-    data_criacao = models.DateTimeField(default=timezone.now, verbose_name="Data de criação")
+    data_criacao = models.DateTimeField(default=timezone.now, verbose_name="Data de criação")     
 
     # Gerais
     titulo = models.CharField(max_length=200, verbose_name="Título")
