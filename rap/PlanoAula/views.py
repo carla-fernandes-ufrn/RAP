@@ -176,7 +176,6 @@ def editar_midia(request, pk):
             'form_robo_videos': forms.FormMidiasRoboVideos(),
             'form_execucao_fotos': forms.FormMidiasExecucaoFotos(),
             'form_execucao_videos': forms.FormMidiasExecucaoVideos(),
-            'form_robo_pdf': forms.FormMidiasRobo(),
         }
 
         return render(request, "PlanoAula/editar_midias.html", informacoes)
