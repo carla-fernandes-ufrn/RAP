@@ -39,8 +39,8 @@
             <tbody>
                 {% for disciplina in lista_disciplinas %}
                     <tr>
-                        <td><p class="text-sm mb-0">{{disciplina.nome}}</p></td>
-                        <td><p class="text-xs font-weight-bold mb-0">-</p></td>
+                        <td><p class="text-sm mb-0">{{disciplina.0.nome}}</p></td>
+                        <td><p class="text-xs font-weight-bold mb-0">{{disciplina.1}}</p></td>
                         <td><span class="text-secondary text-xs font-weight-bold">ícones</span></td>
                     </tr>
                 {% endfor %}
@@ -106,7 +106,7 @@
                     <tr>
                         <td><h6 class="mb-0 text-sm">{{conteudo.disciplina}}</h6></td>
                         <td><p class="text-sm mb-0">{{conteudo.nome}}</p></td>
-                        <td><p class="text-xs font-weight-bold mb-0">-</p></td>
+                        <td><p class="text-xs font-weight-bold mb-0">{{conteudo.planos_de_aula.all|length}}</p></td>
                         <td><span class="text-secondary text-xs font-weight-bold">ícones</span></td>
                     </tr>
                 {% endfor %}

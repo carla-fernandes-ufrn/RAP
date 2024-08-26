@@ -13,6 +13,8 @@ from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import user_passes_test
 
 from Disciplina.models import Disciplina, Conteudo, SugestaoDisciplina, SugestaoConteudo
+from PlanoAula.models import PlanoAula
+from rap.views import encontrar_planos_aula_disciplina
 from Usuario.models import Usuario
 
 # class CriarDisciplina(generic.CreateView):
@@ -23,11 +25,12 @@ from Usuario.models import Usuario
 
 @login_required
 def listar(request):
+    planos_aula = PlanoAula.objects.filter(status=True)
     disciplinas = Disciplina.objects.filter(status="Ativo")
     conteudos = Conteudo.objects.filter(status="Ativo")
 
     informacoes = {
-        'lista_disciplinas': disciplinas,
+        'lista_disciplinas': encontrar_planos_aula_disciplina(planos_aula, list(disciplinas)),
         'lista_conteudos': conteudos,
     }
 
