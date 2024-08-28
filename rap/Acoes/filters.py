@@ -25,4 +25,4 @@ class AcoesFiltro(django_filters.FilterSet):
 
     class Meta:
         model = Acoes
-        fields = {'tipo', 'status'}
+        fields = {'tipo', 'formato', 'status'}

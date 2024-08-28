@@ -5,10 +5,17 @@ from django.utils import timezone
 from Usuario.models import Usuario
 
 TIPO = [
-    ('Evento', 'Evento'),
+    ('Competição', 'Competição'),
     ('Curso', 'Curso'),
+    ('Evento', 'Evento'),
     ('Palestra', 'Palestra'),
     ('Outro', 'Outro')
+]
+
+FORMATO = [
+    ('Híbrido', 'Híbrido'),
+    ('Presencial', 'Presencial'),
+    ('Online', 'Online')
 ]
 
 def user_directory_path(instance, filename):
@@ -17,7 +24,10 @@ def user_directory_path(instance, filename):
 
 class Acoes(models.Model):
     titulo = models.CharField(max_length=500, verbose_name="Título")
-    tipo = models.CharField(max_length=8, choices=TIPO, default='Evento')
+    tipo = models.CharField(max_length=10, choices=TIPO, default='Competição')
+    formato = models.CharField(max_length=10, choices=FORMATO, default="Híbrido")
+    site = models.URLField(null=True, blank = True, verbose_name="Site")
+    link_de_acesso = models.URLField(null=True, blank = True, verbose_name="Link de acesso")
     data_inicio = models.DateField(default = date.today, verbose_name = "Data de início")
     data_fim = models.DateField(null=True, blank = True, verbose_name = "Data de fim")
     local = models.CharField(max_length=200, null=True, blank=True, verbose_name="Local")

@@ -33,14 +33,29 @@
                 </div>
 
                 <div class="row">
+                    <div class="col-8">
+                        {{ form.site|as_crispy_field }}
+                    </div>
                     <div class="col-4">
+                        {{ form.formato|as_crispy_field }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        {{ form.local|as_crispy_field }}
+                    </div>
+                    <div class="col-6">
+                        {{ form.link_de_acesso|as_crispy_field }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
                         {{ form.data_inicio|as_crispy_field }}
                     </div>
-                    <div class="col-4">
+                    <div class="col-6">
                         {{ form.data_fim|as_crispy_field }}
-                    </div>
-                    <div class="col-4">
-                        {{ form.local|as_crispy_field }}
                     </div>
                 </div>
 

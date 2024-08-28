@@ -25,7 +25,7 @@ from Acoes.filters import AcoesFiltro
 
 class CriarAcao(LoginRequiredMixin, generic.CreateView):
     model = Acoes
-    fields = ['titulo', 'tipo', 'data_inicio', 'data_fim', 'local', 'descricao']
+    fields = ['titulo', 'tipo', 'formato', 'site', 'link_de_acesso', 'data_inicio', 'data_fim', 'local', 'descricao']
     template_name = "Acoes/criar.html"
 
     def form_valid(self, form):
@@ -38,7 +38,7 @@ class CriarAcao(LoginRequiredMixin, generic.CreateView):
 
 class EditarAcao(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Acoes
-    fields = ['titulo', 'tipo', 'data_inicio', 'data_fim', 'local', 'descricao', 'status']
+    fields = ['titulo', 'tipo', 'formato', 'site', 'link_de_acesso', 'data_inicio', 'data_fim', 'local', 'descricao', 'status']
     template_name = "Acoes/editar.html"
 
     def test_func(self):

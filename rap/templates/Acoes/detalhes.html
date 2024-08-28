@@ -14,17 +14,30 @@
     <div class="col-8">
         <h3 class="text-uppercase font-weight-bold">{{acao.titulo}}</h3>
         <span class="badge bg-gradient-warning">{{acao.tipo}}</span>
+        <span class="badge bg-gradient-danger">{{acao.formato}}</span>
+        <br>
         <br>
         <a href=""><span class="text-md mb-0 text-uppercase font-weight-bold">Responsável: </span>
             <span>{{acao.responsavel}}</span>
         </a>
+        {% if acao.site is not None %}
+            <br>
+            <span class="text-md mb-0 text-uppercase font-weight-bold">Site: </span>
+                <a href="{{acao.site}}" target="_blank"><span>{{acao.site}}</span></a>
+        {% endif %}
+        <br>
+        {% if acao.local is not None %}
+            <br>
+            <span class="text-md mb-0 text-uppercase font-weight-bold">Local: </span>
+                <span>{{acao.local}}</span>
+        {% endif %}
+        {% if acao.link_de_acesso is not None %}
+            <br>
+            <span class="text-md mb-0 text-uppercase font-weight-bold">Link de acesso: </span>
+                <a href="{{acao.link_de_acesso}}" target="_blank"><span>{{acao.link_de_acesso}}</span></a>
+        {% endif %}
     </div>
     <div class="float-end col-4">
-        <div class="float-end ">
-            <span class="text-md mb-0 text-uppercase font-weight-bold">Local: </span>
-            <span>{{acao.local}}</span>
-        </div>
-        <br>
         <div class="float-end ">
             <span class="text-md mb-0 text-uppercase font-weight-bold">Início: </span>
             <span>{{acao.data_inicio|date:"d/m/Y"}}</span>

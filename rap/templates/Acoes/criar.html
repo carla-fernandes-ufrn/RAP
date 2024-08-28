@@ -26,19 +26,34 @@
                 </div>
 
                 <div class="row">
+                    <div class="col-8">
+                        {{ form.site|as_crispy_field }}
+                    </div>
                     <div class="col-4">
+                        {{ form.formato|as_crispy_field }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
+                        {{ form.local|as_crispy_field }}
+                    </div>
+                    <div class="col-6">
+                        {{ form.link_de_acesso|as_crispy_field }}
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-6">
                         {{ form.data_inicio|as_crispy_field }}
                     </div>
-                    <div class="col-4">
+                    <div class="col-6">
                         {{ form.data_fim|as_crispy_field }}
-                    </div>
-                    <div class="col-4">
-                        {{ form.local|as_crispy_field }}
                     </div>
                 </div>
 
                 {{ form.descricao|as_crispy_field }}
-                <input class="btn btn-info col-lg-2" type="submit" value="Cadastrar" />
+                <input class="btn btn-success col-lg-2" type="submit" value="Cadastrar" />
             </form>
         </div>
     </div>

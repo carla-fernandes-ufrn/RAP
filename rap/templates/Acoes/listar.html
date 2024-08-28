@@ -28,6 +28,11 @@
                         </div>
                         <br>
                         <div class="input-group">
+                            <span class="input-group-text text-body">Formato</span>
+                            {{form_filtro.formato|add_class:"form-control"}}
+                        </div>
+                        <br>
+                        <div class="input-group">
                             <span class="input-group-text text-body">Data de início</span>
                             {{form_filtro.data_inicio|add_class:"form-control"}}
                         </div>
@@ -113,23 +118,27 @@
                         {% endif %}
                     </div>
                 </div>
-                <a href="{% url 'acoes:detalhes' pk=acao.pk %}">
-                    <div class="card-body row">
+                <div class=card-body>
+                    <span class="badge bg-gradient-warning">{{acao.tipo}}</span>
+                    <span class="badge bg-gradient-danger">{{acao.formato}}</span>
+                    <div class="row">
                         <div class="col-4">
-                            <span class="mb-2 text-xs">Tipo: 
-                                <span class="text-dark font-weight-bold ms-sm-2">
-                                    {{ acao.tipo }}
+                            {% if acao.site is not None %}
+                                <span class="mb-2 text-xs">Site: 
+                                    <span class="text-dark font-weight-bold ms-sm-2">
+                                        <a href="{{ acao.site }}" target="_blank">{{ acao.site }}</a>
+                                    </span>
                                 </span>
-                            </span>
-                            <br>
-                            <span class="mb-2 text-xs">Local: 
-                                <span class="text-dark font-weight-bold ms-sm-2">
-                                    {% if acao.local is not None %}
+                                <br>
+                            {% endif %}
+                            {% if acao.local is not None %}
+                                <span class="mb-2 text-xs">Local: 
+                                    <span class="text-dark font-weight-bold ms-sm-2">
                                         {{ acao.local }}
-                                    {% endif %}
+                                    </span>
                                 </span>
-                            </span>
-                            <br>
+                                <br>
+                            {% endif %}
                             <span class="mb-2 text-xs">Responsável: 
                                 <span class="text-dark font-weight-bold ms-sm-2">
                                     {% if acao.responsavel is not None %}
@@ -145,7 +154,7 @@
                         </div>
                         
                     </div>
-                </a>
+                </div>
             </div>
             <br>
             
