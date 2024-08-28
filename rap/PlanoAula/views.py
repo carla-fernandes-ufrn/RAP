@@ -46,6 +46,8 @@ def criar(request):
                 plano_aula.avaliacao = form_inf_gerais.cleaned_data['avaliacao']
 
             # Montagem
+            if (form_montagem.cleaned_data['nivel_dificuldade_montagem'] != ""):
+                plano_aula.nivel_dificuldade_montagem = form_montagem.cleaned_data['nivel_dificuldade_montagem']
             if (form_montagem.cleaned_data['robo_equipamento'] != ""):
                 plano_aula.robo_equipamento = form_montagem.cleaned_data['robo_equipamento']
             if (form_montagem.cleaned_data['robo_descricao'] != ""):
@@ -56,6 +58,8 @@ def criar(request):
                 plano_aula.robo_pdf = form_montagem.cleaned_data['robo_pdf']
 
             # Programação
+            if (form_programacao.cleaned_data['nivel_dificuldade_programacao'] != ""):
+                plano_aula.nivel_dificuldade_programacao = form_programacao.cleaned_data['nivel_dificuldade_programacao']
             if (form_programacao.cleaned_data['prog_linguagem'] != ""):
                 plano_aula.prog_linguagem = form_programacao.cleaned_data['prog_linguagem']
             if (form_programacao.cleaned_data['prog_descricao'] != ""):
@@ -219,6 +223,8 @@ def editar(request, pk):
                     plano_aula.avaliacao = form_inf_gerais.cleaned_data['avaliacao']
 
                 # Montagem
+                if (form_montagem.cleaned_data['nivel_dificuldade_montagem'] != ""):
+                    plano_aula.nivel_dificuldade_montagem = form_montagem.cleaned_data['nivel_dificuldade_montagem']
                 if (form_montagem.cleaned_data['robo_equipamento'] != ""):
                     plano_aula.robo_equipamento = form_montagem.cleaned_data['robo_equipamento']
                 if (form_montagem.cleaned_data['robo_descricao'] != ""):
@@ -229,6 +235,8 @@ def editar(request, pk):
                     plano_aula.robo_pdf = form_montagem.cleaned_data['robo_pdf']
 
                 # Programação
+                if (form_programacao.cleaned_data['nivel_dificuldade_programacao'] != ""):
+                    plano_aula.nivel_dificuldade_programacao = form_programacao.cleaned_data['nivel_dificuldade_programacao']
                 if (form_programacao.cleaned_data['prog_linguagem'] != ""):
                     plano_aula.prog_linguagem = form_programacao.cleaned_data['prog_linguagem']
                 if (form_programacao.cleaned_data['prog_descricao'] != ""):

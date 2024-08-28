@@ -10,4 +10,4 @@ class PlanoAulaFiltro(django_filters.FilterSet):
 
     class Meta:
         model = PlanoAula
-        fields = {'conteudos', 'conteudos__disciplina'}
+        fields = {'conteudos', 'conteudos__disciplina', 'nivel_dificuldade_montagem', 'nivel_dificuldade_programacao'}

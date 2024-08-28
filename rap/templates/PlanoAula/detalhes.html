@@ -156,6 +156,26 @@
                     </div>
                     <div class="card-body pt-4 p-3">
                         <ul class="list-group">
+                            {% if plano_aula.nivel_dificuldade_montagem %}
+                                <div class="text-center">
+                                    <span class="mb-2 text-uppercase text-bold">{{plano_aula.nivel_dificuldade_montagem}}</span>
+                                    <br>
+                                    {% if plano_aula.nivel_dificuldade_montagem == "Fácil" %}
+                                        <i class="fa-solid fa-gear text-info"></i>
+                                        <i class="fa-solid fa-gear" style="color: #dee2e6"></i>
+                                        <i class="fa-solid fa-gear" style="color: #dee2e6"></i>
+                                    {% elif plano_aula.nivel_dificuldade_montagem == "Intermediário" %}
+                                        <i class="fa-solid fa-gear text-info"></i>
+                                        <i class="fa-solid fa-gear text-info"></i>
+                                        <i class="fa-solid fa-gear" style="color: #dee2e6"></i>
+                                    {% else %}
+                                        <i class="fa-solid fa-gear text-info"></i>
+                                        <i class="fa-solid fa-gear text-info"></i>
+                                        <i class="fa-solid fa-gear text-info"></i>
+                                    {% endif %}
+                                </div>
+                                <br>
+                            {% endif %}
                             {% if plano_aula.robo_descricao %}
                                 <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
                                     <div class="d-flex flex-column">
@@ -312,6 +332,26 @@
                     <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">Programação</span>
                 </div>
                 <div class="card-body pt-4 p-3">
+                    {% if plano_aula.nivel_dificuldade_programacao %}
+                        <div class="text-center">
+                            <span class="mb-2 text-uppercase text-bold">{{plano_aula.nivel_dificuldade_programacao}}</span>
+                            <br>
+                            {% if plano_aula.nivel_dificuldade_programacao == "Fácil" %}
+                                <i class="fa-solid fa-code text-info"></i>
+                                <i class="fa-solid fa-code" style="color: #dee2e6"></i>
+                                <i class="fa-solid fa-code" style="color: #dee2e6"></i>
+                            {% elif plano_aula.nivel_dificuldade_programacao == "Intermediário" %}
+                                <i class="fa-solid fa-code text-info"></i>
+                                <i class="fa-solid fa-code text-info"></i>
+                                <i class="fa-solid fa-code" style="color: #dee2e6"></i>
+                            {% else %}
+                                <i class="fa-solid fa-code text-info"></i>
+                                <i class="fa-solid fa-code text-info"></i>
+                                <i class="fa-solid fa-code text-info"></i>
+                            {% endif %}
+                        </div>
+                        <br>
+                    {% endif %}
                     <ul class="list-group">
                     <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg" >
                         <div class="d-flex flex-column">

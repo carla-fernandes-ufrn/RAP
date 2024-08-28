@@ -14,6 +14,12 @@ def diretorio_plano_aula(instance, filename):
 def diretorio_plano_aula_midias(instance, filename):
     return 'plano_aula_{0}_{1}/{2}'.format(instance.plano_aula.data_criacao.date(), instance.plano_aula.data_criacao.strftime("%H-%M-%S"), filename)
 
+NIVEL_DIFICULDADE = [
+    ('Fácil', 'Fácil'),
+    ('Intermediário', 'Intermediário'),
+    ('Difícil', 'Difícil')
+]
+
 class PlanoAula(models.Model):
 
     criador = models.ForeignKey(Usuario, on_delete=models.RESTRICT,null=True, verbose_name="Responsável")
@@ -30,12 +36,14 @@ class PlanoAula(models.Model):
     robo_equipamento = models.CharField(max_length=200, blank=True, null=True, verbose_name="Equipamento")
     robo_descricao = models.TextField(blank=True, null=True, verbose_name="Descrição do robô")
     robo_link = models.TextField(verbose_name="Links", blank=True, null=True)
+    nivel_dificuldade_montagem = models.CharField(max_length=13, choices=NIVEL_DIFICULDADE, blank=True, null=True, verbose_name="Nível de dificuldade da montagem")
 
     # Programação
     prog_linguagem = models.CharField(max_length=200, blank=True, null=True, verbose_name="Linguagem de programação")
     prog_descricao = models.TextField(blank=True, null=True, verbose_name="Descrição da programação")
     prog_link = models.TextField(verbose_name="Links", blank=True, null=True)
     prog_codigos = models.FileField(upload_to=diretorio_plano_aula, blank=True, null=True, verbose_name="Códigos")
+    nivel_dificuldade_programacao = models.CharField(max_length=13, choices=NIVEL_DIFICULDADE, blank=True, null=True, verbose_name="Nível de dificuldade da programação")
 
     # Mídias
     robo_pdf = models.FileField(upload_to=diretorio_plano_aula, blank=True, null=True, verbose_name="Manual de montagem do robô")

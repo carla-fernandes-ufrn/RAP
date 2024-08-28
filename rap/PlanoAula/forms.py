@@ -22,13 +22,13 @@ class FormMontagem(ModelForm):
 
     class Meta:
         model = PlanoAula
-        fields = ('robo_equipamento', 'robo_descricao', 'robo_link', 'robo_pdf')
+        fields = ('nivel_dificuldade_montagem', 'robo_equipamento', 'robo_descricao', 'robo_link', 'robo_pdf')
 
 class FormProgramacao(ModelForm):
     
     class Meta:
         model = PlanoAula
-        fields = ('prog_linguagem', 'prog_descricao', 'prog_link', 'prog_codigos')
+        fields = ('nivel_dificuldade_programacao', 'prog_linguagem', 'prog_descricao', 'prog_link', 'prog_codigos')
 
 class FormMidiasRoboFotos(ModelForm):
     
