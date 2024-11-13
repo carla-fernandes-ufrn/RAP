@@ -1,0 +1,39 @@
+{% extends "Base/base.html" %}
+
+{% block barra_titulo %}
+{{ block.super }}
+{% endblock %}
+
+{% block titulo %}
+Usuários
+{% endblock %}
+
+{% block subtitulo %}
+    {% if ativos %}
+        Ativos
+    {% else %}
+        Inativos
+    {% endif %}
+{% endblock %}
+
+{% block titulo_lateral %}
+<a href="#" class="btn btn-primary">Button</a>
+{% endblock %}
+
+{% block conteudo %}
+    {% if not lista_usuarios %}
+
+        <h4>Não há usuários cadastrados.</h4>
+
+    {% else %}
+
+        <ul>
+            {% for usuario in lista_usuarios %}
+                <li>{{usuario}}</li>
+            {% endfor %}
+        </ul>
+
+    {% endif %}
+
+    <a href="{% url 'usuario:logout' %}">Logout</a>
+{% endblock %}

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+{% load static %}
+{% load widget_tweaks %}
+
+<head>
+  {% include "Base/cabecalho.html" %}
+</head>
+
+<body class="">
+  <main class="main-content  mt-0">
+    <section>
+      <div class="page-header min-vh-100">
+        <div class="container">
+          <div class="row">
+            <div class="col-xl-4 col-lg-5 col-md-7 d-flex flex-column mx-lg-0 mx-auto">
+              <div class="card card-plain">
+                <div class="card-header pb-0 text-start">
+                  <h4 class="font-weight-bolder">Login</h4>
+                  <p class="mb-0">Faça o seu login com nome de usuário e senha</p>
+                </div>
+                <div class="card-body">
+                  <form role="form" method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                      {% render_field form.username class="form-control form-control-lg" placeholder="Nome de usuário" %}
+                    </div>
+                    <div class="mb-3">
+                      {% render_field form.password class="form-control form-control-lg" placeholder="Senha" %}
+                    </div>
+                    <div class="text-center">
+                      <button type="submit" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">Login</button>
+                    </div>
+                  </form>
+                </div>
+                <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                  <p class="mb-4 text-sm mx-auto">
+                    Não tem uma conta?
+                    <a href="{% url 'usuario:cadastrar' %}" class="text-primary text-gradient font-weight-bold">Cadastre-se</a>
+                  </p>
+                  <p class="mb-4 text-sm mx-auto">
+                    Esqueceu sua senha?
+                    <a href="{% url 'usuario:password_reset' %}" class="text-primary text-gradient font-weight-bold">Esqueceu sua senha?</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
+              <div id="imagem-aleatoria" class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden">
+                <span class="mask bg-gradient-primary opacity-6"></span>
+                <h4 class="mt-5 text-white font-weight-bolder position-relative">RAP<br>Robótica para alunos e professores</h4>
+                <p class="text-white position-relative">Venha compartilhar sua experiência em robótica educacional com professores do Brasil todo!</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  {% include "Base/scripts.html" %}
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+
+    const images = ["assets/img/robotica/imagem1.jpeg",
+    "assets/img/robotica/imagem2.jpeg",
+    "assets/img/robotica/imagem3.jpeg",
+    "assets/img/robotica/imagem4.jpeg",
+    "assets/img/robotica/imagem5.jpeg",
+    "assets/img/robotica/imagem6.jpeg",
+    "assets/img/robotica/imagem7.jpeg",
+    "assets/img/robotica/imagem8.jpeg",
+    "assets/img/robotica/imagem9.jpeg",
+    "assets/img/robotica/imagem10.jpeg",
+    "assets/img/robotica/imagem11.jpeg",
+    "assets/img/robotica/imagem12.jpeg",
+    "assets/img/robotica/imagem13.jpeg",
+    "assets/img/robotica/imagem14.jpeg",
+    "assets/img/robotica/imagem15.jpeg",
+    "assets/img/robotica/imagem16.jpeg",
+    "assets/img/robotica/imagem17.jpeg",
+    "assets/img/robotica/imagem18.jpeg",
+    "assets/img/robotica/imagem19.jpeg",
+    "assets/img/robotica/imagem20.jpeg",
+    "assets/img/robotica/imagem21.jpeg"
+      ];
+
+      document.addEventListener('DOMContentLoaded', _ => {
+        const randImageIndex = ~~(Math.random() * images.length);
+        let imagemEscolhida = images[randImageIndex];
+        let staticURL = "url('{% static '" + "' %}";
+        staticURL = staticURL.substring(0,staticURL.lastIndexOf('/'));
+        let imageURL = staticURL + "/" + imagemEscolhida + "')";
+        let backgroundSize = "cover";
+        document.getElementById('imagem-aleatoria').style.backgroundImage = imageURL;
+        document.getElementById('imagem-aleatoria').style.backgroundSize = backgroundSize;
+      });
+  </script>
+</body>
+
+</html>
+

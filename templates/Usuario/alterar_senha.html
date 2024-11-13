@@ -1,0 +1,26 @@
+<div class="modal fade" id="alterar_senha_modal" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <form action="">
+            <div class="modal-content">
+                <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Alterar senha</h5>
+                </div>
+                <div class="modal-body">
+                    {{form}}
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Fechar</button>
+                <input type="submit" class="btn btn-primary" value="Alterar senha"></input>
+                </div>
+            </div>
+        </form>
+        <script>
+
+                var form_options = {
+                    target: '#modal',
+                    success: function() {  }
+                }
+                $('#item_update_form').ajaxForm(form_options);
+        </script>
+    </div>
+  </div>

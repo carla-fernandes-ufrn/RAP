@@ -1,0 +1,77 @@
+
+{% extends "Base/base.html" %}
+
+{% block breadcrumb1 %}
+  Plano de aula
+{% endblock %}
+
+{% block breadcrumb2 %}
+  Informações
+{% endblock %}
+
+{% block titulo %}
+  {{plano_aula}}
+{% endblock %}
+
+{% block conteudo %}
+<br>
+
+<div class="row" >
+    <div class="card">
+                 <br>
+        <div class="col-lg-10 col-md-2">
+                <div class="card">
+                    <div class="card-header home pb-0 p-3">
+                        <p class="text-sm mb-0 text-uppercase text-white font-weight-bold" class="text-center" >TITULO</p>
+                    </div>
+                    
+                <div class="card-body pt-4 p-3">
+                    <ul class="list-group">
+                    <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg" >
+                        <div class="d-flex flex-column">
+                        <h6 class="mb-3 text-sm text-uppercase">Linguagem Usada</h6>
+                        <span class="mb-2 text-xs">{{ plano_aula.prog_linguagem|linebreaks }}</span>
+                        </div>
+                    </li>
+                    <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg" >
+                        <div class="d-flex flex-column">
+                        <h6 class="mb-3 text-sm text-uppercase">Descrição</h6>
+                        <span class="mb-2 text-xs">{{ plano_aula.prog_descricao|linebreaks }}</span>
+                        </div>
+                    </li>
+                    {% if plano_aula.prog_codigos%}
+                    <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                        <div class="d-flex flex-column">
+                        <h6 class="mb-3 text-sm text-uppercase">Codigo</h6>
+                        <span class="mb-2 text-xs">{{ plano_aula.prog_codigos|linebreaks }}</span>
+                        </div>
+                    </li>
+                    {% endif %}
+                    {% if plano_aula.prog_link %}
+                    <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg">
+                        <div class="d-flex flex-column">
+                        <h6 class="mb-3 text-sm text-uppercase">Link</h6>
+                        <span class="mb-2 text-xs">{{ plano_aula.prog_link|linebreaks }}</span>
+                        </div>
+                    </li>
+                {% endif %}
+                    
+                    </ul>
+                </div>
+                </div>
+            </div>
+  
+                    <br>
+                  
+        </div>
+    </div>
+</div>
+  
+    
+<ul>
+    {% for aula in lista_planos_aula %}
+    <li><a href="{% url 'plano_aula:programacao' pk=aula.id %}">{{aula}}</a></li>
+    <!--tr-->
+    {% endfor %}
+</ul>
+{% endblock %}

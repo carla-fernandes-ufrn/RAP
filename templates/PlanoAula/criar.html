@@ -1,0 +1,219 @@
+{% extends "Base/base.html" %} 
+{% load static %} {% load bootstrap5 %} 
+{% load crispy_forms_tags %} 
+{% block breadcrumb1 %} Plano de aula {% endblock %} 
+{% block breadcrumb2 %} Criação {% endblock %} 
+{% block titulo %} Novo plano de aula {% endblock %}
+{% block conteudo %}
+
+<div class="p-3 d-flex main justify-content-between">
+    <div>
+        <button id="btn_inf_gerais" class="btn btn-outline-success me-2" onclick="mostrar_inf_gerais()">Informações gerais</button>
+        <button id="btn_montagem_programacao" class="btn btn-outline-secondary me-2" onclick="mostrar_montagem_programacao()">Montagem e Programação</button>
+    </div>
+    <input class="btn btn-success me-2" form="form_plano_aula" type="submit" value="Cadastrar" />
+</div>
+
+<form id="form_plano_aula" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <input type="hidden" id="lista_id_conteudos" name="lista_id_conteudos"></input>
+
+    <div>
+        <div id="div_inf_gerais">
+            <div class="row mt-4">
+                <div class="col-lg-12 col-md-12 mb-2">
+                    <div class="card">
+                        <div class="card-header pb-0 p-3">
+                            <div class="d-flex justify-content-between">
+                                <h6 class="text-uppercase text-sm">Plano de aula</h6>
+                            </div>
+                        </div>
+                        <div class="card-body p-3 overflow-auto">
+                            {{ form_inf_gerais.titulo|as_crispy_field }}
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-12">
+                                    {{ form_inf_gerais.contextualizacao|as_crispy_field }}
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-12">
+                                    {{ form_inf_gerais.descricao_atividade|as_crispy_field }}
+                                </div>
+                            </div>
+                            <!-- {% bootstrap_form form_inf_gerais %} -->
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-12 col-md-12 mb-2">
+                    <div class="card">
+                        <div class="card-header pb-0">
+                            <div class="d-flex justify-content-between">
+                                <h6 class="text-uppercase text-sm">Conteúdos selecionados</h6>
+                                <div>
+                                    <h6 id="text_nome_disciplina" class="text-uppercase text-sm">DISCIPLINAS</h6>
+                                    <a id="anchor_escolher_outra_disciplina" onclick='escolher_outra_disciplina()' 
+                                            style="display:none" class="text-xs">
+                                        Escolher outra disciplina
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body overflow-auto">
+                            <div class="row">
+                                <!-- Coluna de conteúdos selecionados -->
+                                <div class="col-6" style="box-shadow: .5px 0 0 #000;">
+                                    <div id="div_conteudos_selecionados" class="row">
+                                    </div>
+                                </div>
+                                <!-- Coluna com todos os conteúdos -->
+                                <div class="col-6" style="box-shadow: -.5px 0 0 #000;">
+                                    <div id="div_disciplinas">
+                                        <div class="row">
+                                            {% for disciplina in lista_disciplinas %}
+                                                {% if disciplina.conteudos.all|length > 0 %}
+                                                    <div class="col-lg-4 col-md-6">
+                                                        <a onclick="selecionar_conteudo('{{disciplina.nome}}')">
+                                                            <i class="text-success me-2 icon-xxs dropdown-item-icon fas fa-arrow-right"></i>
+                                                        </a>
+                                                        {{ disciplina.nome }}
+                                                        <br>
+                                                    </div>
+                                                {% endif %} 
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                    <div id="div_conteudos" style="display: none">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="div_montagem_programacao" style="display: none">
+            <div class="row mt-4">
+                <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
+                    <div class="card">
+                        <div class="card-header pb-0 p-3">
+                            <div class="d-flex justify-content-between">
+                                <h6 class="text-uppercase text-sm">Montagem</h6>
+                            </div>
+                        </div>
+                        <div class="card-body p-3 overflow-auto">
+                            {% bootstrap_form form_montagem %}
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
+                    <div class="card">
+                        <div class="card-header pb-0 p-3">
+                            <div class="d-flex justify-content-between">
+                                <h6 class="text-uppercase text-sm">Programação</h6>
+                            </div>
+                        </div>
+                        <div class="card-body p-3 overflow-auto">
+                            {% bootstrap_form form_programacao %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</form>
+{% endblock %} {% block scripts %}
+
+<script>
+    var conteudos_selecionados = []
+
+    function mostrar_inf_gerais() {
+        document.getElementById("div_inf_gerais").style.display = 'block';
+        document.getElementById("div_montagem_programacao").style.display = 'none';
+        trocar_cor("btn_inf_gerais", "btn_montagem_programacao");
+    }
+
+    function mostrar_montagem_programacao() {
+        document.getElementById("div_inf_gerais").style.display = 'none';
+        document.getElementById("div_montagem_programacao").style.display = 'block';
+        trocar_cor("btn_montagem_programacao", "btn_inf_gerais");
+    }
+
+    function trocar_cor(nova, antiga1) {
+        document.getElementById(nova).classList.remove('btn-outline-secondary');
+        document.getElementById(nova).classList.add('btn-outline-success');
+        document.getElementById(antiga1).classList.remove('btn-outline-success');
+        document.getElementById(antiga1).classList.add('btn-outline-secondary');
+    }
+
+    function selecionar_conteudo(nome) {
+        document.getElementById("div_disciplinas").style.display = 'none';
+        document.getElementById("div_conteudos").style.display = 'block';
+        document.getElementById("text_nome_disciplina").innerHTML = nome;
+        document.getElementById("anchor_escolher_outra_disciplina").style.display = 'block';
+
+        tabela = document.getElementById('tabela_conteudos');
+
+        $.ajax({
+            url: "/disciplina/listar-conteudos/", // the endpoint
+            type: "GET", // http method
+            data: {
+                'nome': nome
+            },
+            success: function(response) {
+                document.getElementById("div_conteudos").innerHTML = ""
+                for (var i = 0; i < response.length; i++) {
+                    var str = " <a onclick=\"adicionar_conteudo('" + nome + "','" + response[i][1] + "')\">" +
+                        "    <i class='fas fa-plus font-weight-bolder text-success'></i> " + response[i][1] +
+                        " </a> <br>";
+                    document.getElementById("div_conteudos").innerHTML += str;
+                    document.getElementById("div_conteudos").style.display = 'block';
+                }
+            }
+        });
+    }
+
+    function escolher_outra_disciplina() {
+        document.getElementById("div_disciplinas").style.display = 'block';
+        document.getElementById("div_conteudos").style.display = 'none';
+        document.getElementById("text_nome_disciplina").innerHTML = 'Disciplinas';
+        document.getElementById("anchor_escolher_outra_disciplina").style.display = 'none';
+        $("#tabela_conteudos").find("tr:not(:first)").remove();
+    }
+
+    function adicionar_conteudo(disciplina, conteudo) {
+
+        $.ajax({
+            url: "/disciplina/ler-id-conteudo/", // the endpoint
+            type: "GET", // http method
+            data: {
+                'conteudo': conteudo,
+                'disciplina': disciplina
+            },
+            success: function(response) {
+                if (!conteudos_selecionados.includes(response['id'])) {
+                    conteudos_selecionados.push(response['id'])
+                    document.getElementById("lista_id_conteudos").value = conteudos_selecionados
+
+                    var str = "<a onclick='remover_conteudo(" + response['id'] + ")' id='conteudo_selecionado_" + response['id'] +
+                        "'> " +
+                        " <i class='fas fa-minus font-weight-bolder text-danger'></i>  " +
+                        disciplina + ": " + conteudo +
+                        " </a>";
+                    document.getElementById("div_conteudos_selecionados").innerHTML += str;
+                }
+            }
+        });
+    }
+
+    function remover_conteudo(id) {
+        const index = conteudos_selecionados.indexOf(id);
+        conteudos_selecionados.splice(index, 1);
+        document.getElementById("lista_id_conteudos").value = conteudos_selecionados
+        var elem = document.getElementById("conteudo_selecionado_" + id);
+        elem.parentNode.removeChild(elem);
+        console.log(conteudos_selecionados)
+    }
+</script>
+
+{% endblock %}

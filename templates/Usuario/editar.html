@@ -1,0 +1,85 @@
+{% extends "Base/base.html" %}
+
+{% load info_usuario %}
+{% load bootstrap5 %}
+
+{% block barra_titulo %}
+{% endblock %}
+
+{% block conteudo %}
+<div class="card col-md-8 center">
+    <!-- card body -->
+    <div class="card-body">
+      <div class=" mb-6">
+        <h3 class="mb-0 fw-bold">{{ user.first_name }} {{ user.last_name }}</h3>
+        <br>
+        <h4 class="mb-1">Meu perfil</h4>
+
+      </div>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <!-- {% bootstrap_form form %} -->
+            <div class="row">
+                <div class="col-6">
+                    {% bootstrap_field form.username %}
+                </div>
+                <div class="col-6">
+                    {% bootstrap_field form.email %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    {% bootstrap_field form.first_name %}
+                </div>
+                <div class="col-6">
+                    {% bootstrap_field form.last_name %}
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    {% bootstrap_field form.cidade %}
+                </div>
+                <div class="col-6">
+                    {% bootstrap_field form.estado %}
+                </div>
+            </div>
+            <input type="hidden" name="next" value="{{ request.GET.next }}">
+            <div class="text-right">
+                <input type="submit" class="btn btn-primary pull-right" value="Atualizar"></input>
+            </div>
+        </form>
+
+        <br>
+
+        <div class="row">
+            <div class="col-6">
+                <div class="mb-6">
+                    <h4 class="mb-1">Meu avatar</h4>
+                </div>
+                <div class="me-3">
+                    <div class="avatar avatar-md avatar-indicators avatar-online">
+                        <img alt="avatar" src="{% usuario_avatar user.username %}" class="rounded-circle" />
+                    </div>
+                    <!-- <img src="{% usuario_avatar user.username %}" class="rounded-circle avatar avatar-lg" alt=""> -->
+                    <a href="" class="btn btn-secondary pull-right">Alterar</a>
+                    <a href="{% url 'usuario:alterar_avatar' pk=user.pk novo=0 %}" class="btn btn-outline-white">Remover</a>
+                </div>
+            </div>
+            <div class="col-6">
+                <div class="mb-6">
+                    <h4 class="mb-1">Minha senha</h4>
+                </div>
+                <div class="me-3">
+                    <a href="{% url 'usuario:alterar_senha' pk=user.pk %}" class="btn btn-secondary pull-right" data-toggle="modal" data-target="#alterar_senha_modal">
+                        Alterar senha
+                    </a>
+                </div>
+                <div class="modal fade" id="alterar_senha_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                </div><!-- /.modal -->
+            </div>
+        </div>
+
+        
+    </div>
+</div>
+{% endblock %}

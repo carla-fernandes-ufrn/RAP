@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <title>Esqueceu sua senha?</title>
+</head>
+<body>
+  <h2>Esqueceu sua senha?</h2>
+  <p>Digite seu e-mail para receber instruções de redefinição de senha.</p>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Enviar</button>
+  </form>
+</body>
+</html>

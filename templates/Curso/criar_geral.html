@@ -1,0 +1,419 @@
+{% extends "Base/base.html" %} 
+{% load static %} 
+{% load pagination_tags %}
+{% load bootstrap5 %} 
+{% load crispy_forms_tags %} 
+{% block breadcrumb1 %} Curso {% endblock %} 
+{% block breadcrumb2 %} Criação {% endblock %} 
+{% block titulo %} Novo curso {% endblock %}
+{% block conteudo %}
+<br>
+<div class="row">
+    <div class="col-sm-12 col-md-5 col-lg-3">
+        <div class="card border-primary text-center">
+
+            <div class="card-header pb-0 p-3">
+                <div class="icon bg-gradient-faded-primary shadow-primary rounded-circle"></div>
+                <div class="icon bg-gradient-faded-primary shadow-primary rounded-circle"></div>
+                <div class="icon bg-gradient-primary shadow-primary rounded-circle"></div>
+                <p class="text-sm mb-0 text-uppercase font-weight-bold">Kit de robótica e linguagem de programação</p>
+            </div>
+            <div class="card-body p-3 overflow-auto">
+                <div class="form-group">
+                    <label for="example-text-input" class="form-control-label">Kit de robótica</label>
+                    <input class="form-control" type="text" value="">
+                    <input class="form-check-input" type="checkbox" value="" id="cb1" style="outline: 1px solid #5e72e4">
+                    <label class="form-check-label" for="cb1">
+                        <span class="text-xs">Admitir aulas com outros kits de robótica</span>
+                    </label>
+                    <br>
+                    <label for="example-text-input" class="form-control-label">Linguagem de programação</label>
+                    <input class="form-control" type="text" value="">
+                    <input class="form-check-input" type="checkbox" value="" id="cb1" style="outline: 1px solid #5e72e4">
+                    <label class="form-check-label" for="cb1">
+                        <span class="text-xs">Admitir aulas com outras linguagens</span>
+                    </label>
+                    <br>
+                    <br>
+                    <button class="btn btn-gray btn-sm ms-auto">Voltar</button>
+                    <button class="btn btn-primary btn-sm ms-auto">Continuar</button>
+                </div>
+            </div>
+        </div>
+        <div class="card border-primary">
+
+            <div class="card-header pb-0 p-3 text-center">
+                <div class="icon bg-gradient-faded-primary shadow-primary rounded-circle"></div>
+                <div class="icon bg-gradient-primary shadow-primary rounded-circle"></div>
+                <div class="icon bg-gradient-faded-primary shadow-primary rounded-circle"></div>
+                <p class="text-sm mb-0 text-uppercase font-weight-bold">Disciplinas e conteúdos</p>
+            </div>
+            <div class="card-body p-3 overflow-auto">
+                <div class="form-group">
+                    <i class="fas fa-caret-right"></i>
+                    <label> </label>
+                    <input class="form-check-input" type="checkbox" value="" id="cb1" style="outline: 1px solid #5e72e4">
+                    <label class="form-check-label" for="cb1">
+                        Artes
+                    </label>
+                    <br>
+                    <i class="fas fa-caret-right"></i>
+                    <label> </label>
+                    <input class="form-check-input" type="checkbox" value="" id="cb2" style="outline: 1px solid #5e72e4">
+                    <label class="form-check-label" for="cb2">
+                        Português
+                    </label>
+                    <br>
+                    <i class="fas fa-caret-down"></i>
+                    <label> </label>
+                    <input class="form-check-input" type="checkbox" value="" id="cb3" style="outline: 1px solid #5e72e4">
+                    <label class="form-check-label" for="cb3">
+                        Matemática
+                    </label>
+                    <br>
+                    <label class="text-white">espaço</label>
+                    <input class="form-check-input" type="checkbox" value="" id="cb1" style="outline: 1px solid #5e72e4">
+                    <label class="form-check-label" for="cb1">
+                        Frações
+                    </label>
+                    <br>
+                    <label class="text-white">espaço</label>
+                    <input class="form-check-input" type="checkbox" value="" id="cb1" style="outline: 1px solid #5e72e4">
+                    <label class="form-check-label" for="cb1">
+                        Números inteiros
+                    </label>
+                    <br>
+                    <label class="text-white">espaço</label>
+                    <input class="form-check-input" type="checkbox" value="" id="cb1" style="outline: 1px solid #5e72e4">
+                    <label class="form-check-label" for="cb1">
+                        Números reais
+                    </label>
+                    <br>
+                    <br>
+                    <div class=" text-center">
+                        <button class="btn btn-gray btn-sm ms-auto">Voltar</button>
+                        <button class="btn btn-primary btn-sm ms-auto">Continuar</button>
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+        <div class="card border-primary text-center">
+
+            <div class="card-header pb-0 p-3">
+                <div class="icon bg-gradient-primary shadow-primary rounded-circle"></div>
+                <div class="icon bg-gradient-faded-primary shadow-primary rounded-circle"></div>
+                <div class="icon bg-gradient-faded-primary shadow-primary rounded-circle"></div>
+                <p class="text-sm mb-0 text-uppercase font-weight-bold">Parâmetros iniciais</p>
+            </div>
+            <div class="card-body p-3 overflow-auto">
+                <div class="form-group">
+                    <label for="example-text-input" class="form-control-label">Quantidade total de aulas</label>
+                    <input class="form-control" type="text" value="">
+                    <br>
+                    <label for="example-text-input" class="form-control-label">Categorias</label>
+                    <br>
+                    <div class="row">
+                        <div class="col-6">
+                            <label>Montagem</label>
+                            <br>
+                            <br>
+                            <label>Programação</label>
+                            <br>
+                            <br>
+                            <label>Aplicação</label>
+                        </div>
+                        <div class="col-6">
+                            <input class="form-control" type="text" value="">
+                            <br>
+                            <input class="form-control" type="text" value="">
+                            <br>
+                            <input class="form-control" type="text" value="">
+                        </div>
+                    </div>
+                    <br>
+                    <button class="btn btn-gray btn-sm ms-auto">Voltar</button>
+                    <button class="btn btn-primary btn-sm ms-auto">Continuar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-12 col-md-7 col-lg-9">
+            <div class="card">
+                <div class="card-body p-3 overflow-auto">
+                    <!-- <p>Não foram encontradas aulas que formem o curso com os parâmetros indicados.</p> -->
+                    <div class="row">
+                        <div class="col-4">
+                            <label for="example-text-input" class="form-control-label">Quantidade total de aulas</label>
+                            <p>20 aulas</p>
+                            <br>
+                            <span class="mb-2 text-xs">Montagem: <span class="text-dark font-weight-bold ms-sm-2">5 aulas</span></span>
+                            <br>
+                            <span class="mb-2 text-xs">Programação: <span class="text-dark font-weight-bold ms-sm-2">10 aulas</span></span>
+                            <br>
+                            <span class="mb-2 text-xs">Aplicação: <span class="text-dark font-weight-bold ms-sm-2">5 aulas</span></span>
+                        </div>
+                        <div class="col-4">
+                            <label for="example-text-input" class="form-control-label">Disciplinas e conteúdos selecionados</label>
+                            <span class="mb-2 text-xs">Matemática: <span class="text-dark font-weight-bold ms-sm-2">Equações de primeiro grau</span></span>
+                            <br>
+                            <span class="mb-2 text-xs">Matemática: <span class="text-dark font-weight-bold ms-sm-2">Números inteiros</span></span>
+                            <br>
+                            <span class="mb-2 text-xs">Matemática: <span class="text-dark font-weight-bold ms-sm-2">Números reais</span></span>
+                            <br>
+                            <span class="mb-2 text-xs">Inglês<span class="text-dark font-weight-bold ms-sm-2"></span></span>
+                        </div>
+                        <div class="col-4">
+                            <label for="example-text-input" class="form-control-label">Kit de robótica e linguagem de programação</label>
+                            <!-- <span class="mb-2 text-xs">Kit de robótica: <span class="text-dark font-weight-bold ms-sm-2">Lego EV3</span></span>
+                            <br>
+                            <span class="mb-2 text-xs">Linguagem de programação: <span class="text-dark font-weight-bold ms-sm-2">Python</span></span>
+                            <br> -->
+                            <span class="mb-2 text-xs">Kit de robótica: <span class="text-dark font-weight-bold ms-sm-2">Livre</span></span>
+                            <br>
+                            <span class="mb-2 text-xs">Linguagem de programação: <span class="text-dark font-weight-bold ms-sm-2">Livre</span></span>
+                            <br>
+                        </div>
+                    </div>
+                    <br>
+                    <!-- <p>Sugestão de alterações:</p> -->
+                    <!-- <h6 class="mb-1 text-dark text-sm">Adicionar novos conteúdos para o curso</h6>
+                    <span class="mb-2 text-xs">Matemática: <span class="text-dark font-weight-bold ms-sm-2">Números inteiros</span></span>
+                    <br>
+                    <span class="mb-2 text-xs">Matemática: <span class="text-dark font-weight-bold ms-sm-2">Números reais</span></span>
+                    <br>
+                    <span class="mb-2 text-xs">Matemática: <span class="text-dark font-weight-bold ms-sm-2">Formas geométricas</span></span>
+                    <br>
+                    <span class="mb-2 text-xs">Matemática: <span class="text-dark font-weight-bold ms-sm-2">Equações de segundo grau</span></span>
+                    <br> -->
+                    <!-- <h6 class="mb-1 text-dark text-sm">Admitir aulas com outros kits de robótica</h6>
+                    <h6 class="mb-1 text-dark text-sm">Admitir aulas com outras linguagens de programação</h6> -->
+
+                    <div class="card">
+                        <div class="card-header pb-0 p-3">
+                            <button class="btn btn-icon-only btn-rounded btn-outline-primary mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">1</button>
+                            <a href="">Números inteiros com robótica livre</a>
+                            <br>
+                            <span class="mb-2 text-xs">Categoria: <span class="text-dark font-weight-bold ms-sm-2">Montagem</span></span>
+                        </div>
+                        <div class="card-body p-3 overflow-auto">
+                            
+                        </div>
+                        <div class="card-header pb-0 p-3">
+                            <button class="btn btn-icon-only btn-rounded btn-outline-primary mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">2</button>
+                            <a href="">Ensinando Arduino com matemática</a>
+                            <br>
+                            <span class="mb-2 text-xs">Categoria: <span class="text-dark font-weight-bold ms-sm-2">Montagem</span></span>
+                        </div>
+                        <div class="card-body p-3 overflow-auto">
+                            
+                        </div>
+                        <div class="card-header pb-0 p-3">
+                            <button class="btn btn-icon-only btn-rounded btn-outline-primary mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">3</button>
+                            <a href="">Números reais</a>
+                            <br>
+                            <span class="mb-2 text-xs">Categoria: <span class="text-dark font-weight-bold ms-sm-2">Montagem</span></span>
+                        </div>
+                        <div class="card-body p-3 overflow-auto">
+                            
+                        </div>
+                        <div class="card-header pb-0 p-3">
+                            <button class="btn btn-icon-only btn-rounded btn-outline-primary mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">4</button>
+                            <a href="">Números inteiros: Lego EV3</a>
+                            <br>
+                            <span class="mb-2 text-xs">Categoria: <span class="text-dark font-weight-bold ms-sm-2">Montagem</span></span>
+                        </div>
+                        <div class="card-body p-3 overflow-auto">
+                            
+                        </div>
+                        <div class="card-header pb-0 p-3">
+                            <button class="btn btn-icon-only btn-rounded btn-outline-primary mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">5</button>
+                            <a href="">Números inteiros com robótica livre</a>
+                            <br>
+                            <span class="mb-2 text-xs">Categoria: <span class="text-dark font-weight-bold ms-sm-2">Montagem</span></span>
+                        </div>
+                        <div class="card-body p-3 overflow-auto">
+                            
+                        </div>
+                        <div class="card-header pb-0 p-3">
+                            <button class="btn btn-icon-only btn-rounded btn-outline-success mb-0 me-3 btn-sm d-flex align-items-center justify-content-center">6</button>
+                            <a href="">Números inteiros com robótica livre</a>
+                            <br>
+                            <span class="mb-2 text-xs">Categoria: <span class="text-dark font-weight-bold ms-sm-2">Programação</span></span>
+                        </div>
+                        <div class="card-body p-3 overflow-auto">
+                            
+                        </div>
+                    </div>
+                    <br/>
+                </div>
+            </div>
+        <nav class="justify-content-center d-flex pagination">
+            <ul class="pagination">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a href="?{% url_replace request 'page' page_obj.previous_page_number %}" class="page-link" aria-label="Previous">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a href="" class="page-link" aria-label="Previous">
+                            <i class="fas fa-chevron-left"></i>
+                        </a>
+                    </li>
+                {% endif %}
+      
+                {% if page_obj.number|add:'-2' > 1 %}
+                    <li class="page-item">
+                        <a href="?{% url_replace request 'page' page_obj.number|add:'-3' %}" class="page-link">&hellip;</a>
+                    </li>
+                {% endif %}
+      
+                {% for i in page_obj.paginator.page_range %}
+                    {% if page_obj.number == i %}
+                        <li class="active page-item">
+                            <span class="page-link">{{ i }} <span class="sr-only">(current)</span></span>
+                        </li>
+                    {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                        <li class="page-item">
+                            <a href="?{% url_replace request 'page' i %}" class="page-link">{{ i }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+      
+                {% if page_obj.paginator.num_pages > page_obj.number|add:'2' %}
+                    <li class="page-item">
+                        <a href="?{% url_replace request 'page' page_obj.number|add:'3' %}" class="page-link">&hellip;</a>
+                    </li>
+                {% endif %}
+      
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a href="?{% url_replace request 'page' page_obj.next_page_number %}" class="page-link" aria-label="Next">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a href="" class="page-link" aria-label="Next">
+                            <i class="fas fa-chevron-right"></i>
+                        </a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+
+</div>
+
+
+{% endblock %} {% block scripts %}
+
+<script>
+    var conteudos_selecionados = []
+
+    function mostrar_inf_gerais() {
+        // titulo = document.getElementById("id_titulo").value
+        // console.log(titulo)
+        document.getElementById("div_inf_gerais").style.display = 'block';
+        document.getElementById("div_montagem_programacao").style.display = 'none';
+        document.getElementById("div_midias").style.display = 'none';
+        trocar_cor("btn_inf_gerais", "btn_montagem_programacao", "btn_midias");
+    }
+
+    function mostrar_montagem_programacao() {
+        document.getElementById("div_inf_gerais").style.display = 'none';
+        document.getElementById("div_montagem_programacao").style.display = 'block';
+        document.getElementById("div_midias").style.display = 'none';
+        trocar_cor("btn_montagem_programacao", "btn_inf_gerais", "btn_midias");
+    }
+
+    function mostrar_execucao() {
+        document.getElementById("div_inf_gerais").style.display = 'none';
+        document.getElementById("div_montagem_programacao").style.display = 'none';
+        document.getElementById("div_midias").style.display = 'block';
+        trocar_cor("btn_midias", "btn_inf_gerais", "btn_montagem_programacao");
+    }
+
+    function trocar_cor(nova, antiga1, antiga2) {
+        document.getElementById(nova).classList.remove('btn-light');
+        document.getElementById(nova).classList.add('btn-success');
+        document.getElementById(antiga1).classList.remove('btn-success');
+        document.getElementById(antiga1).classList.add('btn-light');
+        document.getElementById(antiga2).classList.remove('btn-success');
+        document.getElementById(antiga2).classList.add('btn-light');
+    }
+
+    function selecionar_conteudo(nome) {
+        document.getElementById("div_disciplinas").style.display = 'none';
+        document.getElementById("div_conteudos").style.display = 'block';
+        document.getElementById("disciplina_selecionada").innerHTML = "" +
+            "<a onclick='escolher_outra_disciplina()'>" +
+            "   <i class='fa fa-arrow-left font-weight-bolder text-primary'></i>" +
+            "</a>" +
+            " Disciplina: " + nome;
+
+        tabela = document.getElementById('tabela_conteudos');
+
+        $.ajax({
+            url: "/disciplina/listar-conteudos/", // the endpoint
+            type: "GET", // http method
+            data: {
+                'nome': nome
+            },
+            success: function(response) {
+                for (var i = 0; i < response.length; i++) {
+                    nova_linha = tabela.insertRow(-1);
+                    nova_celula = nova_linha.insertCell(0);
+                    nova_celula.innerHTML = response[i][1] +
+                        " <a onclick=\"adicionar_conteudo('" + nome + "','" + response[i][1] + "')\" style='float:right'>" +
+                        "    <i class='fas fa-plus font-weight-bolder text-primary'></i> " +
+                        " </a>"
+                }
+            }
+        });
+    }
+
+    function escolher_outra_disciplina() {
+        document.getElementById("div_disciplinas").style.display = 'block';
+        document.getElementById("div_conteudos").style.display = 'none';
+        $("#tabela_conteudos").find("tr:not(:first)").remove();
+    }
+
+    function adicionar_conteudo(disciplina, conteudo) {
+
+        $.ajax({
+            url: "/disciplina/ler-id-conteudo/", // the endpoint
+            type: "GET", // http method
+            data: {
+                'conteudo': conteudo,
+                'disciplina': disciplina
+            },
+            success: function(response) {
+                if (!conteudos_selecionados.includes(response['id'])) {
+                    conteudos_selecionados.push(response['id'])
+                    document.getElementById("lista_id_conteudos").value = conteudos_selecionados
+
+                    var str = "<a class='text-sm opacity-8' onclick='remover_conteudo(" + response['id'] + ")' id='conteudo_selecionado_" + response['id'] +
+                        "'> " +
+                        " <i class='fas fa-minus font-weight-bolder text-danger'></i>  " +
+                        disciplina + ": " + conteudo +
+                        " </a>";
+                    document.getElementById("div_conteudos_selecionados").innerHTML += str;
+                }
+            }
+        });
+    }
+
+    function remover_conteudo(id) {
+        const index = conteudos_selecionados.indexOf(id);
+        conteudos_selecionados.splice(index, 1);
+        document.getElementById("lista_id_conteudos").value = conteudos_selecionados
+        var elem = document.getElementById("conteudo_selecionado_" + id);
+        elem.parentNode.removeChild(elem);
+        console.log(conteudos_selecionados)
+    }
+</script>
+
+{% endblock %}
