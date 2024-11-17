@@ -215,7 +215,15 @@
                             <div class="d-flex flex-column">
                                 <h6 class="mb-3 text-sm text-uppercase">Conteúdo</h6>
                                 {% for conteudo in plano_aula.conteudos.all %}
-                                    <span class="mb-2 text-s">{{ conteudo.disciplina}} - {{ conteudo }}</span> 
+                                    <span class="mb-2 text-s">
+                                        <a href="{% url 'plano_aula:listar' %}?conteudos__disciplina={{conteudo.disciplina.pk}}">
+                                            {{ conteudo.disciplina }}
+                                        </a> 
+                                        - 
+                                        <a href="{% url 'plano_aula:listar' %}?conteudos={{conteudo.pk}}">
+                                            {{ conteudo }}
+                                        </a>
+                                    </span> 
                                 {% empty %}
                                     <span class="mb-2 text-s">-</span> 
                                 {% endfor %}
