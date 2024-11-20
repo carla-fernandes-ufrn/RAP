@@ -35,7 +35,6 @@ def home(request):
 
     # return render(request, "Base/home.html")
 
-
 def encontrar_planos_aula_disciplina(planos_aula, disciplinas):
 
     inf_disciplinas = []
