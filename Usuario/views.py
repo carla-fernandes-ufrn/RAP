@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from django.views import generic
@@ -110,10 +110,20 @@ class CompletarCadastro(LoginRequiredMixin, generic.UpdateView):
     template_name = 'Usuario/completar_cadastro.html'
     success_url = reverse_lazy('home')
 
-class Editar(LoginRequiredMixin, generic.UpdateView):
+class Editar(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Usuario
     form_class = forms.FormEditarUsuario
     template_name = 'Usuario/editar.html'
+
+    def test_func(self):
+        usuario = Usuario.objects.get(pk=int(self.kwargs['pk']))
+        print(self.request.user.id == usuario.id)
+        return self.request.user.id == usuario.id
+    
+    def get_context_data(self,**kwargs):
+        context = super(Editar,self).get_context_data(**kwargs)
+        context['form_senha'] = forms.FormEditarSenha()
+        return context
 
     def get_success_url(self):
            pk = self.kwargs["pk"]
@@ -128,6 +138,13 @@ def alterar_avatar(request, pk, novo):
         return redirect('usuario:editar', pk=pk)
     else:
         pass
+
+@login_required
+def alterar_senha(request, pk, senha):
+    usuario = Usuario.objects.get(pk=pk)
+    usuario.password = senha
+    usuario.save()
+    return redirect('usuario:editar', pk=pk)
 
 class AlterarSenha(LoginRequiredMixin, generic.UpdateView):
     model = Usuario
