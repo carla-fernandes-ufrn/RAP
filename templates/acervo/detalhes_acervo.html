@@ -1,0 +1,28 @@
+<!-- acervo/templates/acervo/detalhes_acervo.html -->
+{% extends 'base/base.html' %}
+{% load static %}
+
+{% block title %}Detalhes do Acervo{% endblock %}
+
+{% block conteudo %}
+<div class="row">
+    <div class="col-12">
+        <h2>{{ acervo_item.titulo }}</h2>
+        <p><strong>Tipo:</strong> {{ acervo_item.tipo.tipo }}</p>
+        <p><strong>Autor:</strong> {{ acervo_item.autor }}</p>
+        <p><strong>Ano:</strong> {{ acervo_item.ano }}</p>
+        <p><strong>Licença de Uso:</strong> {{ acervo_item.licenca_de_uso }}</p>
+        {% if acervo_item.link %}
+            <p><strong>Link:</strong> <a href="{{ acervo_item.link }}" target="_blank">{{ acervo_item.link }}</a></p>
+        {% endif %}
+        {% if acervo_item.file %}
+            <p><strong>Arquivo:</strong> <a href="{{ acervo_item.file.url }}" target="_blank">Download</a></p>
+        {% endif %}
+        <!-- Botões de Ação -->
+        {% if acervo_item.responsavel == user %}
+            <a href="{% url 'acervo:editar_acervo' acervo_item.pk %}" class="btn btn-primary">Editar</a>
+        {% endif %}
+        <a href="{% url 'acervo:acervo' %}" class="btn btn-secondary">Voltar</a>
+    </div>
+</div>
+{% endblock %}

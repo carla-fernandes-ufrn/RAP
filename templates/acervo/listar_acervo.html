@@ -1,0 +1,61 @@
+<!-- acervo/templates/acervo/listar_acervo.html -->
+{% extends 'base/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Lista de Acervos{% endblock %}
+
+{% block conteudo %}
+<div class="row mb-3">
+    <div class="col-12 d-flex justify-content-between align-items-center">
+        <h2>Lista de Acervos</h2>
+        {% if user.is_authenticated %}
+            <a href="{% url 'acervo:criar' %}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Adicionar Novo Acervo
+            </a>
+        {% else %}
+            <a href="{% url 'login' %}" class="btn btn-success">
+                <i class="fas fa-plus"></i> Faça Login para Adicionar
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Título</th>
+                    <th>Tipo</th>
+                    <th>Autor</th>
+                    <th>Ano</th>
+                    <th>Licença de Uso</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for acervo in acervo_items %}
+                <tr>
+                    <td><a href="{% url 'acervo:detalhes_acervo' acervo.pk %}">{{ acervo.titulo }}</a></td>
+                    <td>{{ acervo.tipo.tipo }}</td>
+                    <td>{{ acervo.autor }}</td>
+                    <td>{{ acervo.ano }}</td>
+                    <td>{{ acervo.licenca_de_uso }}</td>
+                    <td>
+                        {% if acervo.responsavel == user %}
+                            <a href="{% url 'acervo:editar_acervo' acervo.pk %}" class="btn btn-sm btn-primary">Editar</a>
+                        {% endif %}
+                        <!-- Adicione mais ações se necessário -->
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">Nenhum acervo encontrado.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

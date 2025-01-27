@@ -1,0 +1,11 @@
+<!-- acervo/templates/acervo/criar_acervo.html -->
+{% extends 'base/base.html' %}
+
+{% block content %}
+  <h1>Adicionar novo item ao Acervo</h1>
+  <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">Salvar</button>
+  </form>
+{% endblock %}
