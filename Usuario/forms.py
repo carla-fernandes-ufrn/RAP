@@ -35,6 +35,13 @@ class FormCompletarCadastro(ModelForm):
         if commit:
             user.save()
         return user
+    
+    def __init__(self, *args, **kwargs):
+        super(FormCompletarCadastro, self).__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+        self.fields['estado'].required = True
+        self.fields['cidade'].required = True
 
 class FormAtualizarInteresses(ModelForm):
 

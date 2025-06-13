@@ -91,7 +91,14 @@ def completar_cadastro(request):
                         disciplina = Disciplina.objects.get(pk=interesse)
                         Interesses.objects.get(usuario=usuario, disciplina=disciplina).delete()
             return redirect('home')
-        
+        else:
+            informacoes = {
+                'form_usuario': form_usuario,
+                'form_interesses': form_interesses,
+                'disciplinas': disciplinas,
+                'interesses': interesses
+            }
+            return render(request, "usuario/completar_cadastro.html", informacoes)
     else:
         form_usuario = forms.FormCompletarCadastro()
         form_interesses = forms.FormAtualizarInteresses()
