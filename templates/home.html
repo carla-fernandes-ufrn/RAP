@@ -98,9 +98,15 @@
                                             <span class="text-dark font-weight-bold text-xs ms-sm-2">{{acao.data_fim|date:"d/m/Y"}}</span>
                                         </span>
                                         {% endif %}
-                                        <span class="mb-2 text-xs">Local: 
-                                            <span class="text-dark font-weight-bold text-xs ms-sm-2">{{acao.local}}</span>
-                                        </span>
+                                        {% if acao.local is not None %}
+                                            <span class="mb-2 text-xs">Local: 
+                                                <span class="text-dark font-weight-bold text-xs ms-sm-2">{{acao.local}}</span>
+                                            </span>
+                                        {% else %}
+                                            <span class="mb-2 text-xs">Local: 
+                                                <span class="text-dark font-weight-bold text-xs ms-sm-2"> -</span>
+                                            </span>
+                                        {% endif %}
                                     </div>
                                     <div class="ms-auto text-end text-sm text-uppercase">
                                         {{acao.tipo}}
@@ -128,27 +134,9 @@
           Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
     
-        const images = ["assets/img/robotica/vertical/imagem1.jpeg",
-        "assets/img/robotica/vertical/imagem2.jpeg",
-        "assets/img/robotica/vertical/imagem3.jpeg",
-        "assets/img/robotica/vertical/imagem4.jpeg",
-        "assets/img/robotica/vertical/imagem5.jpeg",
-        "assets/img/robotica/vertical/imagem6.jpeg",
-        "assets/img/robotica/vertical/imagem7.jpeg",
-        "assets/img/robotica/vertical/imagem8.jpeg",
-        "assets/img/robotica/vertical/imagem9.jpeg",
-        "assets/img/robotica/vertical/imagem10.jpeg",
-        "assets/img/robotica/vertical/imagem11.jpeg",
-        "assets/img/robotica/vertical/imagem12.jpeg",
-        "assets/img/robotica/vertical/imagem13.jpeg",
-        "assets/img/robotica/vertical/imagem14.jpeg",
-        "assets/img/robotica/vertical/imagem15.jpeg",
-        "assets/img/robotica/vertical/imagem16.jpeg",
-        "assets/img/robotica/vertical/imagem17.jpeg",
-        "assets/img/robotica/vertical/imagem18.jpeg",
-        "assets/img/robotica/vertical/imagem19.jpeg",
-        "assets/img/robotica/vertical/imagem20.jpeg",
-        "assets/img/robotica/vertical/imagem21.jpeg"
+        const images = ["assets/img/robotica/horizontal/imagem1.png",
+        "assets/img/robotica/horizontal/imagem2.png",
+        "assets/img/robotica/horizontal/imagem3.png"
           ];
     
           document.addEventListener('DOMContentLoaded', _ => {

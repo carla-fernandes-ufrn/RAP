@@ -1,66 +1,67 @@
 {% load static %}
+<nav class="navbar navbar-expand-lg px-0 shadow-none bg-gradient-danger" style="height: 70px;">
+  <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fa fa-bars"></i>  <!-- Ícone visível sempre -->
+  </button>
+  <div class="collapse navbar-collapse justify-content-between" id="navbar">
 
-<div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-  <div class="navbar-nav mr-auto">
-    <ul class="navbar-nav justify-content-end">
-      <li class="nav-item d-flex align-items-center">
-        <a href="{% url 'home' %}" class="nav-link font-weight-bold px-0 text-white">
-          <img src="{% static 'assets/img/repo-educ-logo.png' %}" width="150" alt="">
+    <ul class="navbar-nav">
+      <li class="nav-item d-flex align-items-center h-100">
+        <a href="{% url 'home' %}" class="d-flex align-items-center" style="height: 50px;">
+          <img src="{% static 'assets/img/LogoRAP-transparente.png' %}"
+               style="height: 100%; width: auto; display: block;"
+               alt="Logo">
         </a>
       </li>
       <li class="nav-item px-3 d-flex align-items-center">
         <a href="{% url 'plano_aula:listar' %}" class="nav-link font-weight-bold px-0 text-white">
-          <span class="d-sm-inline d-none">Planos de aula</span>
+          Planos de aula
         </a>
       </li>
       <li class="nav-item px-3 d-flex align-items-center">
         <a href="{% url 'disciplina:listar' %}" class="nav-link font-weight-bold px-0 text-white">
-          <span class="d-sm-inline d-none">Disciplinas</span>
+          Disciplinas
         </a>
       </li>
       
       <!-- Novo item de navegação para "Acervo" com namespace -->
       <li class="nav-item px-3 d-flex align-items-center">
         <a href="{% url 'acervo:acervo' %}" class="nav-link font-weight-bold px-0 text-white">
-          <span class="d-sm-inline d-none">Acervo</span>
+          Acervo
         </a>
       </li>
       
       <li class="nav-item px-3 d-flex align-items-center">
         <a href="" class="nav-link font-weight-bold px-0 text-white">
-          <span class="d-sm-inline d-none">Usuários</span>
+          Usuários
         </a>
       </li>
       <li class="nav-item px-3 d-flex align-items-center">
         <a href="{% url 'acoes:listar' %}" class="nav-link font-weight-bold px-0 text-white">
-          <span class="d-sm-inline d-none">Ações</span>
+          Ações
+        </a>
+      </li>
+    </ul>
+    <ul class="navbar-nav align-items-center">
+      <li class="nav-item me-2">
+        <div class="input-group">
+          <input type="text" class="form-control" placeholder="Digite aqui...">
+          <span class="input-group-text"><a href=""><i class="fa fa-search"></i></a></span>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a href="#" class="nav-link text-white">
+          <i class="fa fa-user me-1"></i> {{ user.first_name }} {{ user.last_name }}
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="{% url 'usuario:logout' %}" class="nav-link text-white">
+          <i class="fa fa-sign-out-alt"></i>
         </a>
       </li>
     </ul>
   </div>
-  <div class="navbar-nav ml-auto collapse navbar-collapse justify-content-end">
-    <div class="pe-md-3 d-flex align-items-center">
-      <div class="input-group">
-        <input type="text" class="form-control" placeholder="Digite aqui...">
-        <span class="input-group-text text-body"><a href=""><i class="fa fa-search" aria-hidden="true"></i></a></span>
-      </div>
-    </div>
-    <ul class="navbar-nav justify-content-end">
-      <li class="nav-item d-flex align-items-center">
-        <a href="" class="nav-link font-weight-bold px-0 text-white">
-          <i class="fa fa-user me-sm-1"></i>
-          <span class="d-sm-inline d-none">{{ user.first_name }} {{ user.last_name }}</span>
-        </a>
-      </li>
-      <li class="nav-item px-3 d-flex align-items-center">
-        <a href="{% url 'usuario:logout' %}" class="nav-link p-0 text-white">
-          <i class="fa fa-sign-out-alt fixed-plugin-button-nav cursor-pointer"></i>
-        </a>
-      </li>
-    </ul>
-  </div>
-</div>
-
+</nav>
 <style>
 .badge {
   padding-left: 9px;
