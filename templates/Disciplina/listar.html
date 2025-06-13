@@ -45,7 +45,7 @@
                         <td><p class="text-sm mb-0">{{disciplina.0.nome}}</p></td>
                         <td><p class="text-xs font-weight-bold mb-0">{{disciplina.1}}</p></td>
                         <td>
-                          <a href="">
+                          <a href="{% url 'plano_aula:listar' %}?conteudos__disciplina={{ disciplina.0.id }}">
                               <i class="fas fa-magnifying-glass px-3"
                               style="color: var(--bs-info);"></i>
                           </a>
@@ -138,7 +138,7 @@
                         <td><p class="text-sm mb-0">{{conteudo.nome}}</p></td>
                         <td><p class="text-xs font-weight-bold mb-0">{{conteudo.planos_de_aula.all|length}}</p></td>
                         <td>
-                          <a href="">
+                          <a href="{% url 'plano_aula:listar' %}?conteudos={{ conteudo.id }}">
                               <i class="fas fa-magnifying-glass px-3"
                               style="color: var(--bs-info);"></i>
                           </a>
