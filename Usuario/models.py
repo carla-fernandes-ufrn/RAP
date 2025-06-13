@@ -1,9 +1,39 @@
 from django.contrib.auth.models import User
 from django.db import models
 
+ESTADOS = [
+    ('AC', 'Acre'),
+    ('AL', 'Alagoas'),
+    ('AP', 'Amapá'),
+    ('AM', 'Amazonas'),
+    ('BA', 'Bahia'),
+    ('CE', 'Ceará'),
+    ('DF', 'Distrito Federal'),
+    ('ES', 'Espírito Santo'),
+    ('GO', 'Goiás'),
+    ('MA', 'Maranhão'),
+    ('MT', 'Mato Grosso'),
+    ('MS', 'Mato Grosso do Sul'),
+    ('MG', 'Minas Gerais'),
+    ('PA', 'Pará'),
+    ('PB', 'Paraíba'),
+    ('PR', 'Paraná'),
+    ('PE', 'Pernambuco'),
+    ('PI', 'Piauí'),
+    ('RJ', 'Rio de Janeiro'),
+    ('RN', 'Rio Grande do Norte'),
+    ('RS', 'Rio Grande do Sul'),
+    ('RO', 'Rondônia'),
+    ('RR', 'Roraima'),
+    ('SC', 'Santa Catarina'),
+    ('SP', 'São Paulo'),
+    ('SE', 'Sergipe'),
+    ('TO', 'Tocantins')
+]
+
 class Usuario(User):
     cidade = models.CharField(max_length=100, verbose_name='Cidade')
-    estado = models.CharField(max_length=100, verbose_name='Estado')
+    estado = models.CharField(max_length=2, choices=ESTADOS, default='AC', verbose_name='Estado')
     avatar = models.ImageField(upload_to='profile-pic/', default='profile-pic/default.jpeg')
     interesses = models.ManyToManyField('Disciplina.Disciplina', through='Interesses')
 
