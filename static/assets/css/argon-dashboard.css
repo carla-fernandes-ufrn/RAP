@@ -21589,6 +21589,14 @@ label,
   margin-left: -15px;
 }
 
+.icon-stroke {
+  text-shadow:
+    -1px -1px 1px black,
+     1px -1px 1px black,
+    -1px  1px 1px black,
+     1px  1px 1px black;
+}
+
 .info-horizontal {
   text-align: left !important;
 }

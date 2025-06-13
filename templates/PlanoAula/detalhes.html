@@ -28,12 +28,12 @@
         <span class="text-sm text-uppercase font-weight-bold">
             {% if plano_aula.likes.all|encontrar_usuario_lista:user.id %}
                 <a onclick="marcar_favorito({{plano_aula.id}}, {{user.id}}, '-')">
-                    <i class="fas fa-thumbs-up px-3" id="icon_thumbs_up_{{plano_aula.id}}"
+                    <i class="fas fa-thumbs-up px-3 text-success icon-stroke" id="icon_thumbs_up_{{plano_aula.id}}"
                     style="color: var(--bs-success);"></i>
                 </a>
             {% else %}
                 <a onclick="marcar_favorito({{plano_aula.id}}, {{user.id}}, '-')">
-                    <i class="fas fa-thumbs-up px-3" id="icon_thumbs_up_{{plano_aula.id}}"></i>
+                    <i class="fas fa-thumbs-up px-3 icon-stroke" id="icon_thumbs_up_{{plano_aula.id}}"  style="color: white;"   ></i>
                 </a>
             {% endif %}
             <span class="text-sm text-uppercase font-weight-bold" id="contador_thumbs_up_{{plano_aula.id}}">{{ plano_aula.likes.count }}</span>
@@ -41,12 +41,12 @@
         <span class="text-sm text-uppercase font-weight-bold">
             {% if plano_aula.execucoes.all|encontrar_usuario_lista:user.id %}
                 <a onclick="marcar_executado({{plano_aula.id}}, {{user.id}}, '-')">
-                    <i class="fas fa-play px-3" id="icon_play_{{plano_aula.id}}"
+                    <i class="fas fa-play px-3 icon-stroke" id="icon_play_{{plano_aula.id}}"
                     style="color: var(--bs-success);"></i>
                 </a>
             {% else %}
                 <a onclick="marcar_executado({{plano_aula.id}}, {{user.id}}, '-')">
-                    <i class="fas fa-play px-3" id="icon_play_{{plano_aula.id}} style="color: gray;"></i>
+                    <i class="fas fa-play px-3 icon-stroke" id="icon_play_{{plano_aula.id}}" style="color: white;"></i>
                 </a>
             {% endif %}
             <span class="text-sm text-uppercase font-weight-bold" id="contador_play_{{plano_aula.id}}">{{ plano_aula.execucoes.count }}</span>
@@ -371,7 +371,7 @@
                         {% endif %}
                         </div>
                     </li>
-                    {% if plano_aula.prog_linguagem %}
+                    {% if plano_aula.prog_descricao %}
                         <li class="list-group-item border-0 d-flex p-4 mb-2 bg-gray-100 border-radius-lg" >
                             <div class="d-flex flex-column">
                             <h6 class="mb-3 text-sm text-uppercase">Descrição</h6>
@@ -531,7 +531,7 @@
             document.getElementById("div_programacao").style.display = 'none';
             document.getElementById("div_comentarios").style.display = 'none';
             
-            trocar_cor("btn_inf_gerais", "btn_programacao", "btn_comentarios");
+            trocar_cor_botoes("btn_inf_gerais", "btn_programacao", "btn_comentarios");
         }
 
         function mostrar_programacao() {
@@ -539,7 +539,7 @@
             document.getElementById("div_programacao").style.display = 'block';
             document.getElementById("div_comentarios").style.display = 'none';
             
-            trocar_cor("btn_programacao", "btn_inf_gerais", "btn_comentarios");
+            trocar_cor_botoes("btn_programacao", "btn_inf_gerais", "btn_comentarios");
         }
 
         function mostrar_comentarios() {
@@ -547,10 +547,10 @@
             document.getElementById("div_programacao").style.display = 'none';
             document.getElementById("div_comentarios").style.display = 'block';
             
-            trocar_cor("btn_comentarios", "btn_inf_gerais", "btn_programacao");
+            trocar_cor_botoes("btn_comentarios", "btn_inf_gerais", "btn_programacao");
         }
 
-        function trocar_cor(selecionada, nao_selecionada1, nao_selecionada2) {
+        function trocar_cor_botoes(selecionada, nao_selecionada1, nao_selecionada2) {
             document.getElementById(selecionada).classList.remove('btn-outline-secondary');
             document.getElementById(selecionada).classList.add('btn-outline-success');
             document.getElementById(nao_selecionada1).classList.remove('btn-outline-success');
