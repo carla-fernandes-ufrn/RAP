@@ -360,7 +360,7 @@ class ListarPlanosAulaFiltrados(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         qs = super().get_queryset()
         planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.all())
-        qs_filtrada = planos_aula_filtrado.qs
+        qs_filtrada = planos_aula_filtrado.qs.distinct()
         return qs_filtrada
 
     def get_context_data(self,**kwargs):
@@ -381,7 +381,7 @@ class ListarPlanosAulaFiltradosUsuario(LoginRequiredMixin, generic.ListView):
         qs = super().get_queryset()
         usuario = Usuario.objects.get(pk=self.kwargs.get('pk'))
         planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(criador=usuario))
-        qs_filtrada = planos_aula_filtrado.qs
+        qs_filtrada = planos_aula_filtrado.qs.distinct()
         return qs_filtrada
 
     def get_context_data(self,**kwargs):
