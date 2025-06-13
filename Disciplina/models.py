@@ -8,7 +8,7 @@ STATUS = [
 ]
 
 class Disciplina(models.Model):
-    nome = models.CharField(max_length=200, verbose_name="Nome")
+    nome = models.CharField(unique=True, max_length=200, verbose_name="Nome")
     status = models.CharField(max_length=7, choices=STATUS, default='Ativo')
     
     def __str__(self):
@@ -31,6 +31,9 @@ class Conteudo(models.Model):
         ordering = ['disciplina', 'nome']
         verbose_name = "Conteúdo"
         verbose_name_plural = "Conteúdos"
+        constraints = [
+            models.UniqueConstraint(fields=['nome', 'disciplina'], name='unique_conteudo_por_disciplina')
+        ]
 
 
 STATUS_SUGESTAO = [

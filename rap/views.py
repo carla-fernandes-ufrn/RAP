@@ -37,6 +37,8 @@ def home(request):
 
 def encontrar_planos_aula_disciplina(planos_aula, disciplinas):
 
+    print(disciplinas)
+
     inf_disciplinas = []
 
     for disciplina in disciplinas:
@@ -51,9 +53,10 @@ def encontrar_planos_aula_disciplina(planos_aula, disciplinas):
             if conteudo.disciplina not in disciplinas_pa:
                 disciplinas_pa.append(conteudo.disciplina)
         for disciplina in disciplinas_pa:
-            indice = disciplinas.index(disciplina)
-            inf_disciplinas[indice][1] += 1
-    
+            if (disciplina in disciplinas):
+                indice = disciplinas.index(disciplina)
+                inf_disciplinas[indice][1] += 1
+
     return inf_disciplinas
 
 def encontrar_principais_planos_aula(planos_aula, quantidade):

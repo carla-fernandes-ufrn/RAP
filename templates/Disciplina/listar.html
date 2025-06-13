@@ -46,16 +46,24 @@
                         <td><p class="text-xs font-weight-bold mb-0">{{disciplina.1}}</p></td>
                         <td>
                           <a href="">
-                              <i class="fas fa-magnifying-glass px-3" id="icon_play_{{plano_aula.id}}"
+                              <i class="fas fa-magnifying-glass px-3"
                               style="color: var(--bs-info);"></i>
                           </a>
                           {% if user.is_superuser %}
-                            <a href="">
-                                <i class="fas fa-pencil px-3" id="icon_play_{{plano_aula.id}}"
+                            <a href="" class="editar-disciplina-btn text-primary"
+                                data-id="{{ disciplina.0.id }}"
+                                data-nome="{{ disciplina.0.nome }}"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalEditarDisciplina">
+                                <i class="fas fa-pencil px-3"
                                 style="color: var(--bs-warning);"></i>
                             </a>
-                            <a href="">
-                                <i class="fas fa-trash px-3" id="icon_play_{{plano_aula.id}}"
+                            <a href="" class="text-danger deletar-disciplina-btn"
+                                data-id="{{ disciplina.0.id }}"
+                                data-nome="{{ disciplina.0.nome }}"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalDeletarDisciplina">
+                                <i class="fas fa-trash px-3"
                                 style="color: var(--bs-danger);"></i>
                             </a>
                           {% endif %}
@@ -131,16 +139,25 @@
                         <td><p class="text-xs font-weight-bold mb-0">{{conteudo.planos_de_aula.all|length}}</p></td>
                         <td>
                           <a href="">
-                              <i class="fas fa-magnifying-glass px-3" id="icon_play_{{plano_aula.id}}"
+                              <i class="fas fa-magnifying-glass px-3"
                               style="color: var(--bs-info);"></i>
                           </a>
                           {% if user.is_superuser %}
-                            <a href="">
-                                <i class="fas fa-pencil px-3" id="icon_play_{{plano_aula.id}}"
+                            <a href="" class="editar-conteudo-btn text-primary"
+                                  data-id="{{ conteudo.id }}"
+                                  data-nome="{{ conteudo.nome }}"
+                                  data-disciplina="{{ conteudo.disciplina.nome }}"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#modalEditarConteudo">
+                                <i class="fas fa-pencil px-3"
                                 style="color: var(--bs-warning);"></i>
                             </a>
-                            <a href="">
-                                <i class="fas fa-trash px-3" id="icon_play_{{plano_aula.id}}"
+                            <a href="" class="text-danger deletar-conteudo-btn"
+                                data-id="{{ conteudo.id }}"
+                                data-nome="{{ conteudo.nome }}"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalDeletarConteudo">
+                                <i class="fas fa-trash px-3"
                                 style="color: var(--bs-danger);"></i>
                             </a>
                           {% endif %}
@@ -172,7 +189,7 @@
                 <select class="form-select" id="disciplina_selecionada">
                   <option selected></option>
                   {% for disciplina in lista_disciplinas %}
-                    <option value="{{disciplina}}">{{disciplina.0.nome}}</option>
+                    <option value="{{disciplina.0}}">{{disciplina.0.nome}}</option>
                   {% endfor %}
                 </select>
                 <label for="example-text-input" class="form-control-label">Conteúdo: </label>
@@ -190,6 +207,103 @@
   </div>
 </div>
 </div>
+
+<div class="modal fade" id="modalEditarDisciplina" tabindex="-1" aria-labelledby="editarDisciplinaLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="formEditarDisciplina">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="editarDisciplinaLabel">Editar Disciplina</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="disciplina-id">
+          <div class="mb-3">
+            <label for="disciplina-nome" class="form-label">Nome</label>
+            <input type="text" class="form-control" id="disciplina-nome" name="nome">
+            <small id="erro-disciplina-nome" class="text-danger d-none"></small>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalEditarConteudo" tabindex="-1" aria-labelledby="editarConteudoLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="formEditarConteudo">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="editarConteudoLabel">Editar Conteúdo</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="conteudo-id">
+          <div class="mb-3">
+            <label class="form-label">Disciplina</label>
+            <input type="text" class="form-control" id="conteudo-disciplina" disabled>
+          </div>
+          <div class="mb-3">
+            <label for="conteudo-nome" class="form-label">Nome</label>
+            <input type="text" class="form-control" id="conteudo-nome" name="nome">
+            <small id="erro-nome" class="text-danger d-none"></small>  <!-- Aqui aparece a mensagem -->
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalDeletarDisciplina" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="formDeletarDisciplina">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmar exclusão</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          Tem certeza que deseja excluir a disciplina <strong id="disciplina-nome-delete"></strong>?
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger">Sim, excluir</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" id="modalDeletarConteudo" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="formDeletarConteudo">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmar exclusão</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          Tem certeza que deseja excluir o conteúdo <strong id="conteudo-nome-delete"></strong>?
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger">Sim, excluir</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
 
 {% endblock %}
 
@@ -220,5 +334,136 @@ $(document).ready(function () {
     } );
   });
 </script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    let disciplinaId = null;
+
+    document.querySelectorAll('.editar-disciplina-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        disciplinaId = button.dataset.id;
+        const nome = button.dataset.nome;
+        document.getElementById('disciplina-id').value = disciplinaId;
+        document.getElementById('disciplina-nome').value = nome;
+      });
+    });
+
+    document.getElementById('formEditarDisciplina').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const nome = document.getElementById('disciplina-nome').value;
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      const erroEl = document.getElementById('erro-disciplina-nome');
+      erroEl.classList.add('d-none'); // limpa erro anterior
+
+      fetch(`/disciplina/editar-disciplina/${disciplinaId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrfToken,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `nome=${encodeURIComponent(nome)}`
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          location.reload(); // ou atualize só a linha
+        } else {
+          erroEl.textContent = data.error || 'Erro ao salvar';
+          erroEl.classList.remove('d-none');
+        }
+      });
+    });
+  });
+
+  document.addEventListener('DOMContentLoaded', function () {
+    let conteudoId = null;
+
+    document.querySelectorAll('.editar-conteudo-btn').forEach(button => {
+      button.addEventListener('click', () => {
+        conteudoId = button.dataset.id;
+        document.getElementById('conteudo-id').value = conteudoId;
+        document.getElementById('conteudo-nome').value = button.dataset.nome;
+        document.getElementById('conteudo-disciplina').value = button.dataset.disciplina;
+      });
+    });
+
+    document.getElementById('formEditarConteudo').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const nome = document.getElementById('conteudo-nome').value;
+      const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+      const erroEl = document.getElementById('erro-nome');
+      erroEl.classList.add('d-none'); // esconde erro antigo
+
+      fetch(`/disciplina/editar-conteudo/${conteudoId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': csrfToken,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: `nome=${encodeURIComponent(nome)}`
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          // recarrega ou atualiza linha
+          location.reload();
+        } else {
+          erroEl.textContent = data.error || 'Erro ao salvar';
+          erroEl.classList.remove('d-none'); // mostra mensagem de erro
+        }
+      });
+    });
+
+  });
+
+  let disciplinaId;
+
+    document.querySelectorAll('.deletar-disciplina-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        disciplinaId = btn.getAttribute('data-id');
+        document.getElementById('disciplina-nome-delete').textContent = btn.getAttribute('data-nome');
+      });
+    });
+
+    document.getElementById('formDeletarDisciplina').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      fetch(`/disciplina/inativar-disciplina/${disciplinaId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) location.reload();
+      });
+    });
+
+    document.querySelectorAll('.deletar-conteudo-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        conteudoId = btn.getAttribute('data-id');
+        document.getElementById('conteudo-nome-delete').textContent = btn.getAttribute('data-nome');
+      });
+    });
+
+    document.getElementById('formDeletarConteudo').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      fetch(`/disciplina/inativar-conteudo/${conteudoId}/`, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value,
+        }
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) location.reload();
+      });
+    });
+</script>
+
 
 {% endblock %}

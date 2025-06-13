@@ -20,5 +20,11 @@ urlpatterns = [
     path('listar-sugestoes-usuario/<int:pk>', views.listar_sugestoes_usuario, name="listar_sugestoes_usuario"),
     path('numero-sugestoes/', views.ler_numero_sugestoes, name="numero_sugestoes"),
 
+    # Editar/deletar conteúdo e disciplina
+    path('editar-disciplina/<int:pk>/', views.editar_disciplina, name='editar_disciplina'),
+    path('editar-conteudo/<int:pk>/', views.editar_conteudo, name='editar_conteudo'),
+    path('inativar-disciplina/<int:pk>/', views.inativar_disciplina, name='inativar_disciplina'),
+    path('inativar-conteudo/<int:pk>/', views.inativar_conteudo, name='inativar_conteudo'),
+
     path('ler-id-conteudo/', views.ler_id_conteudo, name="ler_id_conteudo"),
 ]

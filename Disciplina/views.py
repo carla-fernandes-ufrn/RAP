@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 
 from django.core.exceptions import PermissionDenied
@@ -26,6 +26,7 @@ from Usuario.models import Usuario
 @login_required
 def listar(request):
     planos_aula = PlanoAula.objects.filter(status=True)
+    
     disciplinas = Disciplina.objects.filter(status="Ativo")
     conteudos = Conteudo.objects.filter(status="Ativo")
 
@@ -98,14 +99,24 @@ def analisar_sugestoes_disciplina(request):
 
     for pk in lista_disciplinas_aceitas:
         sugestao = SugestaoDisciplina.objects.get(id=int(pk))
-        if (len(Disciplina.objects.filter(nome = sugestao.nome)) == 0) : 
-            nova_disciplina = Disciplina(nome = sugestao.nome)
+        disciplina_existente = Disciplina.objects.filter(nome__iexact=sugestao.nome).first()
+
+        if not disciplina_existente:
+            # Não existe disciplina com esse nome: criar nova
+            nova_disciplina = Disciplina(nome=sugestao.nome)
             nova_disciplina.save()
-            sugestao.status = 'B'
-            sugestao.save()
+            sugestao.status = 'B'  # Aprovada
         else:
-            sugestao.status = 'C'
-            sugestao.save()
+            if disciplina_existente.status == 'Inativo':
+                # Já existe, mas está inativa → reativar
+                disciplina_existente.status = 'Ativo'
+                disciplina_existente.save()
+                sugestao.status = 'B'  # Aprovada
+            else:
+                # Já existe e está ativa → marcar como conflituosa
+                sugestao.status = 'C'  # Conflito
+
+        sugestao.save()
     
     for pk in lista_disciplinas_negadas:
         sugestao = SugestaoDisciplina.objects.get(id=int(pk))
@@ -122,14 +133,27 @@ def analisar_sugestoes_conteudo(request):
 
     for pk in lista_conteudos_aceitos:
         sugestao = SugestaoConteudo.objects.get(id=int(pk))
-        if (len(Conteudo.objects.filter(nome = sugestao.nome, disciplina = sugestao.disciplina)) == 0): 
-            novo_conteudo = Conteudo(nome = sugestao.nome, disciplina = sugestao.disciplina)
+        conteudo_existente = Conteudo.objects.filter(
+            nome__iexact=sugestao.nome,
+            disciplina=sugestao.disciplina
+        ).first()
+
+        if not conteudo_existente:
+            # Não existe conteúdo com esse nome na disciplina → criar novo
+            novo_conteudo = Conteudo(nome=sugestao.nome, disciplina=sugestao.disciplina)
             novo_conteudo.save()
-            sugestao.status = 'B'
-            sugestao.save()
+            sugestao.status = 'B'  # Aprovado
         else:
-            sugestao.status = 'C'
-            sugestao.save()
+            if conteudo_existente.status == 'Inativo':
+                # Existe, mas está inativo → reativar
+                conteudo_existente.status = 'Ativo'
+                conteudo_existente.save()
+                sugestao.status = 'B'  # Aprovado
+            else:
+                # Já existe e está ativo → conflito
+                sugestao.status = 'C'
+
+        sugestao.save()
     
     for pk in lista_conteudos_negados:
         sugestao = SugestaoConteudo.objects.get(id=int(pk))
@@ -192,6 +216,77 @@ def ler_numero_sugestoes(request):
 
     resposta = qnt_sugestoes_disciplina + qnt_sugestoes_conteudo
     return JsonResponse({"qnt":resposta}, status = 200)
+
+@login_required
+def editar_disciplina(request, pk):
+    disciplina = get_object_or_404(Disciplina, pk=pk)
+
+    if request.method == 'POST':
+        novo_nome = request.POST.get('nome')
+
+        if not novo_nome:
+            return JsonResponse({'success': False, 'error': 'Nome não pode ser vazio.'})
+
+        # Verifica se já existe outra disciplina com o mesmo nome (ignorando maiúsculas/minúsculas)
+        existe = Disciplina.objects.filter(nome__iexact=novo_nome).exclude(pk=disciplina.pk).exists()
+        if existe:
+            return JsonResponse({'success': False, 'error': 'Já existe uma disciplina com esse nome.'})
+
+        disciplina.nome = novo_nome
+        disciplina.save()
+        return JsonResponse({'success': True, 'nome': disciplina.nome})
+
+    # Se GET, retorna dados para preencher o modal
+    return JsonResponse({
+        'id': disciplina.id,
+        'nome': disciplina.nome,
+    })
+
+@login_required
+def editar_conteudo(request, pk):
+    conteudo = get_object_or_404(Conteudo, pk=pk)
+
+    if request.method == 'POST':
+        novo_nome = request.POST.get('nome')
+
+        if not novo_nome:
+            return JsonResponse({'success': False, 'error': 'Nome não pode ser vazio.'})
+
+        # Verifica se já existe outro conteúdo com o mesmo nome na mesma disciplina
+        existe = Conteudo.objects.filter(
+            disciplina=conteudo.disciplina,
+            nome__iexact=novo_nome
+        ).exclude(pk=conteudo.pk).exists()
+
+        if existe:
+            return JsonResponse({
+                'success': False,
+                'error': 'Já existe um conteúdo com esse nome nesta disciplina.'
+            })
+
+        conteudo.nome = novo_nome
+        conteudo.save()
+        return JsonResponse({'success': True, 'nome': conteudo.nome})
+
+    return JsonResponse({
+        'id': conteudo.id,
+        'nome': conteudo.nome,
+        'disciplina': conteudo.disciplina.nome
+    })
+
+@login_required
+def inativar_disciplina(request, pk):
+    disciplina = get_object_or_404(Disciplina, pk=pk)
+    disciplina.status = 'Inativo'
+    disciplina.save()
+    return JsonResponse({'success': True})
+
+@login_required
+def inativar_conteudo(request, pk):
+    conteudo = get_object_or_404(Conteudo, pk=pk)
+    conteudo.status = 'Inativo'
+    conteudo.save()
+    return JsonResponse({'success': True})
 
 @login_required
 def ler_id_conteudo(request):
