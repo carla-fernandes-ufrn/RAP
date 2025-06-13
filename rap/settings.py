@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'Disciplina',
     'Curso',
     'Acoes',
+    'acervo',
     # python -m pip install Pillow
     'crispy_bootstrap4', # pip install crispy-bootstrap4
     'bootstrap5', #pip install django-bootstrap-v5
@@ -79,7 +80,7 @@ ROOT_URLCONF = 'rap.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [TEMPLATE_DIR,],
+        'DIRS': [TEMPLATE_DIR, ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

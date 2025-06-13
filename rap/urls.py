@@ -30,6 +30,7 @@ urlpatterns = [
     path('disciplina/', include('Disciplina.urls')),
     path('curso/', include('Curso.urls')),
     path('acoes/', include('Acoes.urls')),
+    path('acervo/', include('acervo.urls', namespace='acervo')),    
 ]
 
 urlpatterns += staticfiles_urlpatterns()

@@ -1,0 +1,51 @@
+<!-- acervo/templates/acervo/submeter_acervo.html -->
+{% extends 'base/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}
+  {% if form.instance.pk %}
+    Editar Acervo
+  {% else %}
+    Criar Novo Acervo
+  {% endif %}
+{% endblock %}
+
+{% block conteudo %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-gradient-success text-white">
+                <h4>
+                    {% if form.instance.pk %}
+                        Editar Acervo
+                    {% else %}
+                        Criar Novo Acervo
+                    {% endif %}
+                </h4>
+            </div>
+            <div class="card-body">
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="mb-3">
+                            {{ field.label_tag }}
+                            {% render_field field class="form-control" %}
+                            {% if field.help_text %}
+                                <small class="form-text text-muted">{{ field.help_text }}</small>
+                            {% endif %}
+                            {% if field.errors %}
+                                <div class="text-danger">
+                                    {{ field.errors }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                    <a href="{% url 'acervo:acervo' %}" class="btn btn-secondary">Cancelar</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
