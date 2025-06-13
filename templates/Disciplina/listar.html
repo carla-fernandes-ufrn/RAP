@@ -29,10 +29,13 @@
       </div>
       <div class="table-responsive">
           <table id="tabela_disciplinas" class="table align-items-center" cellspacing="0">
+            <col style="width: 50%;">
+            <col style="width: 25%;">
+            <col style="width: 25%;">
             <thead>
               <tr>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">#Aulas</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">#Planos de Aula</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
               </tr>
             </thead>
@@ -41,7 +44,22 @@
                     <tr>
                         <td><p class="text-sm mb-0">{{disciplina.0.nome}}</p></td>
                         <td><p class="text-xs font-weight-bold mb-0">{{disciplina.1}}</p></td>
-                        <td><span class="text-secondary text-xs font-weight-bold">ícones</span></td>
+                        <td>
+                          <a href="">
+                              <i class="fas fa-magnifying-glass px-3" id="icon_play_{{plano_aula.id}}"
+                              style="color: var(--bs-info);"></i>
+                          </a>
+                          {% if user.is_superuser %}
+                            <a href="">
+                                <i class="fas fa-pencil px-3" id="icon_play_{{plano_aula.id}}"
+                                style="color: var(--bs-warning);"></i>
+                            </a>
+                            <a href="">
+                                <i class="fas fa-trash px-3" id="icon_play_{{plano_aula.id}}"
+                                style="color: var(--bs-danger);"></i>
+                            </a>
+                          {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -93,11 +111,15 @@
       </div>
       <div class="table-responsive">
           <table id="tabela_conteudos" class="table align-items-center" cellspacing="0">
+            <col style="width: 25%;">
+            <col style="width: 25%;">
+            <col style="width: 25%;">
+            <col style="width: 25%;">
             <thead>
               <tr>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Disciplina</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Conteúdo</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">#Aulas</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">#Planos de Aula</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7"></th>
               </tr>
             </thead>
@@ -107,7 +129,22 @@
                         <td><h6 class="mb-0 text-sm">{{conteudo.disciplina}}</h6></td>
                         <td><p class="text-sm mb-0">{{conteudo.nome}}</p></td>
                         <td><p class="text-xs font-weight-bold mb-0">{{conteudo.planos_de_aula.all|length}}</p></td>
-                        <td><span class="text-secondary text-xs font-weight-bold">ícones</span></td>
+                        <td>
+                          <a href="">
+                              <i class="fas fa-magnifying-glass px-3" id="icon_play_{{plano_aula.id}}"
+                              style="color: var(--bs-info);"></i>
+                          </a>
+                          {% if user.is_superuser %}
+                            <a href="">
+                                <i class="fas fa-pencil px-3" id="icon_play_{{plano_aula.id}}"
+                                style="color: var(--bs-warning);"></i>
+                            </a>
+                            <a href="">
+                                <i class="fas fa-trash px-3" id="icon_play_{{plano_aula.id}}"
+                                style="color: var(--bs-danger);"></i>
+                            </a>
+                          {% endif %}
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -135,10 +172,10 @@
                 <select class="form-select" id="disciplina_selecionada">
                   <option selected></option>
                   {% for disciplina in lista_disciplinas %}
-                    <option value="{{disciplina}}">{{disciplina}}</option>
+                    <option value="{{disciplina}}">{{disciplina.0.nome}}</option>
                   {% endfor %}
                 </select>
-                <label for="example-text-input" class="form-control-label">Nome: </label>
+                <label for="example-text-input" class="form-control-label">Conteúdo: </label>
                 <input id="conteudo_text" class="form-control" type="text">
             </div>
             <div class="col-md-2">
