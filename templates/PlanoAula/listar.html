@@ -90,7 +90,6 @@
             <a href="{% url 'plano_aula:listar_usuario' pk=user.pk %}" class="btn btn-outline-success me-2">Meus planos de aula</a>
             <a href="{% url 'plano_aula:listar_favoritos' pk=user.pk %}" class="btn btn-outline-secondary me-2">Favoritos</a>
             <a href="{% url 'plano_aula:listar_executados' pk=user.pk %}" class="btn btn-outline-secondary me-2">Executados</a>
-            <a href="{% url 'plano_aula:criar' %}" class="btn btn-success me-2 float-end"><i class="fa fa-plus"></i></a>
         {% elif tipo == "favoritos" %}
             <a href="{% url 'plano_aula:listar' %}" class="btn btn-outline-secondary me-2">Todos os planos de aula</a>
             <a href="{% url 'plano_aula:listar_usuario' pk=user.pk %}" class="btn btn-outline-secondary me-2">Meus planos de aula</a>
@@ -102,6 +101,7 @@
             <a href="{% url 'plano_aula:listar_favoritos' pk=user.pk %}" class="btn btn-outline-secondary me-2">Favoritos</a>
             <a href="{% url 'plano_aula:listar_executados' pk=user.pk %}" class="btn btn-outline-success me-2">Executados</a>
         {% endif %}
+        <a href="{% url 'plano_aula:criar' %}" class="btn btn-success me-2 float-end"><i class="fa fa-plus"></i></a>
         <br>
         {% for aula in lista_planos_aula %}
             <div class="card" id="card_plano_aula_{{aula.id}}">
@@ -184,7 +184,11 @@
                         </div>
                         <div class="col-8">
                             <div class="overflow-auto">
-                                <i class="ni education_hat mr-2"></i>{{ aula.descricao_atividade|slice:":600" }}...
+                                {% if aula.descricao_atividade|length > 600 %}
+                                    {{ aula.descricao_atividade|slice:":600" }}...
+                                {% else %}
+                                    {{ aula.descricao_atividade }}
+                                {% endif %}
                             </div>
                         </div>
                         
