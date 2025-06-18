@@ -20,6 +20,8 @@
 
 {% block conteudo %}
 
+{% with aba=request.GET.aba|default:'inf_gerais' %}
+
 <br>
 
 <div class="row">
@@ -58,24 +60,37 @@
         
     </div>
     <div class="col-6" style="float:right; text-align: right;">
-        <button id="btn_inf_gerais" class="btn btn-outline-success ml-1" onclick="mostrar_inf_gerais()">Informações gerais</button>
-        <button id="btn_programacao" class="btn btn-outline-secondary ml-1" onclick="mostrar_programacao()">Programação</button>
-        <button id="btn_comentarios" class="btn btn-outline-secondary ml-1" onclick="mostrar_comentarios()">Comentários</button>
-        {% if plano_aula.criador.id == user.id %}
+        <button id="btn_inf_gerais" 
+            class="btn {% if aba == 'inf_gerais' %}btn-outline-success{% else %}btn-outline-secondary{% endif %} ml-1" 
+            onclick="mostrar_inf_gerais()">
+            Informações gerais
+        </button>
+
+        <button id="btn_programacao" 
+            class="btn {% if aba == 'programacao' %}btn-outline-success{% else %}btn-outline-secondary{% endif %} ml-1" 
+            onclick="mostrar_programacao()">
+            Programação
+        </button>
+
+        <button id="btn_comentarios" 
+            class="btn {% if aba == 'comentarios' %}btn-outline-success{% else %}btn-outline-secondary{% endif %} ml-1" 
+            onclick="mostrar_comentarios()">
+            Comentários
+        </button>
+
             <br>
             <a href="{% url 'plano_aula:deletar' pk=plano_aula.pk %}" class="float-end px-3" data-bs-toggle="modal" data-bs-target="#modalDeletarPlanoAula" >
                 <i class="fa fa-trash text-danger"></i>
             </a>
             <a href="{% url 'plano_aula:editar_midia' pk=plano_aula.pk %}" class="float-end px-3"><i class="fa fa-camera text-info"></i></a>
             <a href="{% url 'plano_aula:editar' pk=plano_aula.pk %}" class="float-end px-3" tool><i class="fa fa-pencil text-info"></i></a>
-        {% endif %}
     </div>
 </div>
 
 <br>
 
 <div>
-    <div id="div_inf_gerais">
+    <div id="div_inf_gerais" style="display: {% if aba == 'inf_gerais' %}block{% else %}none{% endif %};">
         <div class="row">
             <div class="col-lg-4 col-md-0">
                 <div class="card">
@@ -256,7 +271,7 @@
     </div>
 </div>
 
-<div id="div_programacao" style="display: none">
+<div id="div_programacao" style="display: {% if aba == 'programacao' %}block{% else %}none{% endif %};">
     <div class="row" >
         <div class="col-lg-4 col-md-0">
             <div class="card">
@@ -394,7 +409,7 @@
     </div>
 </div>
 
-<div id="div_comentarios" style="display: none">
+<div id="div_comentarios" style="display: {% if aba == 'comentarios' %}block{% else %}none{% endif %};">
     <div class="card">
         <!-- <div class="card-body pt-2 p-2"> aqui vc afasta de lado -->
         <div class="card-header bg-gradient-info pb-0 p-3">
@@ -405,48 +420,52 @@
         </div>
         <div class="card-body pt-4 p-3 row">
             {% for mensagem in plano_aula.mensagens.all %}
-                <div>
-                    <span class="text-sm mb-0 text-uppercase font-weight-bold">{{mensagem.usuario}}</span>
-                    {% if mensagem.usuario.id == request.user.id or mensagem.plano_aula.responsavel.id == request.user.id %}
-                        <a href="" data-bs-toggle="modal" data-bs-target="#modalDeletar" 
-                                data-bs-mensagem="{{mensagem.texto}}" data-bs-mensagem-id="{{mensagem.pk}}" class="text-xxs">
-                            <span class="badge badge-sm bg-gradient-danger">Deletar</span>
-                        </a>
-                    {% endif %}
-                    <div class="float-end">
-                        <span class="text-sm mb-0 text-uppercase font-weight-bold">{{mensagem.data|date:"d/m/Y H:i"}}</span>
-                        {% if mensagem.mensagem_original is None %}
-                            <a href="" class="text-xs" data-bs-mensagem-id="{{mensagem.pk}}" data-bs-toggle="modal" data-bs-target="#modalNovaMensagem"><i class="fa fa-reply"></i></a>
+                {% if mensagem.mensagem_original is None %}
+                    <div>
+                        <span class="text-sm mb-0 text-uppercase font-weight-bold">{{mensagem.usuario}}</span>
+                        {% if mensagem.usuario.id == request.user.id or mensagem.plano_aula.responsavel.id == request.user.id %}
+                            <a href="" data-bs-toggle="modal" data-bs-target="#modalDeletarMensagem" 
+                                    data-bs-mensagem="{{mensagem.texto}}" data-bs-mensagem-id="{{mensagem.pk}}" class="text-xxs">
+                                <span class="badge badge-sm bg-gradient-danger">Deletar</span>
+                            </a>
                         {% endif %}
-                    </div>
-                    <br>
-                    <span class="text-xs">{{mensagem.texto|linebreaks}}</span>
-                </div>
-                {% for reply in mensagem.replies.all %}
-                    <div class="col-1"></div>
-                    <div class="col-11">
-                        <div>
-                            <span class="text-sm mb-0 text-uppercase font-weight-bold">{{reply.usuario}}</span>
-                            {% if reply.usuario.id == request.user.id or mensagem.plano_aula.responsavel.id == request.user.id %}
-                                <a href="" data-bs-toggle="modal" data-bs-target="#modalDeletarMensagem" 
-                                        data-bs-mensagem="{{reply.texto}}" data-bs-mensagem-id="{{reply.pk}}" class="text-xxs">
-                                    <span class="badge badge-sm bg-gradient-danger">Deletar</span>
-                                </a>
+                        <div class="float-end">
+                            <span class="text-sm mb-0 text-uppercase font-weight-bold">{{mensagem.data|date:"d/m/Y H:i"}}</span>
+                            {% if mensagem.mensagem_original is None %}
+                                <a href="" class="text-xs" data-bs-mensagem-id="{{mensagem.pk}}" data-bs-toggle="modal" data-bs-target="#modalNovaMensagem"><i class="fa fa-reply"></i></a>
                             {% endif %}
-                            <div class="float-end">
-                                <span class="text-sm mb-0 text-uppercase font-weight-bold">{{reply.data|date:"d/m/Y H:i"}}</span>
-                            </div>
-                            <br>
-                            <span class="text-xs">{{reply.texto|linebreaks}}</span>
                         </div>
+                        <br>
+                        <span class="text-xs">{{mensagem.texto|linebreaks}}</span>
                     </div>
-                {% endfor %}
+                    {% for reply in mensagem.replies.all %}
+                        <div class="col-1"></div>
+                        <div class="col-11">
+                            <div>
+                                <span class="text-sm mb-0 text-uppercase font-weight-bold">{{reply.usuario}}</span>
+                                {% if reply.usuario.id == request.user.id or mensagem.plano_aula.responsavel.id == request.user.id %}
+                                    <a href="" data-bs-toggle="modal" data-bs-target="#modalDeletarMensagem" 
+                                            data-bs-mensagem="{{reply.texto}}" data-bs-mensagem-id="{{reply.pk}}" class="text-xxs">
+                                        <span class="badge badge-sm bg-gradient-danger">Deletar</span>
+                                    </a>
+                                {% endif %}
+                                <div class="float-end">
+                                    <span class="text-sm mb-0 text-uppercase font-weight-bold">{{reply.data|date:"d/m/Y H:i"}}</span>
+                                </div>
+                                <br>
+                                <span class="text-xs">{{reply.texto|linebreaks}}</span>
+                            </div>
+                        </div>
+                    {% endfor %}
+                {% endif %}
             {% empty %}
                 Não há nenhuma mensagem.
             {% endfor %}
         </div>      
     </div>
 </div>
+
+{% endwith %}
 
 <div id="modalNovaMensagem" class="modal fade" role="dialog">
     <div class="modal-dialog">
@@ -516,6 +535,7 @@
         </div>
     </div>
 </div>
+
 {% endblock %} 
 
 {% block scripts %}
@@ -566,9 +586,9 @@
             var hiddenInput = document.getElementById('hidden_input')
             hiddenInput.value = mensagemId
         })
-        
-        var modalDeletar = document.getElementById('modalDeletar')
-        modalDeletar.addEventListener('show.bs.modal', function (event) {
+
+        var modalDeletarMensagem = document.getElementById('modalDeletarMensagem')
+        modalDeletarMensagem.addEventListener('show.bs.modal', function (event) {
             var button = event.relatedTarget
             var mensagem = button.getAttribute('data-bs-mensagem')
             var mensagem_modal = document.getElementById('mensagem_modal')

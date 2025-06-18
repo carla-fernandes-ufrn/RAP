@@ -103,7 +103,7 @@ class Detalhe(LoginRequiredMixin, FormMixin, generic.DetailView):
     form_class = forms.FormNovaMensagem
 
     def get_success_url(self):
-        return reverse('plano_aula:detalhes', kwargs={'pk': self.object.id})
+        return reverse('plano_aula:detalhes', kwargs={'pk': self.object.id}) + '?aba=comentarios'
 
     def get_context_data(self,**kwargs):
         context = super(Detalhe,self).get_context_data(**kwargs)
@@ -301,7 +301,7 @@ def deletar_mensagem(request, pk):
         plano_aula_id = mensagem.plano_aula.id
         mensagem.delete()
 
-        return HttpResponseRedirect(reverse('plano_aula:detalhes', kwargs={'pk': plano_aula_id}))
+        return HttpResponseRedirect(reverse('plano_aula:detalhes', kwargs={'pk': plano_aula_id}) + '?aba=comentarios')
     else:
         raise PermissionDenied()
 
