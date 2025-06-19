@@ -311,6 +311,7 @@ def desabilitar(request, pk):
     if (plano_aula.criador.pk == request.user.pk):
         plano_aula.status = False
         plano_aula.save()
+        return redirect('plano_aula:listar')
     else:
         raise PermissionDenied()
     
@@ -325,8 +326,7 @@ class Deletar(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
 
 @login_required
 def listar(request):
-    planos_aula = PlanoAula.objects.all()
-    principais_conteudos = Conteudo.objects.filter(status='Ativos')
+    planos_aula = PlanoAula.objects.filter(status=True)
     disciplinas = list(Disciplina.objects.filter(status='Ativo'))
 
     inf_disciplinas = encontrar_planos_aula_disciplina(planos_aula, disciplinas)
@@ -343,7 +343,7 @@ def listar(request):
 
 @login_required
 def listar_todos(request):
-    planos_aula = PlanoAula.objects.all()
+    planos_aula = PlanoAula.objects.filter(status=True)
 
     informacoes = {
         'lista_planos_aula': planos_aula
@@ -359,13 +359,13 @@ class ListarPlanosAulaFiltrados(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.all())
+        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(status=True))
         qs_filtrada = planos_aula_filtrado.qs.distinct()
         return qs_filtrada
 
     def get_context_data(self,**kwargs):
         context = super(ListarPlanosAulaFiltrados,self).get_context_data(**kwargs)
-        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.all())
+        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(status=True))
         context['planos_aula_filtrado'] = planos_aula_filtrado.qs
         context['form_filtro'] = planos_aula_filtrado.form
         context['tipo'] = "todos"
@@ -380,14 +380,14 @@ class ListarPlanosAulaFiltradosUsuario(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         qs = super().get_queryset()
         usuario = Usuario.objects.get(pk=self.kwargs.get('pk'))
-        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(criador=usuario))
+        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(status=True, criador=usuario))
         qs_filtrada = planos_aula_filtrado.qs.distinct()
         return qs_filtrada
 
     def get_context_data(self,**kwargs):
         context = super(ListarPlanosAulaFiltradosUsuario,self).get_context_data(**kwargs)
         usuario = Usuario.objects.get(pk=self.kwargs.get('pk'))
-        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(criador=usuario))
+        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(status=True, criador=usuario))
         context['planos_aula_filtrado'] = planos_aula_filtrado.qs
         context['form_filtro'] = planos_aula_filtrado.form
         context['tipo'] = "usuario"
@@ -403,7 +403,7 @@ class ListarPlanosAulaFiltradosFavoritos(LoginRequiredMixin, generic.ListView):
         qs = super().get_queryset()
         usuario = Usuario.objects.get(pk=self.kwargs.get('pk'))
         id_planos_aula_favoritos = list(LikePlanoAula.objects.filter(usuario=usuario).values_list('plano_aula', flat=True))
-        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(id__in = id_planos_aula_favoritos))
+        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(id__in = id_planos_aula_favoritos, status=True))
         qs_filtrada = planos_aula_filtrado.qs
         return qs_filtrada
 
@@ -411,7 +411,7 @@ class ListarPlanosAulaFiltradosFavoritos(LoginRequiredMixin, generic.ListView):
         context = super(ListarPlanosAulaFiltradosFavoritos,self).get_context_data(**kwargs)
         usuario = Usuario.objects.get(pk=self.kwargs.get('pk'))
         id_planos_aula_favoritos = list(LikePlanoAula.objects.filter(usuario=usuario).values_list('plano_aula', flat=True))
-        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(id__in = id_planos_aula_favoritos))
+        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(id__in = id_planos_aula_favoritos, status=True))
         context['planos_aula_filtrado'] = planos_aula_filtrado.qs
         context['form_filtro'] = planos_aula_filtrado.form
         context['tipo'] = "favoritos"
@@ -427,7 +427,7 @@ class ListarPlanosAulaFiltradosExecutados(LoginRequiredMixin, generic.ListView):
         qs = super().get_queryset()
         usuario = Usuario.objects.get(pk=self.kwargs.get('pk'))
         id_planos_aula_executados = list(ExecucaoPlanoAula.objects.filter(usuario=usuario).values_list('plano_aula', flat=True))
-        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(id__in = id_planos_aula_executados))
+        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(id__in = id_planos_aula_executados, status=True))
         qs_filtrada = planos_aula_filtrado.qs
         return qs_filtrada
 
@@ -435,7 +435,7 @@ class ListarPlanosAulaFiltradosExecutados(LoginRequiredMixin, generic.ListView):
         context = super(ListarPlanosAulaFiltradosExecutados,self).get_context_data(**kwargs)
         usuario = Usuario.objects.get(pk=self.kwargs.get('pk'))
         id_planos_aula_executados = list(ExecucaoPlanoAula.objects.filter(usuario=usuario).values_list('plano_aula', flat=True))
-        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(id__in = id_planos_aula_executados))
+        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(id__in = id_planos_aula_executados, status=True))
         context['planos_aula_filtrado'] = planos_aula_filtrado.qs
         context['form_filtro'] = planos_aula_filtrado.form
         context['tipo'] = "executados"
@@ -443,11 +443,11 @@ class ListarPlanosAulaFiltradosExecutados(LoginRequiredMixin, generic.ListView):
 
 @login_required
 def espaco_usuario(request):
-    planos_aula_usuario = PlanoAula.objects.filter(criador=request.user)
+    planos_aula_usuario = PlanoAula.objects.filter(criador=request.user, status=True)
     id_planos_aula_favoritados = list(LikePlanoAula.objects.filter(usuario=request.user).values_list('plano_aula', flat=True))
-    planos_aula_favoritados = PlanoAula.objects.filter(id__in = id_planos_aula_favoritados)
+    planos_aula_favoritados = PlanoAula.objects.filter(id__in = id_planos_aula_favoritados, status=True)
     id_planos_aula_executados = list(ExecucaoPlanoAula.objects.filter(usuario=request.user).values_list('plano_aula', flat=True))
-    planos_aula_executados = PlanoAula.objects.filter(id__in = id_planos_aula_executados)
+    planos_aula_executados = PlanoAula.objects.filter(id__in = id_planos_aula_executados, status=True)
 
     informacoes = {
         'planos_aula_usuario': planos_aula_usuario,
@@ -465,14 +465,14 @@ class EspacoUsuario(LoginRequiredMixin, generic.ListView):
 
     def get_queryset(self):
         qs = super().get_queryset()
-        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(criador=self.request.user))
+        planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(criador=self.request.user, status=True))
         qs_filtrada = planos_aula_filtrado.qs
         return qs_filtrada
 
     def get_context_data(self,**kwargs):
         context = super(EspacoUsuario,self).get_context_data(**kwargs)
-        meus_planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(criador=self.request.user))
-        planos_aula_favoritados_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.all())
+        meus_planos_aula_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(criador=self.request.user, status=True))
+        planos_aula_favoritados_filtrado = filters.PlanoAulaFiltro(self.request.GET, queryset=PlanoAula.objects.filter(status=True))
         context['meus_planos_aula_filtrado'] = meus_planos_aula_filtrado.qs
         context['form_meus_planos_aula_filtro'] = meus_planos_aula_filtrado.form
         return context
@@ -486,7 +486,7 @@ class ListarPlanosAula(LoginRequiredMixin, FilterView):
 
 @login_required
 def listar_usuario(request, pk):
-    lista_aulas = PlanoAula.objects.filter(responsavel__pk=pk)
+    lista_aulas = PlanoAula.objects.filter(responsavel__pk=pk, status=True)
 
     informacoes = {
         'lista_aulas': lista_aulas

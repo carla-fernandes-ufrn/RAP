@@ -15,6 +15,7 @@ urlpatterns = [
     path('editar/<int:pk>/', views.editar, name='editar'),
     path('deletar-mensagem/<int:pk>/', views.deletar_mensagem, name='deletar_mensagem'),
 
+    path('desabilitar/<int:pk>/', views.desabilitar, name='desabilitar'),
     path('deletar/<int:pk>/', views.Deletar.as_view(), name='deletar'),
     
     path('listar/', views.ListarPlanosAulaFiltrados.as_view(), name='listar'),

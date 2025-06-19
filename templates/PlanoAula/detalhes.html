@@ -79,7 +79,7 @@
         </button>
 
             <br>
-            <a href="{% url 'plano_aula:deletar' pk=plano_aula.pk %}" class="float-end px-3" data-bs-toggle="modal" data-bs-target="#modalDeletarPlanoAula" >
+            <a href="{% url 'plano_aula:desabilitar' pk=plano_aula.pk %}" class="float-end px-3" data-bs-toggle="modal" data-bs-target="#modalDeletarPlanoAula" >
                 <i class="fa fa-trash text-danger"></i>
             </a>
             <a href="{% url 'plano_aula:editar_midia' pk=plano_aula.pk %}" class="float-end px-3"><i class="fa fa-camera text-info"></i></a>
@@ -526,7 +526,7 @@
                 <p>As mídias e comentários associados a esse plano de aula também serão deletados.</p>
             </div>
             <div class="modal-footer">
-                <form action="{% url 'plano_aula:deletar' pk=plano_aula.pk %}" method="POST">
+                <form action="{% url 'plano_aula:desabilitar' pk=plano_aula.pk %}" method="POST">
                     {% csrf_token %}
                     <button href="" class="btn btn-success">Deletar</button>
                 </form>
