@@ -12,11 +12,11 @@ class FormInfGerais(ModelForm):
         model = PlanoAula
         fields = ('titulo', 'contextualizacao', 'descricao_atividade', 'avaliacao')
     
-        error_messages = {
-            'titulo': {
-                'required': "Esse campo é obrigatório.",
-            }
-        }
+        #error_messages = {
+        #    'titulo': {
+        #        'required': "Esse campo é obrigatório.",
+        #    }
+        #}
 
 class FormMontagem(ModelForm):
 

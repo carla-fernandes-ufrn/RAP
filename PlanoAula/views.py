@@ -27,13 +27,19 @@ from PlanoAula import forms, filters
 
 @login_required
 def criar(request):
+    lista_disciplinas = Disciplina.objects.filter(status="Ativo")
+    lista_conteudos = Conteudo.objects.filter(status="Ativo")
+
     if (request.method == 'POST'):
         form_inf_gerais = forms.FormInfGerais(request.POST)
         form_montagem = forms.FormMontagem(request.POST, request.FILES)
         form_programacao = forms.FormProgramacao(request.POST, request.FILES)
-        if (form_inf_gerais.is_valid() and form_montagem.is_valid() and form_programacao.is_valid()):
 
-            conteudos = request.POST.get('lista_id_conteudos','').split(',')
+        conteudos = request.POST.get('lista_id_conteudos','').split(',')
+        conteudos_ids = [int(id) for id in conteudos if id.isdigit()]
+        conteudos_selecionados = Conteudo.objects.filter(id__in=conteudos_ids)
+
+        if (form_inf_gerais.is_valid() and form_montagem.is_valid() and form_programacao.is_valid()):
 
             plano_aula = PlanoAula()
             plano_aula.criador = Usuario.objects.get(id=request.user.id)
@@ -79,13 +85,28 @@ def criar(request):
             # Salvar
             plano_aula.save()
 
-            return redirect('plano_aula:listar')
+            return redirect('plano_aula:detalhes', pk=plano_aula.pk)
+
+        if not form_inf_gerais.is_valid():
+            aba = 'inf_gerais'
+        else:
+            aba = 'montagem_programacao'
+
+        informacoes = {
+            'form_inf_gerais': form_inf_gerais,
+            'form_montagem': form_montagem,
+            'form_programacao': form_programacao,
+            'lista_disciplinas': lista_disciplinas,
+            'lista_conteudos': lista_conteudos,
+            'conteudos_selecionados': conteudos_selecionados,
+            'lista_id_conteudos': ','.join(str(id) for id in conteudos_ids),
+            'aba': aba
+        }
+        return render(request, "PlanoAula/criar.html", informacoes)
     else:
         form_inf_gerais = forms.FormInfGerais()
         form_montagem = forms.FormMontagem()
         form_programacao = forms.FormProgramacao()
-        lista_disciplinas = Disciplina.objects.filter(status="Ativo")
-        lista_conteudos = Conteudo.objects.filter(status="Ativo")
         informacoes = {
             'form_inf_gerais': form_inf_gerais,
             'form_montagem': form_montagem,

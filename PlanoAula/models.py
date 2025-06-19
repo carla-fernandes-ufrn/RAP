@@ -26,9 +26,9 @@ class PlanoAula(models.Model):
     data_criacao = models.DateTimeField(default=timezone.now, verbose_name="Data de criação")     
 
     # Gerais
-    titulo = models.CharField(max_length=200, verbose_name="Título")
-    contextualizacao = models.TextField(verbose_name="Contextualização")
-    descricao_atividade = models.TextField(verbose_name="Descrição da atividade")
+    titulo = models.CharField(max_length=200, verbose_name="Título", blank=False, null=False)
+    contextualizacao = models.TextField(verbose_name="Contextualização", blank=False, null=False)
+    descricao_atividade = models.TextField(verbose_name="Descrição da atividade", blank=False, null=False)
     avaliacao = models.TextField(verbose_name="Critérios de avaliação", blank=True, null=True)
     conteudos = models.ManyToManyField(Conteudo, related_name="planos_de_aula", verbose_name="Conteúdos")
 

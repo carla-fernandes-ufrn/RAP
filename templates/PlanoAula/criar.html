@@ -14,10 +14,10 @@
     <input class="btn btn-success me-2" form="form_plano_aula" type="submit" value="Cadastrar" />
 </div>
 
-<form id="form_plano_aula" method="POST" enctype="multipart/form-data">
+<form id="form_plano_aula" method="POST" enctype="multipart/form-data" novalidate>
     {% csrf_token %}
 
-    <input type="hidden" id="lista_id_conteudos" name="lista_id_conteudos"></input>
+    <input type="hidden" id="lista_id_conteudos" name="lista_id_conteudos" value="{{ lista_id_conteudos }}">
 
     <div>
         <div id="div_inf_gerais">
@@ -62,6 +62,12 @@
                                 <!-- Coluna de conteúdos selecionados -->
                                 <div class="col-6" style="box-shadow: .5px 0 0 #000;">
                                     <div id="div_conteudos_selecionados" class="row">
+                                        {% for conteudo in conteudos_selecionados %}
+                                            <a onclick="remover_conteudo({{conteudo.id}})" id="conteudo_selecionado_{{conteudo.id}}">
+                                                <i class="fas fa-minus font-weight-bolder text-danger"></i>  
+                                                {{ conteudo.disciplina }}: {{ conteudo.nome }}
+                                            </a>
+                                        {% endfor %}
                                     </div>
                                 </div>
                                 <!-- Coluna com todos os conteúdos -->
@@ -73,8 +79,8 @@
                                                     <div class="col-lg-4 col-md-6">
                                                         <a onclick="selecionar_conteudo('{{disciplina.nome}}')">
                                                             <i class="text-success me-2 icon-xxs dropdown-item-icon fas fa-arrow-right"></i>
+                                                            {{ disciplina.nome }}
                                                         </a>
-                                                        {{ disciplina.nome }}
                                                         <br>
                                                     </div>
                                                 {% endif %} 
@@ -125,6 +131,7 @@
 {% endblock %} {% block scripts %}
 
 <script>
+
     var conteudos_selecionados = []
 
     function mostrar_inf_gerais() {
@@ -214,6 +221,15 @@
         elem.parentNode.removeChild(elem);
         console.log(conteudos_selecionados)
     }
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const abaSelecionada = "{{ aba|default:'inf_gerais' }}";
+        if (abaSelecionada === "montagem_programacao") {
+            mostrar_montagem_programacao();
+        } else {
+            mostrar_inf_gerais();
+        }
+    });
 </script>
 
 {% endblock %}
