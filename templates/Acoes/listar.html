@@ -149,7 +149,11 @@
                         </div>
                         <div class="col-8">
                             <div class="overflow-auto">
-                                {{ acao.descricao|linebreaks|slice:":300" }}...
+                                {% if item.obj.descricao|length > 300 %}
+                                    {{ item.obj.descricao|slice:":300" }}...
+                                {% else %}
+                                    {{ item.obj.descricao }}
+                                {% endif %}
                             </div>
                         </div>
                         

@@ -25,6 +25,7 @@ from rap import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
+    path('buscar/', views.buscar, name='buscar'),
     path('plano-aula/', include('PlanoAula.urls')),
     path('usuario/', include('Usuario.urls', namespace='usuario')),
     path('disciplina/', include('Disciplina.urls')),

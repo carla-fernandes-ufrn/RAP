@@ -1,5 +1,13 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.views.generic import TemplateView, View
+from django.http import JsonResponse
+from django.db.models import Q
+from django.utils import timezone
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
+
+from Usuario.models import Usuario
 from Disciplina.models import Disciplina, Conteudo
 from PlanoAula.models import PlanoAula, LikePlanoAula, ExecucaoPlanoAula
 from Acoes.models import Acoes
@@ -34,6 +42,62 @@ def home(request):
     return render(request, "home.html", informacoes)
 
     # return render(request, "Base/home.html")
+
+def buscar(request):
+    termo = request.GET.get('q', '')
+
+    planos = PlanoAula.objects.filter(
+        Q(titulo__icontains=termo) |
+        Q(conteudos__nome__icontains=termo) |
+        Q(conteudos__disciplina__nome__icontains=termo)
+    ).distinct()
+
+    acoes = Acoes.objects.filter(
+        Q(titulo__icontains=termo) |
+        Q(local__icontains=termo)
+    ).distinct()
+
+    usuarios = Usuario.objects.filter(
+        Q(first_name__icontains=termo) |
+        Q(last_name__icontains=termo)
+    ).distinct()
+
+    # Junta tudo em uma lista só e adiciona o tipo
+    resultados = []
+
+    for p in planos:
+        resultados.append({'tipo': 'plano', 'obj': p})
+    for a in acoes:
+        resultados.append({'tipo': 'acao', 'obj': a})
+    for u in usuarios:
+        resultados.append({'tipo': 'usuario', 'obj': u})
+
+    # Paginação
+    paginator = Paginator(resultados, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    context = {
+        'page_obj': page_obj,
+        'termo': termo
+    }
+
+    return render(request, 'base/busca.html', context)
+
+
+class BuscarAjaxView(View):
+    def get(self, request):
+        termo = request.GET.get('q', '')
+
+        planos = list(PlanoAula.objects.filter(titulo__icontains=termo).values('id', 'titulo')[:10])
+        acoes = list(Acoes.objects.filter(titulo__icontains=termo).values('id', 'titulo')[:10])
+        usuarios = list(Usuario.objects.filter(first_name__icontains=termo).values('id', 'first_name', 'last_name')[:10])
+
+        return JsonResponse({
+            'planos': planos,
+            'acoes': acoes,
+            'usuarios': usuarios,
+        })
 
 def encontrar_planos_aula_disciplina(planos_aula, disciplinas):
 

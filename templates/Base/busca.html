@@ -1,0 +1,261 @@
+{% extends 'Base/base.html' %}
+{% load static %}
+{% load pagination_tags %}
+{% load attribute_tags %}
+{% load widget_tweaks %}
+
+{% block conteudo %}
+
+<br>
+<h3>Resultado para: "{{ termo }}"</h3>
+
+<div id="resultado_busca">
+
+    {% for item in page_obj %}
+        {% if item.tipo == 'plano' %}
+            <!-- Plano de Aula -->
+            <div class="card" id="card_plano_aula_{{item.obj.id}}">
+                <div class="card-header bg-gradient-info pb-0 p-3">
+                    <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">{{item.obj.titulo}}</span>
+                    <div class="float-end">
+                        <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">
+                            {% if item.obj.likes.all|encontrar_usuario_lista:user.id %}
+                                <a onclick="marcar_favorito({{item.obj.id}}, {{user.id}}, '{{tipo}}')">
+                                    <i class="fas fa-thumbs-up px-3" id="icon_thumbs_up_{{item.obj.id}}"
+                                    style="color: var(--bs-success);"></i>
+                                </a>
+                            {% else %}
+                                <a onclick="marcar_favorito({{item.obj.id}}, {{user.id}}, '{{tipo}}')">
+                                    <i class="fas fa-thumbs-up px-3" id="icon_thumbs_up_{{item.obj.id}}"
+                                    style="color: white;"></i>
+                                </a>
+                            {% endif %}
+                            <span class="text-sm mb-0 text-uppercase text-white font-weight-bold" id="contador_thumbs_up_{{item.obj.id}}">{{ item.obj.likes.count }}</span>
+                        </span>
+                        <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">
+                            {% if item.obj.execucoes.all|encontrar_usuario_lista:user.id %}
+                                <a onclick="marcar_executado({{item.obj.id}}, {{user.id}}, '{{tipo}}')">
+                                    <i class="fas fa-play px-3" id="icon_play_{{item.obj.id}}"
+                                    style="color: var(--bs-success);"></i>
+                                </a>
+                            {% else %}
+                                <a onclick="marcar_executado({{item.obj.id}}, {{user.id}}, '{{tipo}}')">
+                                    <i class="fas fa-play px-3" id="icon_play_{{item.obj.id}}"
+                                    style="color: white;"></i>
+                                </a>
+                            {% endif %}
+                            <span class="text-sm mb-0 text-uppercase text-white font-weight-bold" id="contador_play_{{item.obj.id}}">{{ item.obj.execucoes.count }}</span>
+                        </span>
+                    </div>
+                </div>
+                <a href="{% url 'plano_aula:detalhes' pk=item.obj.pk %}">
+                    <div class="card-body row">
+                        <div class="col-4">
+                            {% if item.obj|plano_aula_midias_foto %}
+                                <div id="midias_robo_{{item.obj.pk}}" class="carousel slide" data-bs-interval="false">
+                                    <div class="carousel-indicators">
+                                        {% for foto in item.obj|plano_aula_midias_foto %}
+                                            {% if forloop.counter == 1 %}
+                                                <button type="button" data-bs-target="#midias_robo_{{item.obj.pk}}" data-bs-slide-to="{{forloop.counter0}}" class="active" aria-current="true" aria-label="Slide {{forloop.counter}}"></button>
+                                            {% else %}
+                                                <button type="button" data-bs-target="#midias_robo_{{item.obj.pk}}" data-bs-slide-to="{{forloop.counter0}}" aria-label="Slide {{forloop.counter}}"></button>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <div class="carousel-inner">
+                                        {% for foto in item.obj|plano_aula_midias_foto %}
+                                            {% if forloop.counter == 1 %}
+                                                <div class="carousel-item active">
+                                            {% else %}
+                                                <div class="carousel-item ">
+                                            {% endif %}
+                                                    <img class="d-block w-100" src="{{foto}}">
+                                                </div>
+                                        {% endfor %}
+                                    </div>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#midias_robo_{{item.obj.pk}}" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#midias_robo_{{item.obj.pk}}" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
+                                </div>
+                            {% else %}
+                                <img src="{% static 'assets/img/carousel-2.jpg' %}" alt="" class="img-fluid">
+                            {% endif %}
+                            {% for conteudo in item.obj.conteudos.all %} 
+                                <span class="mb-2 text-xs">{{conteudo.disciplina}}: 
+                                    <span class="text-dark font-weight-bold ms-sm-2">{{conteudo.nome}}</span>
+                                </span>
+                                <br>
+                            {% endfor %}
+                        </div>
+                        <div class="col-8">
+                            <div class="overflow-auto">
+                                {% if item.obj.descricao_atividade|length > 600 %}
+                                    {{ item.obj.descricao_atividade|slice:":600" }}...
+                                {% else %}
+                                    {{ item.obj.descricao_atividade }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                    </div>
+                </a>
+            </div>
+            <br>
+        {% elif item.tipo == 'acao' %}
+            <!-- Ação -->
+            <div class="card">
+                {% if item.obj.data_fim is not None and todays_date > item.obj.data_fim|date:"Y-m-d" or item.obj.status is False %}
+                    <div id="card_header_informacoes" class="card-header bg-gradient-secondary pb-0 p-3">
+                {% else %}
+                    <div id="card_header_informacoes" class="card-header bg-gradient-warning pb-0 p-3">
+                {% endif %}
+                
+                    <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">
+                        <a href="{% url 'acoes:detalhes' pk=item.obj.pk %}" class="text-white">
+                            {{item.obj.titulo}}
+                        </a>
+                    </span>
+                    <div class="float-end">
+                        <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3">
+                            Início: {{ item.obj.data_inicio|date:"d/m/Y" }}
+                        </span>
+                        <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3">
+                            {% if item.obj.data_fim is not None %}
+                                Fim: {{ item.obj.data_fim|date:"d/m/Y" }}
+                            {% endif %}
+                        </span>
+                        {% if item.obj.responsavel.username == user.username %}
+                            <a href="{% url 'acoes:editar' pk=item.obj.pk %}" class="text-white">
+                                <i class="fa fa-pencil"></i>
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class=card-body>
+                    <span class="badge bg-gradient-warning">{{item.obj.tipo}}</span>
+                    <span class="badge bg-gradient-danger">{{item.obj.formato}}</span>
+                    <div class="row">
+                        <div class="col-4">
+                            {% if item.obj.site is not None %}
+                                <span class="mb-2 text-xs">Site: 
+                                    <span class="text-dark font-weight-bold ms-sm-2">
+                                        <a href="{{ item.obj.site }}" target="_blank">{{ item.obj.site }}</a>
+                                    </span>
+                                </span>
+                                <br>
+                            {% endif %}
+                            {% if item.obj.local is not None %}
+                                <span class="mb-2 text-xs">Local: 
+                                    <span class="text-dark font-weight-bold ms-sm-2">
+                                        {{ item.obj.local }}
+                                    </span>
+                                </span>
+                                <br>
+                            {% endif %}
+                            <span class="mb-2 text-xs">Responsável: 
+                                <span class="text-dark font-weight-bold ms-sm-2">
+                                    {% if item.obj.responsavel is not None %}
+                                        {{ item.obj.responsavel }}
+                                    {% endif %}
+                                </span>
+                            </span>
+                        </div>
+                        <div class="col-8">
+                            <div class="overflow-auto">
+                                {% if item.obj.descricao|length > 300 %}
+                                    {{ item.obj.descricao|slice:":300" }}...
+                                {% else %}
+                                    {{ item.obj.descricao }}
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            </div>
+            <br>
+        {% elif item.tipo == 'usuario' %}
+            <!-- Usuário -->
+            <div class="card border-purple mb-3" style="border-color: purple;">
+                <div class="card-header bg-gradient-dark text-white">
+                    {{ item.obj.first_name }} {{ item.obj.last_name }}
+                </div>
+                <div class="card-body">
+                    <p><a href="#">Ver perfil</a></p>
+                </div>
+            </div>
+        {% endif %}
+    {% empty %}
+        <div class="card">
+            <div class="card-body">
+                <p>Não foram encontrados resultados com esses parâmetros.</p>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<!-- Paginação -->
+{% if page_obj.paginator.num_pages > 1 %}
+    <nav class="justify-content-center d-flex">
+        <ul class="pagination">
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% url_replace request 'page' page_obj.previous_page_number %}">
+                        <i class="fas fa-chevron-left"></i>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link"><i class="fas fa-chevron-left"></i></a>
+                </li>
+            {% endif %}
+
+            {% if page_obj.number|add:'-2' > 1 %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% url_replace request 'page' page_obj.number|add:'-3' %}">&hellip;</a>
+                </li>
+            {% endif %}
+
+            {% for i in page_obj.paginator.page_range %}
+                {% if page_obj.number == i %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ i }}</span>
+                    </li>
+                {% elif i > page_obj.number|add:'-3' and i < page_obj.number|add:'3' %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{% url_replace request 'page' i %}">{{ i }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+
+            {% if page_obj.paginator.num_pages > page_obj.number|add:'2' %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% url_replace request 'page' page_obj.number|add:'3' %}">&hellip;</a>
+                </li>
+            {% endif %}
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?{% url_replace request 'page' page_obj.next_page_number %}">
+                        <i class="fas fa-chevron-right"></i>
+                    </a>
+                </li>
+            {% else %}
+                <li class="page-item disabled">
+                    <a class="page-link"><i class="fas fa-chevron-right"></i></a>
+                </li>
+            {% endif %}
+        </ul>
+    </nav>
+{% endif %}
+
+{% endblock %}
+
+{% block scripts %}
+    <script src="{% static 'assets/js/custom/marcar_favorito_executado.js' %}"></script>
+{% endblock %}

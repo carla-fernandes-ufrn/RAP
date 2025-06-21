@@ -44,10 +44,22 @@
     </ul>
     <ul class="navbar-nav align-items-center">
       <li class="nav-item me-2">
-        <div class="input-group">
-          <input type="text" class="form-control" placeholder="Digite aqui...">
-          <span class="input-group-text"><a href=""><i class="fa fa-search"></i></a></span>
-        </div>
+        <form action="{% url 'buscar' %}" method="get">
+            <div class="input-group">
+                <input type="text" 
+                      class="form-control" 
+                      placeholder="Digite aqui..." 
+                      name="q" 
+                      id="input_busca"
+                      value="{{ request.GET.q }}">
+                <span class="input-group-text">
+                    <a href="#" onclick="this.closest('form').submit(); return false;">
+                        <i class="fa fa-search"></i>
+                    </a>
+                </span>
+            </div>
+        </form>
+
       </li>
       <li class="nav-item">
         <a href="#" class="nav-link text-white">
