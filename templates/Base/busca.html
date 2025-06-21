@@ -3,6 +3,10 @@
 {% load pagination_tags %}
 {% load attribute_tags %}
 {% load widget_tweaks %}
+{% load bootstrap5 %} 
+{% load string_tags %}
+{% load crispy_forms_tags %} 
+
 
 {% block conteudo %}
 
@@ -181,14 +185,30 @@
             <br>
         {% elif item.tipo == 'usuario' %}
             <!-- Usuário -->
-            <div class="card border-purple mb-3" style="border-color: purple;">
-                <div class="card-header bg-gradient-dark text-white">
-                    {{ item.obj.first_name }} {{ item.obj.last_name }}
+            <a href="{% url 'usuario:informacoes_plano_aula' pk=item.obj.pk %}">
+                <div class="card border-primary">
+                    <div class="card-header pb-0 p-3 bg-gradient-success">
+                        <span class="text-md mb-0 text-uppercase text-white font-weight-bold">{{item.obj}}</span>
+                    </div>
+                    <div class="card-body p-3 overflow-auto">
+                        <div class="row">
+                            <div class="col-md-4 col-lg-4">
+                                <p class="text-sm mb-0 text-uppercase font-weight-bold">E-mail</p>
+                                <span class="text-sm mb-0">{{item.obj.email}}</span>
+                            </div>
+                            <div class="col-md-4 col-lg-4">
+                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Cidade</p>
+                                <span class="text-sm mb-0">{{item.obj.cidade}}</span>
+                            </div>
+                            <div class="col-md-4 col-lg-4">
+                                <p class="text-sm mb-0 text-uppercase font-weight-bold">Estado</p>
+                                <span class="text-sm mb-0">{{item.obj.estado}}</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <p><a href="#">Ver perfil</a></p>
-                </div>
-            </div>
+            </a>
+            <br>
         {% endif %}
     {% empty %}
         <div class="card">
