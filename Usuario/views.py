@@ -223,7 +223,7 @@ def ler_informacoes_acoes(request, pk):
 
     informacoes = {
         'usuario': usuario,
-        'form_filtro_acoes': form_filtro_acoes,
+        'form_filtro': form_filtro_acoes,
         'page_obj_acoes': page_obj_acoes,
     }
 

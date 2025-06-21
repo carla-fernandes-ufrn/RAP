@@ -15,11 +15,6 @@
 </div>
 <br>
 
-<div class="text-center">
-    <a href="" class="btn btn-success me-2">Planos de Aula</a>
-    <a href="{% url 'usuario:informacoes_acoes' pk=usuario.pk %}" class="btn btn-light me-2">Ações</a>
-</div>
-
 <div id="div_plano_aula" class="row">
     <div class="col-md-4 col-lg-4">
         
@@ -75,17 +70,18 @@
         </div>
     </div>
     <div id="main_div" class="col-md-8 col-lg-8">
+        <a href="" class="btn btn-success me-2">Planos de Aula</a>
+        <a href="{% url 'usuario:informacoes_acoes' pk=usuario.pk %}" class="btn btn-light me-2">Ações</a>
         {% for aula in page_obj_plano_aula %}
                 <div class="card" id="card_plano_aula_{{aula.id}}">
-                    <div class="card-header bg-gradient-primary pb-0 p-3">
+                    <div class="card-header bg-gradient-info pb-0 p-3">
                         <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">{{aula.titulo}}</span>
                         <div class="float-end">
                             <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">
                                 {% if aula.likes.all|encontrar_usuario_lista:user.id %}
                                     <a onclick="marcar_favorito({{aula.id}}, {{user.id}}, '{{tipo}}')">
                                         <i class="fas fa-thumbs-up px-3" id="icon_thumbs_up_{{aula.id}}"
-                                        style="color: var(--bs-success);
-                                                -webkit-text-stroke: 1px white;"></i>
+                                        style="color: var(--bs-success);"></i>
                                     </a>
                                 {% else %}
                                     <a onclick="marcar_favorito({{aula.id}}, {{user.id}}, '{{tipo}}')">
@@ -99,8 +95,7 @@
                                 {% if aula.execucoes.all|encontrar_usuario_lista:user.id %}
                                     <a onclick="marcar_executado({{aula.id}}, {{user.id}}, '{{tipo}}')">
                                         <i class="fas fa-play px-3" id="icon_play_{{aula.id}}"
-                                        style="color: var(--bs-success);
-                                                -webkit-text-stroke: 1px white;"></i>
+                                        style="color: var(--bs-success);"></i>
                                     </a>
                                 {% else %}
                                     <a onclick="marcar_executado({{aula.id}}, {{user.id}}, '{{tipo}}')">
@@ -158,7 +153,12 @@
                             </div>
                             <div class="col-8">
                                 <div class="overflow-auto">
-                                    <i class="ni education_hat mr-2"></i>{{ aula.descricao_atividade|slice:":600" }}...
+                                    <i class="ni education_hat mr-2"></i>
+                                    {% if aula.descricao_atividade|length > 600 %}
+                                        {{ aula.descricao_atividade|slice:":600" }}...
+                                    {% else %}
+                                        {{ aula.descricao_atividade }}
+                                    {% endif %}
                                 </div>
                             </div>
                             
