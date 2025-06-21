@@ -83,9 +83,9 @@
         {% else %}
             <a href="{% url 'acoes:listar' %}" class="btn btn-outline-secondary me-2">Todas as ações</a>
             <a href="{% url 'acoes:listar_usuario' pk=user.pk %}" class="btn btn-outline-success me-2">Minhas ações</a>
+        {% endif %}
 
             <a href="{% url 'acoes:criar' %}" class="btn btn-success me-2 float-end"><i class="fa fa-plus"></i></a>
-        {% endif %}
 
         <br>
         {% now "Y-m-d" as todays_date %}
