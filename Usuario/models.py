@@ -39,6 +39,18 @@ class Usuario(User):
 
     def __str__(self):
         return self.first_name + " " + self.last_name
+    
+    @property
+    def planos_ativos_count(self):
+        return self.planos_criados.filter(status=True).count()
+    
+    @property
+    def acoes_cadastradas_count(self):
+        return self.acoes_cadastradas.filter(deletada=False).count()
+
+    @property
+    def acoes_ativas_count(self):
+        return self.acoes_cadastradas.filter(deletada=False, status=True).count()
 
     class Meta:
         ordering = ['first_name', 'last_name']

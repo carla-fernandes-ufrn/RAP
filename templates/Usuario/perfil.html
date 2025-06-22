@@ -1,0 +1,181 @@
+{% extends 'Base/base.html' %}
+{% load static %}
+{% load pagination_tags %}
+{% load attribute_tags %}
+{% load widget_tweaks %}
+{% load bootstrap5 %} 
+{% load string_tags %}
+{% load crispy_forms_tags %} 
+
+
+{% block conteudo %}
+
+<br>
+<h3>{{ usuario }}</h3>
+
+<div class="card border-primary">
+    <div class="card-header pb-0 p-3 bg-gradient-success">
+        <span class="text-md mb-0 text-uppercase text-white font-weight-bold">Perfil</span>
+    </div>
+    <div class="card-body p-3 overflow-auto">
+        <div class="row">
+            <div class="col-md-3 col-lg-3">
+                <p class="text-sm mb-0 text-uppercase font-weight-bold">Login</p>
+                <span class="text-sm mb-0">{{usuario.username}}</span>
+            </div>
+            <div class="col-md-3 col-lg-3">
+                <p class="text-sm mb-0 text-uppercase font-weight-bold">E-mail</p>
+                <span class="text-sm mb-0">{{usuario.email}}</span>
+            </div>
+            <div class="col-md-3 col-lg-3">
+                <p class="text-sm mb-0 text-uppercase font-weight-bold">Estado</p>
+                <span class="text-sm mb-0">{{usuario.get_estado_display }}</span>
+            </div>
+            <div class="col-md-3 col-lg-3">
+                <p class="text-sm mb-0 text-uppercase font-weight-bold">Cidade</p>
+                <span class="text-sm mb-0">{{usuario.cidade}}</span>
+            </div>
+        </div>
+        <br>
+        <a href="#" class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalEditarPerfil">
+            Editar perfil
+        </a>
+        <a href="#" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#modalAlterarSenha">
+            Alterar senha
+        </a>
+    </div>
+</div>
+
+<br>
+
+<div class="row">
+    <div class="col-md-6 col-lg-6">
+        <div class="card border-primary">
+            <div class="card-header pb-0 p-3 bg-gradient-info">
+                <span class="text-md mb-0 text-uppercase text-white font-weight-bold">Planos de aula</span>
+            </div>
+            <div class="card-body p-3 overflow-auto">
+                <span class="text-sm mb-0 text-uppercase font-weight-bold">Criados: </span>
+                <span class="text-sm mb-0">{{usuario.planos_ativos_count}}</span>
+                <br>                
+                <span class="text-sm mb-0 text-uppercase font-weight-bold">Favoritos: </span>
+                <span class="text-sm mb-0">{{usuario.likes_plano_aula.count}}</span>
+                <br>
+                <span class="text-sm mb-0 text-uppercase font-weight-bold">Executados: </span>
+                <span class="text-sm mb-0">{{usuario.execucoes_plano_aula.count}}</span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 col-lg-6">
+        <div class="card border-primary">
+            <div class="card-header pb-0 p-3 bg-gradient-warning">
+                <span class="text-md mb-0 text-uppercase text-white font-weight-bold">Ações</span>
+            </div>
+            <div class="card-body p-3 overflow-auto">
+                <span class="text-sm mb-0 text-uppercase font-weight-bold">Cadastradas: </span>
+                <span class="text-sm mb-0">{{usuario.acoes_cadastradas_count }}</span>
+                <br>
+                <span class="text-sm mb-0 text-uppercase font-weight-bold">Em execução: </span>
+                <span class="text-sm mb-0">{{usuario.acoes_ativas_count }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Editar Perfil -->
+<div class="modal fade" id="modalEditarPerfil" tabindex="-1">
+    <div class="modal-dialog modal-dialog-scrollable">
+        <div class="modal-content">
+            <form method="post">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar Perfil</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    {{ form|crispy }}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" name="form_tipo" value="perfil" class="btn btn-success">Salvar</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Alterar Senha -->
+<div class="modal fade" id="modalAlterarSenha" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="form-alterar-senha" method="post">
+                {% csrf_token %}
+                <div class="modal-header">
+                    <h5 class="modal-title">Alterar Senha</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="erros-senha"></div>
+                    {{ form_senha|crispy }}
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-success">Salvar</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<style>
+    .modal-body {
+        max-height: 70vh;
+        overflow-y: auto;
+    }
+</style>
+
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.getElementById('form-alterar-senha').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    const form = this;
+    const url = "{% url 'usuario:alterar_senha_ajax' %}";
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    const formData = new FormData(form);
+
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'X-CSRFToken': csrftoken
+        },
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        const divErros = document.getElementById('erros-senha');
+        divErros.innerHTML = '';
+
+        if (data.status === 'success') {
+            divErros.innerHTML = `<div class="alert alert-success">${data.mensagem}</div>`;
+            form.reset();
+            const modalSenha = bootstrap.Modal.getInstance(document.getElementById('modalAlterarSenha'));
+            modalSenha.hide();
+        } else {
+            const erros = JSON.parse(data.erros);
+            for (const campo in erros) {
+                erros[campo].forEach(erro => {
+                    divErros.innerHTML += `<div class="alert alert-danger">${erro.message}</div>`;
+                });
+            }
+        }
+    })
+    .catch(error => console.error('Erro:', error));
+});
+</script>
+
+{% endblock %}

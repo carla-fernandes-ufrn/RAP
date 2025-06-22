@@ -32,7 +32,7 @@ class Acoes(models.Model):
     data_fim = models.DateField(null=True, blank = True, verbose_name = "Data de fim")
     local = models.CharField(max_length=200, null=True, blank=True, verbose_name="Local")
     descricao = models.TextField(null=True, blank=True,verbose_name="Descrição")
-    responsavel = models.ForeignKey(Usuario, on_delete=models.RESTRICT,verbose_name="Responsável")
+    responsavel = models.ForeignKey(Usuario, on_delete=models.RESTRICT,verbose_name="Responsável",related_name='acoes_cadastradas')
     status = models.BooleanField(default=True, verbose_name = "Está em execução")
     deletada = models.BooleanField(default=False, verbose_name = "Deletado")
 

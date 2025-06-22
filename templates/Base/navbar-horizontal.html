@@ -24,15 +24,15 @@
         </a>
       </li>
       
-      <!-- Novo item de navegação para "Acervo" com namespace -->
-      <li class="nav-item px-3 d-flex align-items-center">
-        <a href="{% url 'acervo:acervo' %}" class="nav-link font-weight-bold px-0 text-white">
-          Acervo
-        </a>
-      </li>
+      <!-- Novo item de navegação para "Acervo" com namespace 
+      <!-- <li class="nav-item px-3 d-flex align-items-center">-->
+      <!--   <a href="{% url 'acervo:acervo' %}" class="nav-link font-weight-bold px-0 text-white">-->
+      <!--     Acervo-->
+      <!--   </a>-->
+      <!-- </li>-->
       
       <li class="nav-item px-3 d-flex align-items-center">
-        <a href="" class="nav-link font-weight-bold px-0 text-white">
+        <a href="{% url 'usuario:listar_ativos' %}" class="nav-link font-weight-bold px-0 text-white">
           Usuários
         </a>
       </li>
@@ -62,7 +62,7 @@
 
       </li>
       <li class="nav-item">
-        <a href="#" class="nav-link text-white">
+        <a href="{% url 'usuario:perfil' %}" class="nav-link text-white">
           <i class="fa fa-user me-1"></i> {{ user.first_name }} {{ user.last_name }}
         </a>
       </li>

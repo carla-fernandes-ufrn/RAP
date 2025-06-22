@@ -12,11 +12,11 @@
     <div class="col">
         <div class="card col">
             <div class="card border-primary">
-                <div class="card-header pb-0 p-3 bg-gradient-info">
+                <div class="card-header pb-0 p-3 bg-gradient-success">
                     <span class="text-md mb-0 text-uppercase text-white font-weight-bold">{{usuario}}</span>
                 </div>
                 <div class="card-body p-3 overflow-auto">
-                    <h6 class="mb-1">Meu perfil</h6>
+                    <h6 class="mb-1">Perfil</h6>
                     <form method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <!-- {% bootstrap_form form %} -->
@@ -49,35 +49,19 @@
                             <input type="submit" class="btn btn-success pull-right" value="Atualizar"></input>
                         </div>
                     </form>
-                    <div class="row">
-                        <div class="col-6">
-                            <div class="mb-6">
-                                <h6 class="mb-1">Meu avatar</h6>
-                            </div>
-                            <div class="me-3">
-                                <div class="avatar avatar-md avatar-indicators avatar-online">
-                                    <img alt="avatar" src="{% usuario_avatar user.username %}" class="rounded-circle" />
-                                </div>
-                                <!-- <img src="{% usuario_avatar user.username %}" class="rounded-circle avatar avatar-lg" alt=""> -->
-                                <a href="" class="btn btn-success pull-right">Alterar</a>
-                                <a href="{% url 'usuario:alterar_avatar' pk=user.pk novo=0 %}" class="btn btn-outline-white">Remover</a>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="mb-6">
-                                <h6 class="mb-1">Minha senha</h6>
-                                <form method="post" >
-                                    {% bootstrap_field form_senha.password1 %}
-                                    {% bootstrap_field form_senha.password2 %}
+                    
+                    <div class="mb-6">
+                        <h6 class="mb-1">Alteração de senha</h6>
+                        <form method="post" >
+                            {% bootstrap_field form_senha.password1 %}
+                            {% bootstrap_field form_senha.password2 %}
 
-                                    <input type="hidden" name="next" value="{{ request.GET.next }}">
-                                    <div class="text-right">
-                                        <input type="submit" class="btn btn-success pull-right" value="Alterar senha"></input>
-                                    </div>
-                                </form>
+                            <input type="hidden" name="next" value="{{ request.GET.next }}">
+                            <div class="text-right">
+                                <input type="submit" class="btn btn-success pull-right" value="Alterar senha"></input>
                             </div>
-                        </div>
-                    </div>    
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>

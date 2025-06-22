@@ -3,13 +3,19 @@ from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.contrib.auth.forms import PasswordChangeForm
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
 from django.views import generic
+from django.contrib.auth import update_session_auth_hash
+from django.contrib import messages
 
 from django.http import JsonResponse
 from django.core import serializers
 
 from Usuario import forms
+from Usuario import filters as filter_usuarios
 from Usuario.models import Usuario, Interesses
 from Disciplina.models import Disciplina
 from PlanoAula.models import PlanoAula
@@ -17,13 +23,50 @@ from PlanoAula import filters as filter_plano_aula
 from Acoes.models import Acoes
 from Acoes import filters as filter_acoes
 
+class ListarAtivos(LoginRequiredMixin, generic.ListView):
+    model = Usuario
+    template_name = 'Usuario/listar.html'
+    context_object_name = 'lista_usuarios'
+    paginate_by = 10
+
+    def get_queryset(self):
+        qs = super().get_queryset()
+        usuarios_filtrados = filter_usuarios.UsuarioFiltro(self.request.GET, queryset=Usuario.objects.filter(is_active=True))
+        qs_filtrada = usuarios_filtrados.qs
+        return qs_filtrada
+
+    def get_context_data(self,**kwargs):
+        context = super(ListarAtivos,self).get_context_data(**kwargs)
+        usuarios_filtrados = filter_usuarios.UsuarioFiltro(self.request.GET, queryset=Usuario.objects.filter(is_active=True))
+        context['usuarios_filtrados'] = usuarios_filtrados.qs
+        context['form_filtro'] = usuarios_filtrados.form
+        context['exibir_todos'] = True
+        return context
+
 @login_required
 def listar_ativos(request):
-    lista_usuarios = Usuario.objects.filter(is_active=True)
-    
+
+    usuarios_filtrado = filter_usuarios.UsuarioFiltro(request.GET, queryset=Usuario.objects.filter(is_active=True))
+
+    print(Usuario.objects.filter(is_active=True))
+
+    lista_usuarios = usuarios_filtrado.qs
+    form_filtro_usuario = usuarios_filtrado.form
+
+    paginator_usuario = Paginator(lista_usuarios, 10)
+
+    page_number_usuario = request.GET.get("page")
+
+    try:
+        page_obj_usuario = paginator_usuario.page(page_number_usuario)
+    except PageNotAnInteger:
+        page_obj_usuario = paginator_usuario.page(1)
+    except EmptyPage:
+        page_obj_usuario = paginator_usuario.page(paginator_usuario.num_pages)
+
     informacoes = {
-        'lista_usuarios': lista_usuarios,
-        'ativos': True
+        'form_filtro_usuario': form_filtro_usuario,
+        'page_obj_usuario': page_obj_usuario,
     }
 
     return render(request, "Usuario/listar.html", informacoes)
@@ -117,24 +160,146 @@ class CompletarCadastro(LoginRequiredMixin, generic.UpdateView):
     template_name = 'Usuario/completar_cadastro.html'
     success_url = reverse_lazy('home')
 
+class Perfil(LoginRequiredMixin, generic.UpdateView):
+    model = Usuario
+    template_name = 'Usuario/perfil.html'
+    form_class = forms.FormEditarUsuario
+    context_object_name = 'usuario'
+
+    def get_object(self):
+        return Usuario.objects.get(pk=self.request.user.pk)  # Correto, sempre o usuário autenticado
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if 'form_senha' not in context:
+            context['form_senha'] = forms.FormEditarSenha(user=self.request.user)
+        return context
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        form = self.get_form()
+        form_senha = forms.FormEditarSenha(user=request.user, data=request.POST)
+
+        print("Entrou no post")
+
+        # Verifica se é um POST de alteração de senha
+        if request.POST.get('form_tipo') == 'senha':
+            print("Entrou na senha")
+            print("Old password:", request.POST.get('old_password'))
+            print("New password1:", request.POST.get('new_password1'))
+            print("New password2:", request.POST.get('new_password2'))
+            if form_senha.is_valid():
+                
+                print("Válido")
+                if not request.user.check_password(form_senha.cleaned_data['old_password']):
+                    messages.error(request, 'Senha atual incorreta.')
+                    context = self.get_context_data(form=form, form_senha=form_senha)
+                    return self.render_to_response(context)
+
+                request.user.set_password(form_senha.cleaned_data['new_password1'])
+                request.user.save()
+
+                update_session_auth_hash(request, request.user)  # Mantém logado
+                messages.success(request, 'Senha atualizada com sucesso.')
+                return redirect(self.get_success_url())
+
+            else:
+                print("erro")
+                print("Erros do formulário:", form_senha.errors.as_data())
+                messages.error(request, 'Erro ao atualizar a senha.')
+                context = self.get_context_data(form=form, form_senha=form_senha)
+                return self.render_to_response(context)
+
+        elif request.POST.get('form_tipo') == 'perfil':
+            
+            print("Entrou no perfil")
+            if form.is_valid():
+                form.save()
+                messages.success(request, 'Perfil atualizado com sucesso.')
+                return self.form_valid(form)
+            else:
+                messages.error(request, 'Erro ao atualizar o perfil.')
+                return self.form_invalid(form)
+
+        else:
+            messages.error(request, 'Ação não reconhecida.')
+            return redirect(self.get_success_url())
+
+
+    def get_success_url(self):
+        return reverse_lazy('usuario:perfil')
+
+@method_decorator(csrf_exempt, name='dispatch')
+def alterar_senha_ajax(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(user=request.user, data=request.POST)
+
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            return JsonResponse({'status': 'success', 'mensagem': 'Senha atualizada com sucesso.'})
+        else:
+            erros = form.errors.as_json()
+            return JsonResponse({'status': 'error', 'erros': erros})
+
+    return JsonResponse({'status': 'error', 'mensagem': 'Método não permitido.'})
+
+# class Perfil(LoginRequiredMixin, generic.UpdateView):
+#     model = Usuario
+#     template_name = 'Usuario/perfil.html'
+#     form_class = forms.FormEditarUsuario
+#     context_object_name = 'usuario'
+
+#     def get_object(self):
+#         return Usuario.objects.get(pk=self.request.user.pk)  # Sempre pega o próprio usuário
+
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         context['form_senha'] = forms.FormEditarSenha(user=Usuario.objects.get(pk=self.request.user.pk))
+#         return context
+
+#     def get_success_url(self):
+#         return reverse_lazy('usuario:perfil')
+
 class Editar(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Usuario
     form_class = forms.FormEditarUsuario
     template_name = 'Usuario/editar.html'
 
     def test_func(self):
-        usuario = Usuario.objects.get(pk=int(self.kwargs['pk']))
-        print(self.request.user.id == usuario.id)
-        return self.request.user.id == usuario.id
-    
-    def get_context_data(self,**kwargs):
-        context = super(Editar,self).get_context_data(**kwargs)
-        context['form_senha'] = forms.FormEditarSenha()
-        return context
+        return self.request.user.id == self.get_object().id or self.request.user.is_superuser
 
     def get_success_url(self):
-           pk = self.kwargs["pk"]
-           return reverse_lazy("usuario:editar", kwargs={"pk": pk})
+        return reverse_lazy("usuario:perfil")
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        form = self.get_form()
+        form_senha = forms.FormEditarSenha(user=request.user, data=request.POST)
+
+        if 'new_password1' in request.POST and 'new_password2' in request.POST:
+            if form_senha.is_valid():
+                user = form_senha.save()
+                update_session_auth_hash(request, user)
+                messages.success(request, 'Senha atualizada com sucesso.')
+                return self.form_valid(form)
+            else:
+                messages.error(request, 'Erro ao atualizar a senha.')
+                return self.form_invalid(form)
+        else:
+            if form.is_valid():
+                messages.success(request, 'Perfil atualizado com sucesso.')
+                return self.form_valid(form)
+            else:
+                messages.error(request, 'Erro ao atualizar o perfil.')
+                return self.form_invalid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_senha'] = forms.FormEditarSenha(user=self.request.user)
+        return context
 
 @login_required
 def alterar_avatar(request, pk, novo):

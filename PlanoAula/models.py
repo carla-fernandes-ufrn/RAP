@@ -22,7 +22,7 @@ NIVEL_DIFICULDADE = [
 
 class PlanoAula(models.Model):
 
-    criador = models.ForeignKey(Usuario, on_delete=models.RESTRICT,null=True, verbose_name="Responsável")
+    criador = models.ForeignKey(Usuario, on_delete=models.RESTRICT,null=True, verbose_name="Responsável", related_name="planos_criados")
     data_criacao = models.DateTimeField(default=timezone.now, verbose_name="Data de criação")     
 
     # Gerais
@@ -107,7 +107,7 @@ class VideoExecucao(models.Model):
         verbose_name_plural = "Vídeos da execução"
 
 class LikePlanoAula(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.RESTRICT,null=True, verbose_name="Usuário")
+    usuario = models.ForeignKey(Usuario, on_delete=models.RESTRICT,null=True, verbose_name="Usuário", related_name="likes_plano_aula")
     plano_aula = models.ForeignKey(PlanoAula, related_name='likes', on_delete=models.RESTRICT,null=True, verbose_name="Plano de aula")
 
     def __str__(self):
@@ -119,7 +119,7 @@ class LikePlanoAula(models.Model):
         verbose_name_plural = "Likes"
 
 class ExecucaoPlanoAula(models.Model):
-    usuario = models.ForeignKey(Usuario, on_delete=models.RESTRICT,null=True, verbose_name="Usuário")
+    usuario = models.ForeignKey(Usuario, on_delete=models.RESTRICT,null=True, verbose_name="Usuário", related_name="execucoes_plano_aula")
     plano_aula = models.ForeignKey(PlanoAula, related_name='execucoes', on_delete=models.RESTRICT,null=True, verbose_name="Plano de aula")
 
     def __str__(self):
