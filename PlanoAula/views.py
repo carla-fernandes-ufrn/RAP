@@ -1,5 +1,6 @@
 from django.urls import reverse
 from django import forms
+from django.db import transaction
 from django.contrib import messages 
 from django.core import serializers
 from django.shortcuts import render, redirect
@@ -329,12 +330,20 @@ def deletar_mensagem(request, pk):
 @login_required
 def desabilitar(request, pk):
     plano_aula = PlanoAula.objects.get(pk=pk)
-    if (plano_aula.criador.pk == request.user.pk):
+
+    if plano_aula.criador.pk != request.user.pk:
+        raise PermissionDenied()
+
+    with transaction.atomic():
+        # Deleta likes e execuções
+        plano_aula.likes.all().delete()
+        plano_aula.execucoes.all().delete()
+
+        # Marca o plano como inativo
         plano_aula.status = False
         plano_aula.save()
-        return redirect('plano_aula:listar')
-    else:
-        raise PermissionDenied()
+
+    return redirect('plano_aula:listar')
     
 class Deletar(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
     model = PlanoAula
