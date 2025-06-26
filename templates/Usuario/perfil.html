@@ -72,6 +72,7 @@
             </div>
         </div>
     </div>
+    <br>
     <div class="col-md-6 col-lg-6">
         <div class="card border-primary">
             <div class="card-header pb-0 p-3 bg-gradient-warning">
@@ -179,7 +180,7 @@ document.getElementById('form-alterar-senha').addEventListener('submit', functio
             const erros = JSON.parse(data.erros);
             for (const campo in erros) {
                 erros[campo].forEach(erro => {
-                    divErros.innerHTML += `<div class="alert alert-danger">${erro.message}</div>`;
+                    divErros.innerHTML += `<div class="alert alert-danger text-white">${erro.message}</div>`;
                 });
             }
         }
