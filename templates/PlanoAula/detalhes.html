@@ -30,12 +30,12 @@
         <span class="text-sm text-uppercase font-weight-bold">
             {% if plano_aula.likes.all|encontrar_usuario_lista:user.id %}
                 <a onclick="marcar_favorito({{plano_aula.id}}, {{user.id}}, '-')">
-                    <i class="fas fa-thumbs-up px-3 text-success icon-stroke" id="icon_thumbs_up_{{plano_aula.id}}"
+                    <i class="fas fa-thumbs-up px-3" id="icon_thumbs_up_{{plano_aula.id}}"
                     style="color: var(--bs-success);"></i>
                 </a>
             {% else %}
                 <a onclick="marcar_favorito({{plano_aula.id}}, {{user.id}}, '-')">
-                    <i class="fas fa-thumbs-up px-3 icon-stroke" id="icon_thumbs_up_{{plano_aula.id}}"  style="color: white;"   ></i>
+                    <i class="fas fa-thumbs-up px-3" id="icon_thumbs_up_{{plano_aula.id}}"  style="color: gray;"   ></i>
                 </a>
             {% endif %}
             <span class="text-sm text-uppercase font-weight-bold" id="contador_thumbs_up_{{plano_aula.id}}">{{ plano_aula.likes.count }}</span>
@@ -43,12 +43,12 @@
         <span class="text-sm text-uppercase font-weight-bold">
             {% if plano_aula.execucoes.all|encontrar_usuario_lista:user.id %}
                 <a onclick="marcar_executado({{plano_aula.id}}, {{user.id}}, '-')">
-                    <i class="fas fa-play px-3 icon-stroke" id="icon_play_{{plano_aula.id}}"
+                    <i class="fas fa-play px-3" id="icon_play_{{plano_aula.id}}"
                     style="color: var(--bs-success);"></i>
                 </a>
             {% else %}
                 <a onclick="marcar_executado({{plano_aula.id}}, {{user.id}}, '-')">
-                    <i class="fas fa-play px-3 icon-stroke" id="icon_play_{{plano_aula.id}}" style="color: white;"></i>
+                    <i class="fas fa-play px-3" id="icon_play_{{plano_aula.id}}" style="color: gray;"></i>
                 </a>
             {% endif %}
             <span class="text-sm text-uppercase font-weight-bold" id="contador_play_{{plano_aula.id}}">{{ plano_aula.execucoes.count }}</span>

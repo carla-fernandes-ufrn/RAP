@@ -110,12 +110,12 @@
                     <div class="float-end">
                         <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">
                             {% if aula.likes.all|encontrar_usuario_lista:user.id %}
-                                <a onclick="marcar_favorito({{aula.id}}, {{user.id}}, '{{tipo}}')">
+                                <a onclick="marcar_favorito({{aula.id}}, {{user.id}}, '{{tipo}}', 'white')">
                                     <i class="fas fa-thumbs-up px-3" id="icon_thumbs_up_{{aula.id}}"
                                     style="color: var(--bs-success);"></i>
                                 </a>
                             {% else %}
-                                <a onclick="marcar_favorito({{aula.id}}, {{user.id}}, '{{tipo}}')">
+                                <a onclick="marcar_favorito({{aula.id}}, {{user.id}}, '{{tipo}}', 'white')">
                                     <i class="fas fa-thumbs-up px-3" id="icon_thumbs_up_{{aula.id}}"
                                     style="color: white;"></i>
                                 </a>
@@ -124,12 +124,12 @@
                         </span>
                         <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">
                             {% if aula.execucoes.all|encontrar_usuario_lista:user.id %}
-                                <a onclick="marcar_executado({{aula.id}}, {{user.id}}, '{{tipo}}')">
+                                <a onclick="marcar_executado({{aula.id}}, {{user.id}}, '{{tipo}}', 'white')">
                                     <i class="fas fa-play px-3" id="icon_play_{{aula.id}}"
                                     style="color: var(--bs-success);"></i>
                                 </a>
                             {% else %}
-                                <a onclick="marcar_executado({{aula.id}}, {{user.id}}, '{{tipo}}')">
+                                <a onclick="marcar_executado({{aula.id}}, {{user.id}}, '{{tipo}}', 'white')">
                                     <i class="fas fa-play px-3" id="icon_play_{{aula.id}}"
                                     style="color: white;"></i>
                                 </a>
