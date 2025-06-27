@@ -2,19 +2,18 @@
 {% load info_usuario %}
 
 <nav class="navbar navbar-expand-lg px-0 shadow-none bg-gradient-danger" style="height: 70px;">
+
+  <a href="{% url 'home' %}" class="d-flex align-items-center px-3" style="height: 50px;">
+    <img src="{% static 'assets/img/LogoRAP-transparente.png' %}"
+         style="height: 100%; width: auto; display: block;"
+         alt="Logo">
+  </a>
   <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
     <i class="fa fa-bars"></i>  <!-- Ícone visível sempre -->
   </button>
   <div class="collapse navbar-collapse justify-content-between" id="navbar">
 
     <ul class="navbar-nav">
-      <li class="nav-item d-flex align-items-center h-100">
-        <a href="{% url 'home' %}" class="d-flex align-items-center" style="height: 50px;">
-          <img src="{% static 'assets/img/LogoRAP-transparente.png' %}"
-               style="height: 100%; width: auto; display: block;"
-               alt="Logo">
-        </a>
-      </li>
       <li class="nav-item px-3 d-flex align-items-center">
         <a href="{% url 'plano_aula:listar' %}" class="nav-link font-weight-bold px-0 text-white">
           Planos de aula
