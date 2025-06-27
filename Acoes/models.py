@@ -1,6 +1,7 @@
 from django.db import models
 from datetime import date
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 from Usuario.models import Usuario
 
@@ -38,9 +39,16 @@ class Acoes(models.Model):
 
     def __str__(self):
         return str(self.tipo) + " - " + str(self.titulo)
+    
+    def clean(self):
+        # Verifica se data_fim existe e se é menor que data_inicio
+        if self.data_fim and self.data_fim < self.data_inicio:
+            raise ValidationError({
+                'data_fim': 'A data de fim não pode ser anterior à data de início.'
+            })
 
     class Meta:
-        ordering = ['-status', '-data_inicio', '-data_fim', 'titulo']
+        ordering = ['-data_inicio', '-data_fim', 'titulo']
         verbose_name = "Ação"
         verbose_name_plural = "Ações"
 

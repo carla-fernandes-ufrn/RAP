@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponseRedirect
 from django.views import generic
+from django import forms
 from django.views.generic.edit import FormMixin
 
 from django.contrib.auth.decorators import login_required
@@ -28,6 +29,12 @@ class CriarAcao(LoginRequiredMixin, generic.CreateView):
     fields = ['titulo', 'tipo', 'formato', 'site', 'link_de_acesso', 'data_inicio', 'data_fim', 'local', 'descricao']
     template_name = "Acoes/criar.html"
 
+    def get_form(self, *args, **kwargs):
+        form = super().get_form(*args, **kwargs)
+        form.fields['data_inicio'].widget = forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})
+        form.fields['data_fim'].widget = forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})
+        return form
+
     def form_valid(self, form):
         usuario = Usuario.objects.get(id=self.request.user.id)
         form.instance.responsavel = usuario
@@ -40,6 +47,12 @@ class EditarAcao(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Acoes
     fields = ['titulo', 'tipo', 'formato', 'site', 'link_de_acesso', 'data_inicio', 'data_fim', 'local', 'descricao', 'status']
     template_name = "Acoes/editar.html"
+
+    def get_form(self, *args, **kwargs):
+        form = super().get_form(*args, **kwargs)
+        form.fields['data_inicio'].widget = forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})
+        form.fields['data_fim'].widget = forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})
+        return form
 
     def test_func(self):
         acao = Acoes.objects.get(pk=int(self.kwargs['pk']))

@@ -17,37 +17,37 @@
                 {% csrf_token %}
 
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-md-8">
                         {{ form.titulo|as_crispy_field }}
                     </div>
-                    <div class="col-4">
+                    <div class="col-md-4">
                         {{ form.tipo|as_crispy_field }}
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-8">
+                    <div class="col-md-8">
                         {{ form.site|as_crispy_field }}
                     </div>
-                    <div class="col-4">
+                    <div class="col-md-4">
                         {{ form.formato|as_crispy_field }}
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-md-6">
                         {{ form.local|as_crispy_field }}
                     </div>
-                    <div class="col-6">
+                    <div class="col-md-6">
                         {{ form.link_de_acesso|as_crispy_field }}
                     </div>
                 </div>
 
                 <div class="row">
-                    <div class="col-6">
+                    <div class="col-md-6">
                         {{ form.data_inicio|as_crispy_field }}
                     </div>
-                    <div class="col-6">
+                    <div class="col-md-6">
                         {{ form.data_fim|as_crispy_field }}
                     </div>
                 </div>
@@ -57,9 +57,6 @@
             </form>
         </div>
     </div>
-
-    
 </div>
 
-
-{% endblock %} 
+{% endblock %}

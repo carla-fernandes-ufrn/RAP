@@ -90,76 +90,75 @@
         <br>
         {% now "Y-m-d" as todays_date %}
         {% for acao in lista_acoes %}
-            <div class="card">
+            <div class="card" style="cursor: pointer;" onclick="location.href='{% url 'acoes:detalhes' pk=acao.pk %}'">
                 {% if acao.data_fim is not None and todays_date > acao.data_fim|date:"Y-m-d" or acao.status is False %}
                     <div id="card_header_informacoes" class="card-header bg-gradient-secondary pb-0 p-3">
                 {% else %}
                     <div id="card_header_informacoes" class="card-header bg-gradient-warning pb-0 p-3">
                 {% endif %}
-                
+
                     <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">
-                        <a href="{% url 'acoes:detalhes' pk=acao.pk %}" class="text-white">
-                            {{acao.titulo}}
-                        </a>
+                    {{ acao.titulo }}
                     </span>
                     <div class="float-end">
-                        <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3">
-                            Início: {{ acao.data_inicio|date:"d/m/Y" }}
-                        </span>
-                        <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3">
-                            {% if acao.data_fim is not None %}
-                                Fim: {{ acao.data_fim|date:"d/m/Y" }}
-                            {% endif %}
-                        </span>
-                        {% if acao.responsavel.username == user.username %}
-                            <a href="{% url 'acoes:editar' pk=acao.pk %}" class="text-white">
-                                <i class="fa fa-pencil"></i>
-                            </a>
+                    <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3">
+                        Início: {{ acao.data_inicio|date:"d/m/Y" }}
+                    </span>
+                    <span class="text-sm mb-0 text-uppercase text-white font-weight-bold px-3">
+                        {% if acao.data_fim is not None %}
+                        Fim: {{ acao.data_fim|date:"d/m/Y" }}
                         {% endif %}
+                    </span>
+                    {% if acao.responsavel.username == user.username %}
+                        <a href="{% url 'acoes:editar' pk=acao.pk %}" onclick="event.stopPropagation()" class="text-white">
+                        <i class="fa fa-pencil"></i>
+                        </a>
+                    {% endif %}
                     </div>
                 </div>
-                <div class=card-body>
-                    <span class="badge bg-gradient-warning">{{acao.tipo}}</span>
-                    <span class="badge bg-gradient-danger">{{acao.formato}}</span>
+
+                <div class="card-body">
+                    <span class="badge bg-gradient-warning">{{ acao.tipo }}</span>
+                    <span class="badge bg-gradient-danger">{{ acao.formato }}</span>
                     <div class="row">
-                        <div class="col-4">
-                            {% if acao.site is not None %}
-                                <span class="mb-2 text-xs">Site: 
-                                    <span class="text-dark font-weight-bold ms-sm-2">
-                                        <a href="{{ acao.site }}" target="_blank">{{ acao.site }}</a>
-                                    </span>
-                                </span>
-                                <br>
-                            {% endif %}
-                            {% if acao.local is not None %}
-                                <span class="mb-2 text-xs">Local: 
-                                    <span class="text-dark font-weight-bold ms-sm-2">
-                                        {{ acao.local }}
-                                    </span>
-                                </span>
-                                <br>
-                            {% endif %}
-                            <span class="mb-2 text-xs">Responsável: 
-                                <span class="text-dark font-weight-bold ms-sm-2">
-                                    {% if acao.responsavel is not None %}
-                                        {{ acao.responsavel }}
-                                    {% endif %}
-                                </span>
+                    <div class="col-4">
+                        {% if acao.site is not None %}
+                        <span class="mb-2 text-xs">Site:
+                            <span class="text-dark font-weight-bold ms-sm-2">
+                            <a href="{{ acao.site }}" target="_blank" onclick="event.stopPropagation()">{{ acao.site }}</a>
                             </span>
+                        </span>
+                        <br>
+                        {% endif %}
+                        {% if acao.local is not None %}
+                        <span class="mb-2 text-xs">Local:
+                            <span class="text-dark font-weight-bold ms-sm-2">
+                            {{ acao.local }}
+                            </span>
+                        </span>
+                        <br>
+                        {% endif %}
+                        <span class="mb-2 text-xs">Responsável:
+                        <span class="text-dark font-weight-bold ms-sm-2">
+                            {% if acao.responsavel is not None %}
+                            {{ acao.responsavel }}
+                            {% endif %}
+                        </span>
+                        </span>
+                    </div>
+                    <div class="col-8">
+                        <div class="overflow-auto">
+                        {% if item.obj.descricao|length > 300 %}
+                            {{ item.obj.descricao|slice:":300" }}...
+                        {% else %}
+                            {{ item.obj.descricao }}
+                        {% endif %}
                         </div>
-                        <div class="col-8">
-                            <div class="overflow-auto">
-                                {% if item.obj.descricao|length > 300 %}
-                                    {{ item.obj.descricao|slice:":300" }}...
-                                {% else %}
-                                    {{ item.obj.descricao }}
-                                {% endif %}
-                            </div>
-                        </div>
-                        
+                    </div>
                     </div>
                 </div>
-            </div>
+                </div>
+
             <br>
             
         {% empty %}
