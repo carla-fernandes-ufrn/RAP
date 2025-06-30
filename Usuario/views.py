@@ -6,6 +6,7 @@ from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.forms import PasswordChangeForm
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.hashers import make_password
 
 from django.views import generic
 from django.contrib.auth import update_session_auth_hash
@@ -314,7 +315,7 @@ def alterar_avatar(request, pk, novo):
 @login_required
 def alterar_senha(request, pk, senha):
     usuario = Usuario.objects.get(pk=pk)
-    usuario.password = senha
+    usuario.password = make_password(senha)
     usuario.save()
     return redirect('usuario:editar', pk=pk)
 
