@@ -1,0 +1,8 @@
+# Ignorar arquivos de cache do Python
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+
+# Ignorar arquivos de migração compilados
+*/migrations/__pycache__/
