@@ -1,10 +1,131 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+{% load static %}
+{% load widget_tweaks %}
+
 <head>
-  <title>E-mail Enviado</title>
+  {% include "Base/cabecalho.html" %}
 </head>
-<body>
-  <h2>Verifique seu e-mail</h2>
-  <p>Enviamos um e-mail com instruções para redefinir sua senha.</p>
+
+<body class="">
+  <main class="main-content mt-0">
+    <section>
+      <div class="page-header min-vh-100">
+        <div class="container">
+          <div class="row d-flex align-items-stretch">
+            <div class="col-12 col-lg-6 d-flex flex-column">
+              <div class="card card-plain">
+                <div class="card-header pb-0 text-center">
+                  <img src="{% static 'assets/img/LogoRAP-transparente.png' %}" width="25%"/>
+                  <h5 class="font-weight-bolder mb-1">Robótica para Alunos e Professores</h5>
+                  <h2 class="mb-1 mt-2">E-mail Enviado!</h2>
+                  <h5 class="font-weight-bolder mb-1">Verifique sua caixa de entrada</h5>
+                  <p class="mb-0 text-sm">Enviamos instruções para redefinir sua senha</p>
+                </div>
+
+                <div class="card-body py-3">
+                  <div class="alert alert-success text-white text-center py-2 mb-3" role="alert">
+                    <i class="fas fa-check-circle me-1"></i>
+                    <strong>Sucesso!</strong> Instruções enviadas para seu e-mail.
+                  </div>
+
+                  <div class="text-center mb-3">
+                    <div class="bg-gradient-success rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
+                      <i class="fas fa-envelope text-white" style="font-size: 1.2rem;"></i>
+                    </div>
+                  </div>
+
+                  <div class="text-center">
+                    <h6 class="mb-2">Próximos passos:</h6>
+                    <div class="text-start">
+                      <p class="mb-1 text-sm"><i class="fas fa-check text-success me-1"></i> Verifique sua caixa de entrada</p>
+                      <p class="mb-1 text-sm"><i class="fas fa-check text-success me-1"></i> Procure na pasta de spam</p>
+                      <p class="mb-1 text-sm"><i class="fas fa-check text-success me-1"></i> Clique no link recebido</p>
+                      <p class="mb-2 text-sm"><i class="fas fa-check text-success me-1"></i> Defina sua nova senha</p>
+                    </div>
+                  </div>
+
+                  <div class="text-center">
+                    <a href="{% url 'usuario:login' %}" class="btn btn-primary btn-lg w-100 mt-2 mb-0">
+                      Voltar ao Login
+                    </a>
+                  </div>
+                </div>
+
+                <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                  <p class="mb-2 text-sm mx-auto">
+                    Não recebeu o e-mail?
+                    <a href="{% url 'usuario:password_reset' %}" class="text-primary text-gradient font-weight-bold">Tentar novamente</a>
+                  </p>
+                  <p class="mb-2 text-sm mx-auto">
+                    Precisa de ajuda?
+                    <a href="mailto:suporte@rap.com" class="text-primary text-gradient font-weight-bold">Entre em contato</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
+              <div id="imagem-aleatoria" class="position-relative bg-gradient-success h-100 m-3 px-5 border-radius-lg d-flex flex-column justify-content-center overflow-hidden">
+                <span class="mask bg-gradient-success opacity-6"></span>
+                <div class="text-center">
+                  <img src="{% static 'assets/img/LogoRAP-transparente-branco.png' %}" width="25%"/>
+                </div>
+                <h5 class="text-white font-weight-bolder position-relative mb-2">Robótica para Alunos e Professores</h5>
+                <p class="text-white position-relative mb-0 text-sm">Quase lá! Verifique seu e-mail e em breve você estará de volta à nossa comunidade.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  {% include "Base/scripts.html" %}
+
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+
+    const images = [
+      "assets/img/robotica/vertical/imagem1.jpeg",
+      "assets/img/robotica/vertical/imagem2.jpeg",
+      "assets/img/robotica/vertical/imagem3.jpeg",
+      "assets/img/robotica/vertical/imagem4.jpeg",
+      "assets/img/robotica/vertical/imagem5.jpeg",
+      "assets/img/robotica/vertical/imagem6.jpeg",
+      "assets/img/robotica/vertical/imagem7.jpeg",
+      "assets/img/robotica/vertical/imagem8.jpeg",
+      "assets/img/robotica/vertical/imagem9.jpeg",
+      "assets/img/robotica/vertical/imagem10.jpeg",
+      "assets/img/robotica/vertical/imagem11.jpeg",
+      "assets/img/robotica/vertical/imagem12.jpeg",
+      "assets/img/robotica/vertical/imagem13.jpeg",
+      "assets/img/robotica/vertical/imagem14.jpeg",
+      "assets/img/robotica/vertical/imagem15.jpeg",
+      "assets/img/robotica/vertical/imagem16.jpeg",
+      "assets/img/robotica/vertical/imagem17.jpeg",
+      "assets/img/robotica/vertical/imagem18.jpeg",
+      "assets/img/robotica/vertical/imagem19.jpeg",
+      "assets/img/robotica/vertical/imagem20.jpeg",
+      "assets/img/robotica/vertical/imagem21.jpeg"
+    ];
+
+    document.addEventListener('DOMContentLoaded', _ => {
+      const randImageIndex = ~~(Math.random() * images.length);
+      let imagemEscolhida = images[randImageIndex];
+      let staticURL = "url('{% static '" + "' %}";
+      staticURL = staticURL.substring(0, staticURL.lastIndexOf('/'));
+      let imageURL = staticURL + "/" + imagemEscolhida + "')";
+      let backgroundSize = "cover";
+      document.getElementById('imagem-aleatoria').style.backgroundImage = imageURL;
+      document.getElementById('imagem-aleatoria').style.backgroundSize = backgroundSize;
+    });
+  </script>
 </body>
 </html>

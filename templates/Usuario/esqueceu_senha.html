@@ -1,15 +1,141 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+{% load static %}
+{% load widget_tweaks %}
+
 <head>
-  <title>Esqueceu sua senha?</title>
+  {% include "Base/cabecalho.html" %}
 </head>
-<body>
-  <h2>Esqueceu sua senha?</h2>
-  <p>Digite seu e-mail para receber instruções de redefinição de senha.</p>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Enviar</button>
-  </form>
+
+<body class="">
+  <main class="main-content mt-0">
+    <section>
+      <div class="page-header min-vh-100">
+        <div class="container">
+          <div class="row d-flex align-items-stretch">
+            <div class="col-12 col-lg-6 d-flex flex-column">
+              <div class="card card-plain">
+                <div class="card-header pb-0 text-center">
+                  <img src="{% static 'assets/img/LogoRAP-transparente.png' %}" width="40%"/>
+                  <h4 class="font-weight-bolder">Robótica para Alunos e Professores</h4>
+                  <h1 class="mb-2 mt-5">Recuperar Senha</h1>
+                  <h4 class="font-weight-bolder">Esqueceu sua senha?</h4>
+                  <p class="mb-0">Digite seu e-mail para receber instruções de redefinição de senha</p>
+                </div>
+
+                <div class="card-body">
+                  <form role="form" method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                      <div class="alert alert-danger text-white" role="alert">
+                        {% for error in form.non_field_errors %}
+                          {{ error }}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+
+                    {% if messages %}
+                      {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} text-white" role="alert">
+                          {{ message }}
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+
+                    <div class="mb-3">
+                      {% render_field form.email class="form-control form-control-lg" placeholder="Digite seu e-mail" %}
+                      {% if form.email.errors %}
+                        <div class="text-danger mt-1">
+                          {% for error in form.email.errors %}
+                            <small>{{ error }}</small>
+                          {% endfor %}
+                        </div>
+                      {% endif %}
+                    </div>
+
+                    <div class="text-center">
+                      <button type="submit" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">
+                        Enviar Instruções
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                  <p class="mb-4 text-sm mx-auto">
+                    Lembrou da sua senha?
+                    <a href="{% url 'usuario:login' %}" class="text-primary text-gradient font-weight-bold">Fazer Login</a>
+                  </p>
+                  <p class="mb-4 text-sm mx-auto">
+                    Não tem uma conta?
+                    <a href="{% url 'usuario:cadastrar' %}" class="text-primary text-gradient font-weight-bold">Cadastre-se</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
+              <div id="imagem-aleatoria" class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden">
+                <span class="mask bg-gradient-primary opacity-6"></span>
+                <div class="text-center">
+                  <img src="{% static 'assets/img/LogoRAP-transparente-branco.png' %}" width="30%"/>
+                </div>
+                <h4 class="text-white font-weight-bolder position-relative">Robótica para Alunos e Professores</h4>
+                <p class="text-white position-relative">Não se preocupe! Vamos ajudá-lo a recuperar o acesso à sua conta rapidamente.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  {% include "Base/scripts.html" %}
+
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+
+    const images = [
+      "assets/img/robotica/vertical/imagem1.jpeg",
+      "assets/img/robotica/vertical/imagem2.jpeg",
+      "assets/img/robotica/vertical/imagem3.jpeg",
+      "assets/img/robotica/vertical/imagem4.jpeg",
+      "assets/img/robotica/vertical/imagem5.jpeg",
+      "assets/img/robotica/vertical/imagem6.jpeg",
+      "assets/img/robotica/vertical/imagem7.jpeg",
+      "assets/img/robotica/vertical/imagem8.jpeg",
+      "assets/img/robotica/vertical/imagem9.jpeg",
+      "assets/img/robotica/vertical/imagem10.jpeg",
+      "assets/img/robotica/vertical/imagem11.jpeg",
+      "assets/img/robotica/vertical/imagem12.jpeg",
+      "assets/img/robotica/vertical/imagem13.jpeg",
+      "assets/img/robotica/vertical/imagem14.jpeg",
+      "assets/img/robotica/vertical/imagem15.jpeg",
+      "assets/img/robotica/vertical/imagem16.jpeg",
+      "assets/img/robotica/vertical/imagem17.jpeg",
+      "assets/img/robotica/vertical/imagem18.jpeg",
+      "assets/img/robotica/vertical/imagem19.jpeg",
+      "assets/img/robotica/vertical/imagem20.jpeg",
+      "assets/img/robotica/vertical/imagem21.jpeg"
+    ];
+
+    document.addEventListener('DOMContentLoaded', _ => {
+      const randImageIndex = ~~(Math.random() * images.length);
+      let imagemEscolhida = images[randImageIndex];
+      let staticURL = "url('{% static '" + "' %}";
+      staticURL = staticURL.substring(0, staticURL.lastIndexOf('/'));
+      let imageURL = staticURL + "/" + imagemEscolhida + "')";
+      let backgroundSize = "cover";
+      document.getElementById('imagem-aleatoria').style.backgroundImage = imageURL;
+      document.getElementById('imagem-aleatoria').style.backgroundSize = backgroundSize;
+    });
+  </script>
 </body>
 </html>
