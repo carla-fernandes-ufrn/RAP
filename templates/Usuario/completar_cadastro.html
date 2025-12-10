@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 
-{% load static %} {% load bootstrap5 %} {% load widget_tweaks %}
+{% load static %} {% load django_bootstrap5 %} {% load widget_tweaks %}
 
 <head>
     {% include "Base/cabecalho.html" %}
@@ -11,17 +11,20 @@
     <main class="main-content mt-0">
         <form id="form_usuario" role="form" method="post">
             {% csrf_token %}
-            <div class="page-header align-items-start min-vh-50 m-3 border-radius-lg" style="background-image: url('{% static 'assets/img/robotica/horizontal/imagem2.png' %}'); background-position: top;">
+            <div class="page-header align-items-start min-vh-50 m-3 border-radius-lg"
+                style="background-image: url('{% static 'assets/img/robotica/horizontal/imagem2.png' %}'); background-position: top;">
                 <span class="mask bg-gradient-primary opacity-6"></span>
                 <div class="container">
                     <div class="row">
-                        <div class="col-md-6 col-lg-6 text-center mb-2 mt-5">   
-                            <img src="{% static 'assets/img/LogoRAP-transparente.png' %}" width="20%"/>
-                            <h4 class="text-white font-weight-bolder position-relative">Robótica para Alunos e Professores</h4>
+                        <div class="col-md-6 col-lg-6 text-center mb-2 mt-5">
+                            <img src="{% static 'assets/img/LogoRAP-transparente.png' %}" width="20%" />
+                            <h4 class="text-white font-weight-bolder position-relative">Robótica para Alunos e
+                                Professores</h4>
                         </div>
                         <div class="col-md-6 col-lg-6">
                             <h3 class="text-white text-center mb-2 mt-5">Complemente seu cadastro!</h3>
-                            <p class="text-lead text-center text-white">Insira seus dados pessoais e interesses para uma melhor experiência no RAP.</p>
+                            <p class="text-lead text-center text-white">Insira seus dados pessoais e interesses para uma
+                                melhor experiência no RAP.</p>
                         </div>
                     </div>
                 </div>
@@ -36,10 +39,11 @@
                             <div class="card-body">
                                 <input type="hidden" id="lista_interesses" name="lista_interesses"></input>
                                 {% for field in form_usuario %}
-                                    <div class="mb-3">
-                                        <label class="form-control-label">{{ field.label }}</label> {% render_field field class="form-control" %}
-                                        <span class="text-sm opacity-8">{{ field.errors }}</span>
-                                    </div>
+                                <div class="mb-3">
+                                    <label class="form-control-label">{{ field.label }}</label> {% render_field field
+                                    class="form-control" %}
+                                    <span class="text-sm opacity-8">{{ field.errors }}</span>
+                                </div>
                                 {% endfor %}
                             </div>
                         </div>
@@ -52,40 +56,43 @@
                             </div>
                             <div class="card-body">
                                 {% for disciplina in disciplinas %}
-                                    <a onclick="alterar_interesse({{disciplina.id}})" style="background-color: transparent; border-color: transparent; box-shadow: none;">
-                                        {% if disciplina.id in interesses %}
-                                            <span id="btn_disc_{{disciplina.id}}" class="badge badge-sm bg-gradient-success">{{ disciplina.nome }}</span>
-                                        {% else %}
-                                            <span id="btn_disc_{{disciplina.id}}" class="badge badge-sm bg-gradient-secondary">{{ disciplina.nome }}</span>
-                                        {% endif %}
-                                    </a>
+                                <a onclick="alterar_interesse({{disciplina.id}})"
+                                    style="background-color: transparent; border-color: transparent; box-shadow: none;">
+                                    {% if disciplina.id in interesses %}
+                                    <span id="btn_disc_{{disciplina.id}}" class="badge badge-sm bg-gradient-success">{{
+                                        disciplina.nome }}</span>
+                                    {% else %}
+                                    <span id="btn_disc_{{disciplina.id}}"
+                                        class="badge badge-sm bg-gradient-secondary">{{ disciplina.nome }}</span>
+                                    {% endif %}
+                                </a>
                                 {% endfor %}
                             </div>
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="text-end mt-4">
                     <button type="submit" class="btn bg-success text-white">
-                    Continuar
+                        Continuar
                     </button>
                 </div>
             </div>
         </form>
-        
+
     </main>
     {% include "Base/rodape.html" %} {% include "Base/scripts.html" %}
 
     {% block scripts %}
     <script>
         var interesses_selecionados = []
-        for (var i = 0; i < {{interesses}}.length; i++) {
-            interesses_selecionados.push({{interesses}}[i])
+        for (var i = 0; i < {{ interesses }}.length; i++) {
+            interesses_selecionados.push({{ interesses }} [i])
         }
         document.getElementById("lista_interesses").value = interesses_selecionados
 
         function alterar_interesse(id_elemento) {
-            var elemento = "btn_disc_"+id_elemento
+            var elemento = "btn_disc_" + id_elemento
             if (document.getElementById(elemento).classList.contains("bg-gradient-secondary")) {
                 interesses_selecionados.push(id_elemento)
                 document.getElementById(elemento).classList.remove('bg-gradient-secondary');

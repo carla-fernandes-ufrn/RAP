@@ -1,7 +1,7 @@
 {% extends "Base/base.html" %}
 
 {% load info_usuario %}
-{% load bootstrap5 %}
+{% load django_bootstrap5 %}
 
 {% block barra_titulo %}
 {% endblock %}
@@ -49,10 +49,10 @@
                             <input type="submit" class="btn btn-success pull-right" value="Atualizar"></input>
                         </div>
                     </form>
-                    
+
                     <div class="mb-6">
                         <h6 class="mb-1">Alteração de senha</h6>
-                        <form method="post" >
+                        <form method="post">
                             {% bootstrap_field form_senha.password1 %}
                             {% bootstrap_field form_senha.password2 %}
 

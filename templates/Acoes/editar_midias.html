@@ -1,8 +1,8 @@
-{% extends "Base/base.html" %} 
+{% extends "Base/base.html" %}
 
-{% load static %} 
-{% load bootstrap5 %} 
-{% load crispy_forms_tags %} 
+{% load static %}
+{% load django_bootstrap5 %}
+{% load crispy_forms_tags %}
 
 {% block conteudo %}
 
@@ -14,7 +14,7 @@
         <h4 class="text-uppercase font-weight-bold">Mídias</h4>
         <a class="float-end btn btn-outline-success" href="{% url 'acoes:detalhes' pk=acao.pk %}">Voltar</a>
     </div>
-    
+
 
     <div class="card">
         <div class="card-body p-3 overflow-auto">
@@ -29,18 +29,18 @@
         <hr class="hr hr-blurry" />
         <div class="container row">
             {% for midia in midias_acao %}
-                <div class="col-lg-2 col-md-4 col-6">
-                    <a href="" data-bs-toggle="modal" data-bs-target="#modalMidia" data-bs-midia-pk="{{midia.pk}}" 
-                            data-bs-midia-url="{{midia.midia.url}}" class="text-xxs">
-                        <img src="{{ midia.midia.url }}" style="max-height: 100px;max-width: 100px;object-fit: contain;"/>
-                    </a>
-                </div>
+            <div class="col-lg-2 col-md-4 col-6">
+                <a href="" data-bs-toggle="modal" data-bs-target="#modalMidia" data-bs-midia-pk="{{midia.pk}}"
+                    data-bs-midia-url="{{midia.midia.url}}" class="text-xxs">
+                    <img src="{{ midia.midia.url }}" style="max-height: 100px;max-width: 100px;object-fit: contain;" />
+                </a>
+            </div>
             {% empty %}
-                Não há mídias cadastradas para essa ação.
+            Não há mídias cadastradas para essa ação.
             {% endfor %}
         </div>
     </div>
-    
+
 </div>
 
 <div id="modalMidia" class="modal fade" role="dialog">
@@ -55,16 +55,16 @@
                         <span aria-hidden="true">&times;</span>
                     </a>
                 </div>
-                
+
             </div>
             <div class="modal-body">
-                <img id="midia_modal" style="width: 100%;" src="{{ midia.midia.url }}"/>
+                <img id="midia_modal" style="width: 100%;" src="{{ midia.midia.url }}" />
             </div>
         </div>
     </div>
 </div>
 
-{% endblock %} 
+{% endblock %}
 
 {% block scripts %}
 

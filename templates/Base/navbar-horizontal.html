@@ -4,12 +4,12 @@
 <nav class="navbar navbar-expand-lg px-0 shadow-none bg-gradient-danger" style="height: 70px;">
 
   <a href="{% url 'home' %}" class="d-flex align-items-center px-3" style="height: 50px;">
-    <img src="{% static 'assets/img/LogoRAP-transparente.png' %}"
-         style="height: 100%; width: auto; display: block;"
-         alt="Logo">
+    <img src="{% static 'assets/img/LogoRAP-transparente.png' %}" style="height: 100%; width: auto; display: block;"
+      alt="Logo">
   </a>
-  <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
-    <i class="fa fa-bars"></i>  <!-- Ícone visível sempre -->
+  <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbar"
+    aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fa fa-bars"></i> <!-- Ícone visível sempre -->
   </button>
   <div class="collapse navbar-collapse justify-content-between" id="navbar">
 
@@ -24,14 +24,14 @@
           Disciplinas
         </a>
       </li>
-      
+
       <!-- Novo item de navegação para "Acervo" com namespace 
       <!-- <li class="nav-item px-3 d-flex align-items-center">-->
       <!--   <a href="{% url 'acervo:acervo' %}" class="nav-link font-weight-bold px-0 text-white">-->
       <!--     Acervo-->
       <!--   </a>-->
       <!-- </li>-->
-      
+
       <li class="nav-item px-3 d-flex align-items-center">
         <a href="{% url 'usuario:listar_ativos' %}" class="nav-link font-weight-bold px-0 text-white">
           Usuários
@@ -46,19 +46,15 @@
     <ul class="navbar-nav align-items-center">
       <li class="nav-item me-2">
         <form action="{% url 'buscar' %}" method="get">
-            <div class="input-group">
-                <input type="text" 
-                      class="form-control" 
-                      placeholder="Digite aqui..." 
-                      name="q" 
-                      id="input_busca"
-                      value="{{ request.GET.q }}">
-                <span class="input-group-text">
-                    <a href="#" onclick="this.closest('form').submit(); return false;">
-                        <i class="fa fa-search"></i>
-                    </a>
-                </span>
-            </div>
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Digite aqui..." name="q" id="input_busca"
+              value="{{ request.GET.q }}">
+            <span class="input-group-text">
+              <a href="#" onclick="this.closest('form').submit(); return false;">
+                <i class="fa fa-search"></i>
+              </a>
+            </span>
+          </div>
         </form>
 
       </li>
@@ -68,33 +64,38 @@
         </a>
       </li>
       <li class="nav-item">
-        <a href="{% url 'usuario:logout' %}" class="nav-link text-white">
+        <a href="#" class="nav-link text-white" title="Sair" aria-label="Sair"
+          onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
           <i class="fa fa-sign-out-alt"></i>
         </a>
+        <form id="logout-form" action="{% url 'usuario:logout' %}" method="post" style="display:none">
+          {% csrf_token %}
+        </form>
       </li>
     </ul>
   </div>
 </nav>
 <style>
-.badge {
-  padding-left: 9px;
-  padding-right: 9px;
-  -webkit-border-radius: 9px;
-  -moz-border-radius: 9px;
-  border-radius: 9px;
-}
+  .badge {
+    padding-left: 9px;
+    padding-right: 9px;
+    -webkit-border-radius: 9px;
+    -moz-border-radius: 9px;
+    border-radius: 9px;
+  }
 
-.label-warning[href],
-.badge-warning[href] {
-  background-color: #c67605;
-}
-#alerta_sugestoes {
+  .label-warning[href],
+  .badge-warning[href] {
+    background-color: #c67605;
+  }
+
+  #alerta_sugestoes {
     font-size: 12px;
     color: #fff;
     padding: 0 5px;
     vertical-align: top;
-    margin-left: -10px; 
-}
+    margin-left: -10px;
+  }
 </style>
 
 <script src="{% static 'assets/js/custom/alerta_sugestoes.js' %}"></script>

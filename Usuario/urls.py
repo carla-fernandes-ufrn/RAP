@@ -7,7 +7,7 @@ app_name = 'usuario'
 
 urlpatterns = [
     path('login/', auth_views.LoginView.as_view(template_name='Usuario/login.html'), name="login"),
-    path('logout/', auth_views.LogoutView.as_view(), name="logout"),
+    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
     path('perfil/', views.Perfil.as_view(), name="perfil"),
     path('alterar-senha-ajax/', views.alterar_senha_ajax, name='alterar_senha_ajax'),
     path('cadastrar/', views.Cadastrar.as_view(), name="cadastrar"),

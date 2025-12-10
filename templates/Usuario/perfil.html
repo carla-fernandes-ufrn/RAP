@@ -3,9 +3,9 @@
 {% load pagination_tags %}
 {% load attribute_tags %}
 {% load widget_tweaks %}
-{% load bootstrap5 %} 
+{% load django_bootstrap5 %}
 {% load string_tags %}
-{% load crispy_forms_tags %} 
+{% load crispy_forms_tags %}
 
 
 {% block conteudo %}
@@ -49,7 +49,7 @@
 <br>
 
 <div class="row">
-    
+
     <div class="col-md-6 col-lg-6 mb-4">
         <div class="card border-primary">
             <div class="card-header pb-0 p-3 bg-gradient-info">
@@ -60,13 +60,13 @@
                     <span class="text-sm mb-0 text-uppercase font-weight-bold">Criados: </span>
                     <span class="text-sm mb-0">{{usuario.planos_ativos_count}}</span>
                 </a>
-                <br>  
-                <a href="{% url 'plano_aula:listar_favoritos' pk=usuario.pk %}">              
+                <br>
+                <a href="{% url 'plano_aula:listar_favoritos' pk=usuario.pk %}">
                     <span class="text-sm mb-0 text-uppercase font-weight-bold">Favoritos: </span>
                     <span class="text-sm mb-0">{{usuario.likes_plano_aula.count}}</span>
                 </a>
                 <br>
-                <a href="{% url 'plano_aula:listar_executados' pk=usuario.pk %}">        
+                <a href="{% url 'plano_aula:listar_executados' pk=usuario.pk %}">
                     <span class="text-sm mb-0 text-uppercase font-weight-bold">Executados: </span>
                     <span class="text-sm mb-0">{{usuario.execucoes_plano_aula.count}}</span>
                 </a>
@@ -150,43 +150,43 @@
 
 {% block scripts %}
 <script>
-document.getElementById('form-alterar-senha').addEventListener('submit', function(e) {
-    e.preventDefault();
+    document.getElementById('form-alterar-senha').addEventListener('submit', function (e) {
+        e.preventDefault();
 
-    const form = this;
-    const url = "{% url 'usuario:alterar_senha_ajax' %}";
-    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        const form = this;
+        const url = "{% url 'usuario:alterar_senha_ajax' %}";
+        const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
-    const formData = new FormData(form);
+        const formData = new FormData(form);
 
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'X-CSRFToken': csrftoken
-        },
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        const divErros = document.getElementById('erros-senha');
-        divErros.innerHTML = '';
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                const divErros = document.getElementById('erros-senha');
+                divErros.innerHTML = '';
 
-        if (data.status === 'success') {
-            divErros.innerHTML = `<div class="alert alert-success">${data.mensagem}</div>`;
-            form.reset();
-            const modalSenha = bootstrap.Modal.getInstance(document.getElementById('modalAlterarSenha'));
-            modalSenha.hide();
-        } else {
-            const erros = JSON.parse(data.erros);
-            for (const campo in erros) {
-                erros[campo].forEach(erro => {
-                    divErros.innerHTML += `<div class="alert alert-danger text-white">${erro.message}</div>`;
-                });
-            }
-        }
-    })
-    .catch(error => console.error('Erro:', error));
-});
+                if (data.status === 'success') {
+                    divErros.innerHTML = `<div class="alert alert-success">${data.mensagem}</div>`;
+                    form.reset();
+                    const modalSenha = bootstrap.Modal.getInstance(document.getElementById('modalAlterarSenha'));
+                    modalSenha.hide();
+                } else {
+                    const erros = JSON.parse(data.erros);
+                    for (const campo in erros) {
+                        erros[campo].forEach(erro => {
+                            divErros.innerHTML += `<div class="alert alert-danger text-white">${erro.message}</div>`;
+                        });
+                    }
+                }
+            })
+            .catch(error => console.error('Erro:', error));
+    });
 </script>
 
 {% endblock %}

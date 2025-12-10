@@ -1,16 +1,18 @@
-{% extends "Base/base.html" %} 
-{% load static %} {% load bootstrap5 %} 
-{% load crispy_forms_tags %} 
-{% block breadcrumb1 %} Plano de aula {% endblock %} 
-{% block breadcrumb2 %} Criação {% endblock %} 
+{% extends "Base/base.html" %}
+{% load static %} {% load django_bootstrap5 %}
+{% load crispy_forms_tags %}
+{% block breadcrumb1 %} Plano de aula {% endblock %}
+{% block breadcrumb2 %} Criação {% endblock %}
 {% block titulo %} Novo plano de aula {% endblock %}
 {% block conteudo %}
 
 
 <div class="p-3 d-flex main justify-content-between">
     <div>
-        <button id="btn_inf_gerais" class="btn btn-outline-success me-2" onclick="mostrar_inf_gerais()">Informações gerais</button>
-        <button id="btn_montagem_programacao" class="btn btn-outline-secondary me-2" onclick="mostrar_montagem_programacao()">Montagem e Programação</button>
+        <button id="btn_inf_gerais" class="btn btn-outline-success me-2" onclick="mostrar_inf_gerais()">Informações
+            gerais</button>
+        <button id="btn_montagem_programacao" class="btn btn-outline-secondary me-2"
+            onclick="mostrar_montagem_programacao()">Montagem e Programação</button>
     </div>
     <input class="btn btn-success me-2" form="form_plano_aula" type="submit" value="Cadastrar" />
 </div>
@@ -51,8 +53,8 @@
                                 <h6 class="text-uppercase text-sm">Conteúdos selecionados</h6>
                                 <div>
                                     <h6 id="text_nome_disciplina" class="text-uppercase text-sm">DISCIPLINAS</h6>
-                                    <a id="anchor_escolher_outra_disciplina" onclick='escolher_outra_disciplina()' 
-                                            style="display:none" class="text-xs">
+                                    <a id="anchor_escolher_outra_disciplina" onclick='escolher_outra_disciplina()'
+                                        style="display:none" class="text-xs">
                                         Escolher outra disciplina
                                     </a>
                                 </div>
@@ -64,10 +66,11 @@
                                 <div class="col-6" style="box-shadow: .5px 0 0 #000;">
                                     <div id="div_conteudos_selecionados" class="row">
                                         {% for conteudo in conteudos_selecionados %}
-                                            <a onclick="remover_conteudo({{conteudo.id}})" id="conteudo_selecionado_{{conteudo.id}}">
-                                                <i class="fas fa-minus font-weight-bolder text-danger"></i>  
-                                                {{ conteudo.disciplina }}: {{ conteudo.nome }}
-                                            </a>
+                                        <a onclick="remover_conteudo({{conteudo.id}})"
+                                            id="conteudo_selecionado_{{conteudo.id}}">
+                                            <i class="fas fa-minus font-weight-bolder text-danger"></i>
+                                            {{ conteudo.disciplina }}: {{ conteudo.nome }}
+                                        </a>
                                         {% endfor %}
                                     </div>
                                 </div>
@@ -76,15 +79,16 @@
                                     <div id="div_disciplinas">
                                         <div class="row">
                                             {% for disciplina in lista_disciplinas %}
-                                                {% if disciplina.conteudos.all|length > 0 %}
-                                                    <div class="col-lg-4 col-md-6">
-                                                        <a onclick="selecionar_conteudo('{{disciplina.nome}}')">
-                                                            <i class="text-success me-2 icon-xxs dropdown-item-icon fas fa-arrow-right"></i>
-                                                            {{ disciplina.nome }}
-                                                        </a>
-                                                        <br>
-                                                    </div>
-                                                {% endif %} 
+                                            {% if disciplina.conteudos.all|length > 0 %}
+                                            <div class="col-lg-4 col-md-6">
+                                                <a onclick="selecionar_conteudo('{{disciplina.nome}}')">
+                                                    <i
+                                                        class="text-success me-2 icon-xxs dropdown-item-icon fas fa-arrow-right"></i>
+                                                    {{ disciplina.nome }}
+                                                </a>
+                                                <br>
+                                            </div>
+                                            {% endif %}
                                             {% endfor %}
                                         </div>
                                     </div>
@@ -168,7 +172,7 @@
             data: {
                 'nome': nome
             },
-            success: function(response) {
+            success: function (response) {
                 document.getElementById("div_conteudos").innerHTML = ""
                 for (var i = 0; i < response.length; i++) {
                     var str = " <a onclick=\"adicionar_conteudo('" + nome + "','" + response[i][1] + "')\">" +
@@ -198,7 +202,7 @@
                 'conteudo': conteudo,
                 'disciplina': disciplina
             },
-            success: function(response) {
+            success: function (response) {
                 if (!conteudos_selecionados.includes(response['id'])) {
                     conteudos_selecionados.push(response['id'])
                     document.getElementById("lista_id_conteudos").value = conteudos_selecionados
@@ -223,7 +227,7 @@
         console.log(conteudos_selecionados)
     }
 
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
         const abaSelecionada = "{{ aba|default:'inf_gerais' }}";
         if (abaSelecionada === "montagem_programacao") {
             mostrar_montagem_programacao();
