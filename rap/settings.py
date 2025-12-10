@@ -14,8 +14,12 @@ MEDIA_URL = '/media/'
 SECRET_KEY = os.getenv("SECRET_KEY", "dev-insecure-key")
 DEBUG = os.getenv("DEBUG", "True") == "True"
 
-#ALLOWED_HOSTS = [h.strip() for h in os.getenv("ALLOWED_HOSTS", "").split(",") if h.strip()]
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "0.0.0.0",
+    ".ngrok-free.dev",
+]
 
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
@@ -112,3 +116,7 @@ EMAIL_USE_TLS = os.getenv("EMAIL_USE_TLS", "True") == "True"
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "Projeto RAP <no-reply@example.com>")
+CSRF_TRUSTED_ORIGINS = [
+    "https://*.ngrok-free.dev",
+    "http://localhost:8000",
+]

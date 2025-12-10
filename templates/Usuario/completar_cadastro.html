@@ -1,7 +1,9 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 
-{% load static %} {% load django_bootstrap5 %} {% load widget_tweaks %}
+{% load static %}
+{% load django_bootstrap5 %}
+{% load widget_tweaks %}
 
 <head>
     {% include "Base/cabecalho.html" %}
@@ -18,32 +20,36 @@
                     <div class="row">
                         <div class="col-md-6 col-lg-6 text-center mb-2 mt-5">
                             <img src="{% static 'assets/img/LogoRAP-transparente.png' %}" width="20%" />
-                            <h4 class="text-white font-weight-bolder position-relative">Robótica para Alunos e
-                                Professores</h4>
+                            <h4 class="text-white font-weight-bolder position-relative">
+                                Robótica para Alunos e Professores
+                            </h4>
                         </div>
                         <div class="col-md-6 col-lg-6">
                             <h3 class="text-white text-center mb-2 mt-5">Complemente seu cadastro!</h3>
-                            <p class="text-lead text-center text-white">Insira seus dados pessoais e interesses para uma
-                                melhor experiência no RAP.</p>
+                            <p class="text-lead text-center text-white">
+                                Insira seus dados pessoais e interesses para uma melhor experiência no RAP.
+                            </p>
                         </div>
                     </div>
                 </div>
             </div>
+
             <div class="container">
                 <div class="row mt-lg-n11 mt-md-n10 mt-n5 justify-content-center">
+
                     <div class="col-xl-4 col-lg-5 col-md-6 mx-auto">
                         <div class="card z-index-0">
                             <div class="card-header text-center pt-4">
                                 <h5>Informações pessoais</h5>
                             </div>
                             <div class="card-body">
-                                <input type="hidden" id="lista_interesses" name="lista_interesses"></input>
+                                <input type="hidden" id="lista_interesses" name="lista_interesses" />
                                 {% for field in form_usuario %}
-                                <div class="mb-3">
-                                    <label class="form-control-label">{{ field.label }}</label> {% render_field field
-                                    class="form-control" %}
-                                    <span class="text-sm opacity-8">{{ field.errors }}</span>
-                                </div>
+                                    <div class="mb-3">
+                                        <label class="form-control-label">{{ field.label }}</label>
+                                        {% render_field field class="form-control" %}
+                                        <span class="text-sm opacity-8">{{ field.errors }}</span>
+                                    </div>
                                 {% endfor %}
                             </div>
                         </div>
@@ -56,16 +62,20 @@
                             </div>
                             <div class="card-body">
                                 {% for disciplina in disciplinas %}
-                                <a onclick="alterar_interesse({{disciplina.id}})"
-                                    style="background-color: transparent; border-color: transparent; box-shadow: none;">
-                                    {% if disciplina.id in interesses %}
-                                    <span id="btn_disc_{{disciplina.id}}" class="badge badge-sm bg-gradient-success">{{
-                                        disciplina.nome }}</span>
-                                    {% else %}
-                                    <span id="btn_disc_{{disciplina.id}}"
-                                        class="badge badge-sm bg-gradient-secondary">{{ disciplina.nome }}</span>
-                                    {% endif %}
-                                </a>
+                                    <a onclick="alterar_interesse({{ disciplina.id }})"
+                                       style="background-color: transparent; border-color: transparent; box-shadow: none; cursor:pointer;">
+                                        {% if disciplina.id in interesses %}
+                                            <span id="btn_disc_{{ disciplina.id }}"
+                                                class="badge badge-sm bg-gradient-success">
+                                                {{ disciplina.nome }}
+                                            </span>
+                                        {% else %}
+                                            <span id="btn_disc_{{ disciplina.id }}"
+                                                class="badge badge-sm bg-gradient-secondary">
+                                                {{ disciplina.nome }}
+                                            </span>
+                                        {% endif %}
+                                    </a>
                                 {% endfor %}
                             </div>
                         </div>
@@ -79,32 +89,46 @@
                 </div>
             </div>
         </form>
-
     </main>
-    {% include "Base/rodape.html" %} {% include "Base/scripts.html" %}
+
+    {% include "Base/rodape.html" %}
+    {% include "Base/scripts.html" %}
+
+    {# aqui vai o JSON com os IDs de interesses atuais #}
+    {{ interesses|json_script:"interesses-data" }}
 
     {% block scripts %}
     <script>
-        var interesses_selecionados = []
-        for (var i = 0; i < {{ interesses }}.length; i++) {
-            interesses_selecionados.push({{ interesses }} [i])
+        // Carrega os IDs vindos do contexto (ex: [1,3,5])
+        const interesses_selecionados = JSON.parse(
+            document.getElementById("interesses-data").textContent
+        );
+
+        function syncHidden() {
+            const input = document.getElementById("lista_interesses");
+            if (input) {
+                input.value = interesses_selecionados.join(',');
+            }
         }
-        document.getElementById("lista_interesses").value = interesses_selecionados
+        syncHidden();
 
         function alterar_interesse(id_elemento) {
-            var elemento = "btn_disc_" + id_elemento
-            if (document.getElementById(elemento).classList.contains("bg-gradient-secondary")) {
-                interesses_selecionados.push(id_elemento)
-                document.getElementById(elemento).classList.remove('bg-gradient-secondary');
-                document.getElementById(elemento).classList.add('bg-gradient-success');
+            const elementoId = "btn_disc_" + id_elemento;
+            const el = document.getElementById(elementoId);
+            if (!el) return;
+
+            const idx = interesses_selecionados.indexOf(id_elemento);
+
+            if (idx === -1) {
+                interesses_selecionados.push(id_elemento);
+                el.classList.remove('bg-gradient-secondary');
+                el.classList.add('bg-gradient-success');
+            } else {
+                interesses_selecionados.splice(idx, 1);
+                el.classList.add('bg-gradient-secondary');
+                el.classList.remove('bg-gradient-success');
             }
-            else {
-                const index = interesses_selecionados.indexOf(id_elemento);
-                interesses_selecionados.splice(index, 1);
-                document.getElementById(elemento).classList.add('bg-gradient-secondary');
-                document.getElementById(elemento).classList.remove('bg-gradient-success');
-            }
-            document.getElementById("lista_interesses").value = interesses_selecionados
+            syncHidden();
         }
     </script>
     {% endblock scripts %}
@@ -112,9 +136,7 @@
     <script>
         var win = navigator.platform.indexOf('Win') > -1;
         if (win && document.querySelector('#sidenav-scrollbar')) {
-            var options = {
-                damping: '0.5'
-            }
+            var options = { damping: '0.5' };
             Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
         }
     </script>
