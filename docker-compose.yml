@@ -17,6 +17,7 @@ services:
 
   web:
     build: .
+    user: "root"
     command: ./entrypoint.sh
     env_file: .env
     depends_on:

@@ -18,11 +18,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar projeto
 COPY . /app
-
-RUN chmod +x /app/entrypoint.sh
+RUN sed -i 's/\r$//' /app/entrypoint.sh && chmod +x /app/entrypoint.sh
 
 # Permissões (opcional)
 RUN adduser --disabled-password --gecos "" appuser && chown -R appuser:appuser /app
-USER appuser
+#USER appuser
 
 EXPOSE 8000

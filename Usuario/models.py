@@ -33,7 +33,7 @@ ESTADOS = [
 
 class Usuario(User):
     cidade = models.CharField(max_length=100, verbose_name='Cidade')
-    estado = models.CharField(max_length=2, choices=ESTADOS, default='AC', verbose_name='Estado')
+    estado = models.CharField(max_length=20, choices=ESTADOS, default='AC', verbose_name='Estado')
     avatar = models.ImageField(upload_to='profile-pic/', default='profile-pic/default.jpeg')
     interesses = models.ManyToManyField('Disciplina.Disciplina', through='Interesses')
 

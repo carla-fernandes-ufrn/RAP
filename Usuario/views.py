@@ -106,54 +106,71 @@ class Cadastrar(generic.CreateView):
 
 @login_required
 def completar_cadastro(request):
+    try:
+        usuario = Usuario.objects.get(pk=request.user.pk)
+    except Usuario.DoesNotExist:
+        # Caso o usuário tenha sido criado via createsuperuser, ele existe em auth_user 
+        # mas não na tabela usuario_usuario. Vamos criar a extensão agora usando SQL
+        # direto para evitar os bugs de herança de múltiplas tabelas do Django ORM.
+        from django.db import connection
+        table_name = Usuario._meta.db_table
+        with connection.cursor() as cursor:
+            cursor.execute(
+                f'INSERT INTO "{table_name}" (user_ptr_id, cidade, estado, avatar) VALUES (%s, %s, %s, %s)',
+                [request.user.pk, '', 'AC', 'profile-pic/default.jpeg']
+            )
+        usuario = Usuario.objects.get(pk=request.user.pk)
 
+    # disciplinas ativas para lista de interesses
     disciplinas = Disciplina.objects.filter(status='Ativo')
 
-    interesses = list(Interesses.objects.filter(usuario = Usuario.objects.get(id =request.user.pk)).values_list('disciplina', flat=True))
+    # ids de disciplinas já marcadas como interesse
+    interesses_ids = list(
+        Interesses.objects.filter(usuario=usuario).values_list('disciplina', flat=True)
+    )
 
-    if (request.method == "POST"):
-        form_usuario = forms.FormCompletarCadastro(request.POST)
-        if (form_usuario.is_valid()):
-            usuario = Usuario.objects.get(pk=request.user.pk)
-            usuario.first_name = form_usuario.cleaned_data['first_name']
-            usuario.last_name = form_usuario.cleaned_data['last_name']
-            usuario.cidade = form_usuario.cleaned_data['cidade']
-            usuario.estado = form_usuario.cleaned_data['estado']
-            usuario.save()
+    if request.method == "POST":
+        # edita o próprio usuário
+        form_usuario = forms.FormCompletarCadastro(request.POST, instance=usuario)
 
-            interesses_novos = request.POST.get('lista_interesses','').split(',')
-            interesses_anteriores = list(Interesses.objects.filter(usuario = Usuario.objects.get(id =request.user.pk)).values_list('disciplina', flat=True))
+        if form_usuario.is_valid():
+            form_usuario.save()
 
-            if (interesses_novos != ['']):
-                for interesse in interesses_novos:
-                    if int(interesse) not in interesses_anteriores:
-                        disciplina = Disciplina.objects.get(id = int(interesse))
-                        usuario.interesses.add(disciplina)
-            if (interesses_anteriores != []):
-                for interesse in interesses_anteriores:
-                    if str(interesse) not in interesses_novos:
-                        disciplina = Disciplina.objects.get(pk=interesse)
-                        Interesses.objects.get(usuario=usuario, disciplina=disciplina).delete()
+            # trata hidden com lista de interesses (ex: "1,3,5")
+            bruto = (request.POST.get('lista_interesses') or '').strip()
+            novos_ids = set(int(x) for x in bruto.split(',') if x.strip().isdigit())
+            antigos_ids = set(interesses_ids)
+
+            # ADD interesses novos
+            for disc_id in (novos_ids - antigos_ids):
+                disciplina = Disciplina.objects.get(pk=disc_id)
+                usuario.interesses.add(disciplina)
+
+            # REMOVE interesses desmarcados
+            for disc_id in (antigos_ids - novos_ids):
+                disciplina = Disciplina.objects.get(pk=disc_id)
+                Interesses.objects.filter(usuario=usuario, disciplina=disciplina).delete()
+
             return redirect('home')
-        else:
-            informacoes = {
-                'form_usuario': form_usuario,
-                'form_interesses': form_interesses,
-                'disciplinas': disciplinas,
-                'interesses': interesses
-            }
-            return render(request, "usuario/completar_cadastro.html", informacoes)
-    else:
-        form_usuario = forms.FormCompletarCadastro()
-        form_interesses = forms.FormAtualizarInteresses()
-    
-        informacoes = {
+
+        # POST inválido → volta pro template com erros
+        contexto = {
             'form_usuario': form_usuario,
-            'form_interesses': form_interesses,
             'disciplinas': disciplinas,
-            'interesses': interesses
+            'interesses': interesses_ids,
         }
-        return render(request, "usuario/completar_cadastro.html", informacoes)
+        # ⚠️ AQUI: respeita o nome/case real da pasta de template
+        return render(request, "Usuario/completar_cadastro.html", contexto)
+
+    # GET → mostra dados atuais
+    form_usuario = forms.FormCompletarCadastro(instance=usuario)
+
+    contexto = {
+        'form_usuario': form_usuario,
+        'disciplinas': disciplinas,
+        'interesses': interesses_ids,
+    }
+    return render(request, "Usuario/completar_cadastro.html", contexto)
 
 class CompletarCadastro(LoginRequiredMixin, generic.UpdateView):
     model = Usuario
@@ -168,7 +185,17 @@ class Perfil(LoginRequiredMixin, generic.UpdateView):
     context_object_name = 'usuario'
 
     def get_object(self):
-        return Usuario.objects.get(pk=self.request.user.pk)  # Correto, sempre o usuário autenticado
+        try:
+            return Usuario.objects.get(pk=self.request.user.pk)
+        except Usuario.DoesNotExist:
+            from django.db import connection
+            table_name = Usuario._meta.db_table
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    f'INSERT INTO "{table_name}" (user_ptr_id, cidade, estado, avatar) VALUES (%s, %s, %s, %s)',
+                    [self.request.user.pk, '', 'AC', 'profile-pic/default.jpeg']
+                )
+            return Usuario.objects.get(pk=self.request.user.pk)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

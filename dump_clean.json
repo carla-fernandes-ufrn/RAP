@@ -1,0 +1,2027 @@
+[
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$gEZA4fhi96JvbxzBZMheO7$ml9TMlqmKrYQlsaIthbz92YmjoXyRXoZENekkrTqB8w=",
+    "last_login": "2025-06-26T14:55:55.497Z",
+    "is_superuser": true,
+    "username": "admin",
+    "first_name": "Admin",
+    "last_name": "LN",
+    "email": "admin@admin.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2024-07-25T15:13:14Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$mBh7OF7MDq3dkbK3c2Ky2n$YgrOrnmRav0harkhYIU2xf52OZtGUOxyEKi2eH/Vt3c=",
+    "last_login": "2025-06-22T01:39:43Z",
+    "is_superuser": true,
+    "username": "alicefc",
+    "first_name": "Alice F.",
+    "last_name": "C.",
+    "email": "alice@alice.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2024-07-25T15:13:28Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$jfYK0hpdgssItnXd5sMubm$nGqM5PZLg8AhfkdAzOBKNkSaoJySeHdUSeTqR2Igyjw=",
+    "last_login": "2024-08-28T13:37:20.671Z",
+    "is_superuser": true,
+    "username": "guia",
+    "first_name": "Guia",
+    "last_name": "Torres",
+    "email": "guiatorresilva@gmail.com",
+    "is_staff": true,
+    "is_active": true,
+    "date_joined": "2024-08-15T13:46:48Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$XZwX16POvdfV6ZclJU6vGh$ORGzmPyE5sBNnvncnT0X4nXKtyLjSQX6irXHkUNNDc0=",
+    "last_login": "2024-11-13T21:44:23.773Z",
+    "is_superuser": false,
+    "username": "rafael",
+    "first_name": "Rafael",
+    "last_name": "Melo",
+    "email": "rafacabral2012@hotmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2024-11-01T18:32:38.847Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$GBqcCN92W6tGxx2ihuxvkO$AzF3xiIXw6knT/sbDekhUuzRhZRsSuMDR8tcv+CaQFM=",
+    "last_login": "2024-11-01T18:33:11.812Z",
+    "is_superuser": false,
+    "username": "rafael2",
+    "first_name": "Rafael",
+    "last_name": "Melo",
+    "email": "rafacabral2013@hotmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2024-11-01T18:33:06.262Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$mbzKyKGyEUrqpJnVl8UtG6$msqeG56u7gn6D6nYYi6OLQhMIIWkB++ONE5rLiT5AZc=",
+    "last_login": "2025-06-13T11:54:54.491Z",
+    "is_superuser": false,
+    "username": "danielcurvelo",
+    "first_name": "Daniel",
+    "last_name": "Curvelo",
+    "email": "danielfcurvelo@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-06-13T08:43:00.222Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$KsfsIQOtyvWnsOUuEgoyzK$vhQbF+TTrJccnigdMSqK14CX2GhB+p4j/YJ4OVUESF0=",
+    "last_login": "2025-06-13T10:32:10.287Z",
+    "is_superuser": false,
+    "username": "neusamaria",
+    "first_name": "",
+    "last_name": "",
+    "email": "n@n.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-06-13T10:32:04.226Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$ar8A5f2iHvBJirZZrT6SHI$6dytSscvQYG6FbQuYapSAdLsVVLkFsZ5Y9+uGH8lOzc=",
+    "last_login": "2025-06-22T01:46:25.676Z",
+    "is_superuser": false,
+    "username": "guiguicurvelo",
+    "first_name": "Gui",
+    "last_name": "R. Curvelo",
+    "email": "g@g.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-06-22T01:46:19.676Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$P2YN9Q8PlcUPGHOdUmMud3$oyHYJ/lS1a+IrX08QXCdZ/8fpyfUlzmwZF2Q25NFwP8=",
+    "last_login": "2025-06-22T02:25:36.088Z",
+    "is_superuser": false,
+    "username": "melissa",
+    "first_name": "Melissa",
+    "last_name": "Rocha",
+    "email": "melissa@m.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-06-22T01:50:59.411Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$TmtOgrd4ixWqkVrdcTUws1$wy1DL3VBvyWZ+2VJXDFXCOZFGq0rXG9LoMVf5wpQ+rM=",
+    "last_login": "2025-06-27T11:41:32.586Z",
+    "is_superuser": false,
+    "username": "luizmarcos",
+    "first_name": "Luiz Marcos",
+    "last_name": "Gonþalves",
+    "email": "lm@lm.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-06-26T14:23:33.101Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$600000$VCxUhomTBqbynDAxggIZ3u$uz9g/qi6hkjaJSE3yNEs9aHTQdAnS18Jp+eifGIjn8E=",
+    "last_login": "2025-07-28T20:08:08.185Z",
+    "is_superuser": false,
+    "username": "Ag0ds",
+    "first_name": "Gabriel Arthur",
+    "last_name": "Oliveira dos Santos",
+    "email": "agods592@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-06-30T21:29:05.446Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "auth.user",
+  "fields": {
+    "password": "pbkdf2_sha256$1000000$JiSOPY78lJsg3H1HSx1ILW$5HHu3G7BlQV0rVNaWNh7fRl+vzNsGU8rPddO7otCvt8=",
+    "last_login": "2025-12-10T13:01:00.361Z",
+    "is_superuser": false,
+    "username": "gabriel.oliveira.117",
+    "first_name": "Gabriel Arthur",
+    "last_name": "Oliveira dos Santos",
+    "email": "arthurgamesbr842@gmail.com",
+    "is_staff": false,
+    "is_active": true,
+    "date_joined": "2025-07-24T20:34:33.000Z",
+    "groups": [],
+    "user_permissions": []
+  }
+},
+{
+  "model": "PlanoAula.fotorobo",
+  "pk": 1,
+  "fields": {
+    "plano_aula": 2,
+    "robo_foto": "plano_aula_2024-08-15_14-11-30/pag3.png"
+  }
+},
+{
+  "model": "PlanoAula.fotorobo",
+  "pk": 2,
+  "fields": {
+    "plano_aula": 2,
+    "robo_foto": "plano_aula_2024-08-15_14-11-30/Fig.10.png"
+  }
+},
+{
+  "model": "PlanoAula.fotorobo",
+  "pk": 3,
+  "fields": {
+    "plano_aula": 6,
+    "robo_foto": "plano_aula_2024-08-28_14-29-46/Fig.6_1.png"
+  }
+},
+{
+  "model": "PlanoAula.fotorobo",
+  "pk": 4,
+  "fields": {
+    "plano_aula": 6,
+    "robo_foto": "plano_aula_2024-08-28_14-29-46/Fig.3.png"
+  }
+},
+{
+  "model": "PlanoAula.videorobo",
+  "pk": 1,
+  "fields": {
+    "plano_aula": 6,
+    "robo_video": "plano_aula_2024-08-28_14-29-46/o-que-sao-banco-de-dados.mp4"
+  }
+},
+{
+  "model": "PlanoAula.fotoexecucao",
+  "pk": 1,
+  "fields": {
+    "plano_aula": 2,
+    "execucao_foto": "plano_aula_2024-08-15_14-11-30/auto-atenþÒo.png"
+  }
+},
+{
+  "model": "PlanoAula.fotoexecucao",
+  "pk": 2,
+  "fields": {
+    "plano_aula": 6,
+    "execucao_foto": "plano_aula_2024-08-28_14-29-46/148.png"
+  }
+},
+{
+  "model": "Usuario.usuario",
+  "fields": {
+    "user_ptr": [
+      "alicefc"
+    ],
+    "cidade": "Mossor¾",
+    "estado": "RN",
+    "avatar": "profile-pic/default.jpeg"
+  }
+},
+{
+  "model": "Usuario.usuario",
+  "fields": {
+    "user_ptr": [
+      "guia"
+    ],
+    "cidade": "Natal",
+    "estado": "RN",
+    "avatar": "profile-pic/default.jpeg"
+  }
+},
+{
+  "model": "Usuario.usuario",
+  "fields": {
+    "user_ptr": [
+      "rafael"
+    ],
+    "cidade": "Natal",
+    "estado": "Rio Grande do Norte",
+    "avatar": "profile-pic/default.jpeg"
+  }
+},
+{
+  "model": "Usuario.usuario",
+  "fields": {
+    "user_ptr": [
+      "rafael2"
+    ],
+    "cidade": "Natal",
+    "estado": "Rio Grande do Norte",
+    "avatar": "profile-pic/default.jpeg"
+  }
+},
+{
+  "model": "Usuario.usuario",
+  "fields": {
+    "user_ptr": [
+      "danielcurvelo"
+    ],
+    "cidade": "Natal",
+    "estado": "RN",
+    "avatar": "profile-pic/default.jpeg"
+  }
+},
+{
+  "model": "Usuario.usuario",
+  "fields": {
+    "user_ptr": [
+      "neusamaria"
+    ],
+    "cidade": "",
+    "estado": "AC",
+    "avatar": "profile-pic/default.jpeg"
+  }
+},
+{
+  "model": "Usuario.usuario",
+  "fields": {
+    "user_ptr": [
+      "guiguicurvelo"
+    ],
+    "cidade": "Natal",
+    "estado": "RN",
+    "avatar": "profile-pic/default.jpeg"
+  }
+},
+{
+  "model": "Usuario.usuario",
+  "fields": {
+    "user_ptr": [
+      "melissa"
+    ],
+    "cidade": "Caic¾",
+    "estado": "RN",
+    "avatar": "profile-pic/default.jpeg"
+  }
+},
+{
+  "model": "Usuario.usuario",
+  "fields": {
+    "user_ptr": [
+      "luizmarcos"
+    ],
+    "cidade": "Natal",
+    "estado": "RN",
+    "avatar": "profile-pic/default.jpeg"
+  }
+},
+{
+  "model": "Usuario.usuario",
+  "fields": {
+    "user_ptr": [
+      "Ag0ds"
+    ],
+    "cidade": "Natal",
+    "estado": "RN",
+    "avatar": "profile-pic/default.jpeg"
+  }
+},
+{
+  "model": "Usuario.usuario",
+  "fields": {
+    "user_ptr": [
+      "gabriel.oliveira.117"
+    ],
+    "cidade": "Natal",
+    "estado": "RN",
+    "avatar": "profile-pic/default.jpeg"
+  }
+},
+{
+  "model": "Usuario.interesses",
+  "pk": 1,
+  "fields": {
+    "usuario": [
+      "guia"
+    ],
+    "disciplina": 1
+  }
+},
+{
+  "model": "Usuario.interesses",
+  "pk": 2,
+  "fields": {
+    "usuario": [
+      "guia"
+    ],
+    "disciplina": 3
+  }
+},
+{
+  "model": "Usuario.interesses",
+  "pk": 3,
+  "fields": {
+    "usuario": [
+      "rafael2"
+    ],
+    "disciplina": 4
+  }
+},
+{
+  "model": "Usuario.interesses",
+  "pk": 4,
+  "fields": {
+    "usuario": [
+      "rafael2"
+    ],
+    "disciplina": 6
+  }
+},
+{
+  "model": "Usuario.interesses",
+  "pk": 5,
+  "fields": {
+    "usuario": [
+      "rafael"
+    ],
+    "disciplina": 2
+  }
+},
+{
+  "model": "Usuario.interesses",
+  "pk": 6,
+  "fields": {
+    "usuario": [
+      "rafael"
+    ],
+    "disciplina": 3
+  }
+},
+{
+  "model": "Usuario.interesses",
+  "pk": 7,
+  "fields": {
+    "usuario": [
+      "rafael"
+    ],
+    "disciplina": 6
+  }
+},
+{
+  "model": "Usuario.interesses",
+  "pk": 8,
+  "fields": {
+    "usuario": [
+      "rafael"
+    ],
+    "disciplina": 4
+  }
+},
+{
+  "model": "Usuario.interesses",
+  "pk": 9,
+  "fields": {
+    "usuario": [
+      "rafael"
+    ],
+    "disciplina": 1
+  }
+},
+{
+  "model": "Usuario.interesses",
+  "pk": 10,
+  "fields": {
+    "usuario": [
+      "rafael"
+    ],
+    "disciplina": 5
+  }
+},
+{
+  "model": "Usuario.interesses",
+  "pk": 13,
+  "fields": {
+    "usuario": [
+      "danielcurvelo"
+    ],
+    "disciplina": 5
+  }
+},
+{
+  "model": "Usuario.interesses",
+  "pk": 14,
+  "fields": {
+    "usuario": [
+      "luizmarcos"
+    ],
+    "disciplina": 8
+  }
+},
+{
+  "model": "Usuario.interesses",
+  "pk": 15,
+  "fields": {
+    "usuario": [
+      "luizmarcos"
+    ],
+    "disciplina": 9
+  }
+},
+{
+  "model": "Usuario.interesses",
+  "pk": 16,
+  "fields": {
+    "usuario": [
+      "luizmarcos"
+    ],
+    "disciplina": 10
+  }
+},
+{
+  "model": "Usuario.interesses",
+  "pk": 17,
+  "fields": {
+    "usuario": [
+      "Ag0ds"
+    ],
+    "disciplina": 8
+  }
+},
+{
+  "model": "Usuario.interesses",
+  "pk": 18,
+  "fields": {
+    "usuario": [
+      "Ag0ds"
+    ],
+    "disciplina": 6
+  }
+},
+{
+  "model": "Usuario.interesses",
+  "pk": 19,
+  "fields": {
+    "usuario": [
+      "Ag0ds"
+    ],
+    "disciplina": 4
+  }
+},
+{
+  "model": "Disciplina.disciplina",
+  "pk": 1,
+  "fields": {
+    "nome": "Geografia 2",
+    "status": "Ativo"
+  }
+},
+{
+  "model": "Disciplina.disciplina",
+  "pk": 2,
+  "fields": {
+    "nome": "Hist¾ria",
+    "status": "Ativo"
+  }
+},
+{
+  "model": "Disciplina.disciplina",
+  "pk": 3,
+  "fields": {
+    "nome": "InglÛs",
+    "status": "Inativo"
+  }
+},
+{
+  "model": "Disciplina.disciplina",
+  "pk": 4,
+  "fields": {
+    "nome": "Matemßtica",
+    "status": "Ativo"
+  }
+},
+{
+  "model": "Disciplina.disciplina",
+  "pk": 5,
+  "fields": {
+    "nome": "Artes Plßsticas",
+    "status": "Inativo"
+  }
+},
+{
+  "model": "Disciplina.disciplina",
+  "pk": 6,
+  "fields": {
+    "nome": "Rob¾tica",
+    "status": "Ativo"
+  }
+},
+{
+  "model": "Disciplina.disciplina",
+  "pk": 7,
+  "fields": {
+    "nome": "Geografia",
+    "status": "Ativo"
+  }
+},
+{
+  "model": "Disciplina.disciplina",
+  "pk": 8,
+  "fields": {
+    "nome": "Estudo das CiÛncias",
+    "status": "Ativo"
+  }
+},
+{
+  "model": "Disciplina.disciplina",
+  "pk": 9,
+  "fields": {
+    "nome": "Artes",
+    "status": "Ativo"
+  }
+},
+{
+  "model": "Disciplina.disciplina",
+  "pk": 10,
+  "fields": {
+    "nome": "Geo",
+    "status": "Ativo"
+  }
+},
+{
+  "model": "Disciplina.disciplina",
+  "pk": 11,
+  "fields": {
+    "nome": "Hist",
+    "status": "Ativo"
+  }
+},
+{
+  "model": "Disciplina.conteudo",
+  "pk": 1,
+  "fields": {
+    "nome": "N·meros inteiros",
+    "disciplina": 4,
+    "status": "Ativo"
+  }
+},
+{
+  "model": "Disciplina.conteudo",
+  "pk": 2,
+  "fields": {
+    "nome": "N·meros reais",
+    "disciplina": 4,
+    "status": "Ativo"
+  }
+},
+{
+  "model": "Disciplina.conteudo",
+  "pk": 3,
+  "fields": {
+    "nome": "Escalas",
+    "disciplina": 1,
+    "status": "Inativo"
+  }
+},
+{
+  "model": "Disciplina.conteudo",
+  "pk": 4,
+  "fields": {
+    "nome": "Partes da planta",
+    "disciplina": 8,
+    "status": "Ativo"
+  }
+},
+{
+  "model": "Disciplina.conteudo",
+  "pk": 5,
+  "fields": {
+    "nome": "Partes da plantas",
+    "disciplina": 8,
+    "status": "Ativo"
+  }
+},
+{
+  "model": "Disciplina.conteudo",
+  "pk": 6,
+  "fields": {
+    "nome": "PP",
+    "disciplina": 8,
+    "status": "Ativo"
+  }
+},
+{
+  "model": "Disciplina.conteudo",
+  "pk": 7,
+  "fields": {
+    "nome": "N·meros",
+    "disciplina": 8,
+    "status": "Ativo"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 1,
+  "fields": {
+    "nome": "Matemßtica",
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "B",
+    "comentarios": null,
+    "data": "2024-07-25"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 2,
+  "fields": {
+    "nome": "Hist¾ria",
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "B",
+    "comentarios": null,
+    "data": "2024-07-25"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 3,
+  "fields": {
+    "nome": "Geografia",
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "B",
+    "comentarios": null,
+    "data": "2024-07-25"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 4,
+  "fields": {
+    "nome": "InglÛs",
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "B",
+    "comentarios": null,
+    "data": "2024-07-25"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 5,
+  "fields": {
+    "nome": "PortuguÛs",
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "C",
+    "comentarios": null,
+    "data": "2024-07-25"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 6,
+  "fields": {
+    "nome": "PortuguÛs",
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "C",
+    "comentarios": null,
+    "data": "2024-07-25"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 7,
+  "fields": {
+    "nome": "Artes",
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "B",
+    "comentarios": null,
+    "data": "2024-07-25"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 8,
+  "fields": {
+    "nome": "Artes",
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "C",
+    "comentarios": null,
+    "data": "2024-07-25"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 9,
+  "fields": {
+    "nome": "Rob¾tica",
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "C",
+    "comentarios": null,
+    "data": "2024-07-25"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 10,
+  "fields": {
+    "nome": "Rob¾tica",
+    "usuario": [
+      "guia"
+    ],
+    "status": "B",
+    "comentarios": null,
+    "data": "2024-08-15"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 11,
+  "fields": {
+    "nome": "EducaþÒo FÝsica",
+    "usuario": [
+      "guia"
+    ],
+    "status": "C",
+    "comentarios": null,
+    "data": "2024-08-28"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 12,
+  "fields": {
+    "nome": "EducaþÒo FÝsica",
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "B",
+    "comentarios": null,
+    "data": "2025-06-13"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 13,
+  "fields": {
+    "nome": "CiÛncias",
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "B",
+    "comentarios": null,
+    "data": "2025-06-13"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 14,
+  "fields": {
+    "nome": "CiÛncias",
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "C",
+    "comentarios": null,
+    "data": "2025-06-13"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 15,
+  "fields": {
+    "nome": "Geografia 2",
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "C",
+    "comentarios": null,
+    "data": "2025-06-13"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 16,
+  "fields": {
+    "nome": "Artes",
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "C",
+    "comentarios": null,
+    "data": "2025-06-13"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 17,
+  "fields": {
+    "nome": "Geo",
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "B",
+    "comentarios": null,
+    "data": "2025-06-13"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 18,
+  "fields": {
+    "nome": "Hist",
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "B",
+    "comentarios": null,
+    "data": "2025-06-13"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 19,
+  "fields": {
+    "nome": "Geografia 2",
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "B",
+    "comentarios": null,
+    "data": "2025-06-13"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 20,
+  "fields": {
+    "nome": "Hist¾ria",
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "C",
+    "comentarios": null,
+    "data": "2025-06-13"
+  }
+},
+{
+  "model": "Disciplina.sugestaodisciplina",
+  "pk": 21,
+  "fields": {
+    "nome": "aaaaaaaa",
+    "usuario": [
+      "Ag0ds"
+    ],
+    "status": "A",
+    "comentarios": null,
+    "data": "2025-07-28"
+  }
+},
+{
+  "model": "Disciplina.sugestaoconteudo",
+  "pk": 1,
+  "fields": {
+    "nome": "N·meros inteiros",
+    "disciplina": 4,
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "B",
+    "comentarios": null,
+    "data": "2024-07-25"
+  }
+},
+{
+  "model": "Disciplina.sugestaoconteudo",
+  "pk": 2,
+  "fields": {
+    "nome": "N·meros reais",
+    "disciplina": 4,
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "B",
+    "comentarios": null,
+    "data": "2024-07-25"
+  }
+},
+{
+  "model": "Disciplina.sugestaoconteudo",
+  "pk": 3,
+  "fields": {
+    "nome": "Hist¾ria do Brasil",
+    "disciplina": 2,
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "C",
+    "comentarios": null,
+    "data": "2024-07-25"
+  }
+},
+{
+  "model": "Disciplina.sugestaoconteudo",
+  "pk": 4,
+  "fields": {
+    "nome": "Escalas",
+    "disciplina": 1,
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "B",
+    "comentarios": null,
+    "data": "2024-07-25"
+  }
+},
+{
+  "model": "Disciplina.sugestaoconteudo",
+  "pk": 5,
+  "fields": {
+    "nome": "Fraþ§es",
+    "disciplina": 4,
+    "usuario": [
+      "guia"
+    ],
+    "status": "C",
+    "comentarios": null,
+    "data": "2024-08-15"
+  }
+},
+{
+  "model": "Disciplina.sugestaoconteudo",
+  "pk": 6,
+  "fields": {
+    "nome": "Partes da planta",
+    "disciplina": 8,
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "B",
+    "comentarios": null,
+    "data": "2025-06-13"
+  }
+},
+{
+  "model": "Disciplina.sugestaoconteudo",
+  "pk": 7,
+  "fields": {
+    "nome": "Corpo humano",
+    "disciplina": 8,
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "B",
+    "comentarios": null,
+    "data": "2025-06-13"
+  }
+},
+{
+  "model": "Disciplina.sugestaoconteudo",
+  "pk": 8,
+  "fields": {
+    "nome": "Partes da planta",
+    "disciplina": 8,
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "C",
+    "comentarios": null,
+    "data": "2025-06-13"
+  }
+},
+{
+  "model": "Disciplina.sugestaoconteudo",
+  "pk": 9,
+  "fields": {
+    "nome": "PP",
+    "disciplina": 8,
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "B",
+    "comentarios": null,
+    "data": "2025-06-13"
+  }
+},
+{
+  "model": "Disciplina.sugestaoconteudo",
+  "pk": 10,
+  "fields": {
+    "nome": "N·meros",
+    "disciplina": 8,
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "B",
+    "comentarios": null,
+    "data": "2025-06-13"
+  }
+},
+{
+  "model": "Disciplina.sugestaoconteudo",
+  "pk": 11,
+  "fields": {
+    "nome": "Partes da planta",
+    "disciplina": 8,
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "C",
+    "comentarios": null,
+    "data": "2025-06-13"
+  }
+},
+{
+  "model": "Disciplina.sugestaoconteudo",
+  "pk": 12,
+  "fields": {
+    "nome": "Partes da plantas",
+    "disciplina": 8,
+    "usuario": [
+      "alicefc"
+    ],
+    "status": "B",
+    "comentarios": null,
+    "data": "2025-06-13"
+  }
+},
+{
+  "model": "Acoes.acoes",
+  "pk": 1,
+  "fields": {
+    "titulo": "Curso de CriaþÒo de Rob¶s com Arduino",
+    "tipo": "Palestra",
+    "formato": "HÝbrido",
+    "site": "https://www.geeksforgeeks.org/urlfield-django-models/",
+    "link_de_acesso": "https://obr.robocup.org.br/2024/05/09/prorrogacao-do-prazo-de-inscricoes/",
+    "data_inicio": "2024-08-01",
+    "data_fim": null,
+    "local": "Online",
+    "descricao": "O curso tem como objetivo bla bla bla",
+    "responsavel": [
+      "guia"
+    ],
+    "status": true,
+    "deletada": false
+  }
+},
+{
+  "model": "Acoes.acoes",
+  "pk": 2,
+  "fields": {
+    "titulo": "CURSO DE ROBËTICA PARA PROFESSORES",
+    "tipo": "Curso",
+    "formato": "Presencial",
+    "site": null,
+    "link_de_acesso": null,
+    "data_inicio": "2024-08-15",
+    "data_fim": "2024-08-28",
+    "local": null,
+    "descricao": "O curso tem como objetivo ...",
+    "responsavel": [
+      "guia"
+    ],
+    "status": true,
+    "deletada": false
+  }
+},
+{
+  "model": "Acoes.acoes",
+  "pk": 3,
+  "fields": {
+    "titulo": "MT OBR 2025",
+    "tipo": "CompetiþÒo",
+    "formato": "HÝbrido",
+    "site": null,
+    "link_de_acesso": null,
+    "data_inicio": "2025-06-21",
+    "data_fim": null,
+    "local": null,
+    "descricao": "Esse Ú um curso legal",
+    "responsavel": [
+      "alicefc"
+    ],
+    "status": false,
+    "deletada": true
+  }
+},
+{
+  "model": "Acoes.acoes",
+  "pk": 4,
+  "fields": {
+    "titulo": "MT OBR 2025",
+    "tipo": "CompetiþÒo",
+    "formato": "Online",
+    "site": null,
+    "link_de_acesso": null,
+    "data_inicio": "2025-06-20",
+    "data_fim": null,
+    "local": null,
+    "descricao": "",
+    "responsavel": [
+      "melissa"
+    ],
+    "status": false,
+    "deletada": false
+  }
+},
+{
+  "model": "Acoes.acoes",
+  "pk": 5,
+  "fields": {
+    "titulo": "Curso de rob¾tic",
+    "tipo": "Palestra",
+    "formato": "Presencial",
+    "site": null,
+    "link_de_acesso": null,
+    "data_inicio": "2025-06-26",
+    "data_fim": null,
+    "local": null,
+    "descricao": "",
+    "responsavel": [
+      "luizmarcos"
+    ],
+    "status": true,
+    "deletada": false
+  }
+},
+{
+  "model": "Acoes.acoes",
+  "pk": 6,
+  "fields": {
+    "titulo": "AulÒo de portugu╩s",
+    "tipo": "Curso",
+    "formato": "Online",
+    "site": null,
+    "link_de_acesso": null,
+    "data_inicio": "2024-06-26",
+    "data_fim": "2025-12-24",
+    "local": null,
+    "descricao": "",
+    "responsavel": [
+      "luizmarcos"
+    ],
+    "status": false,
+    "deletada": false
+  }
+},
+{
+  "model": "Acoes.acoes",
+  "pk": 7,
+  "fields": {
+    "titulo": "Nova Aula de inglÛs",
+    "tipo": "CompetiþÒo",
+    "formato": "HÝbrido",
+    "site": null,
+    "link_de_acesso": null,
+    "data_inicio": "2025-01-26",
+    "data_fim": "2025-02-24",
+    "local": null,
+    "descricao": "",
+    "responsavel": [
+      "luizmarcos"
+    ],
+    "status": true,
+    "deletada": false
+  }
+},
+{
+  "model": "Acoes.acoes",
+  "pk": 8,
+  "fields": {
+    "titulo": "WRE 2025",
+    "tipo": "CompetiþÒo",
+    "formato": "HÝbrido",
+    "site": null,
+    "link_de_acesso": null,
+    "data_inicio": "2025-03-26",
+    "data_fim": "2025-04-24",
+    "local": null,
+    "descricao": "",
+    "responsavel": [
+      "luizmarcos"
+    ],
+    "status": true,
+    "deletada": false
+  }
+},
+{
+  "model": "Acoes.acoes",
+  "pk": 9,
+  "fields": {
+    "titulo": "Teste",
+    "tipo": "CompetiþÒo",
+    "formato": "HÝbrido",
+    "site": null,
+    "link_de_acesso": null,
+    "data_inicio": "2025-06-10",
+    "data_fim": "2025-12-24",
+    "local": null,
+    "descricao": "",
+    "responsavel": [
+      "luizmarcos"
+    ],
+    "status": true,
+    "deletada": false
+  }
+},
+{
+  "model": "Acoes.acoes",
+  "pk": 10,
+  "fields": {
+    "titulo": "Teste 2",
+    "tipo": "CompetiþÒo",
+    "formato": "HÝbrido",
+    "site": null,
+    "link_de_acesso": null,
+    "data_inicio": "2025-06-27",
+    "data_fim": "2024-12-24",
+    "local": null,
+    "descricao": "",
+    "responsavel": [
+      "luizmarcos"
+    ],
+    "status": true,
+    "deletada": false
+  }
+},
+{
+  "model": "Acoes.acoes",
+  "pk": 11,
+  "fields": {
+    "titulo": "Teste 3",
+    "tipo": "CompetiþÒo",
+    "formato": "HÝbrido",
+    "site": null,
+    "link_de_acesso": null,
+    "data_inicio": "2025-06-27",
+    "data_fim": null,
+    "local": null,
+    "descricao": "",
+    "responsavel": [
+      "luizmarcos"
+    ],
+    "status": false,
+    "deletada": false
+  }
+},
+{
+  "model": "Acoes.midia",
+  "pk": 1,
+  "fields": {
+    "acao": 1,
+    "midia": "user_3/acao_1/Fig.5.png",
+    "data": "2024-08-15T14:21:20.967Z"
+  }
+},
+{
+  "model": "Acoes.midia",
+  "pk": 3,
+  "fields": {
+    "acao": 1,
+    "midia": "user_3/acao_1/Fig.7.png",
+    "data": "2024-08-15T14:21:27.532Z"
+  }
+},
+{
+  "model": "Acoes.midia",
+  "pk": 6,
+  "fields": {
+    "acao": 3,
+    "midia": "user_2/acao_3/Captura_de_tela_2025-04-15_162454.png",
+    "data": "2025-06-21T22:32:05.777Z"
+  }
+},
+{
+  "model": "Acoes.midia",
+  "pk": 7,
+  "fields": {
+    "acao": 3,
+    "midia": "user_2/acao_3/Captura_de_tela_2025-04-15_163138.png",
+    "data": "2025-06-21T22:32:10.342Z"
+  }
+},
+{
+  "model": "Acoes.midia",
+  "pk": 8,
+  "fields": {
+    "acao": 5,
+    "midia": "user_10/acao_5/Captura_de_tela_2025-04-15_162454.png",
+    "data": "2025-06-26T15:04:17.105Z"
+  }
+},
+{
+  "model": "Acoes.midia",
+  "pk": 9,
+  "fields": {
+    "acao": 5,
+    "midia": "user_10/acao_5/Captura_de_tela_2025-04-15_163138.png",
+    "data": "2025-06-26T15:04:21.090Z"
+  }
+},
+{
+  "model": "Acoes.midia",
+  "pk": 10,
+  "fields": {
+    "acao": 5,
+    "midia": "user_10/acao_5/Captura_de_tela_2025-04-15_180330.png",
+    "data": "2025-06-26T15:04:54.778Z"
+  }
+},
+{
+  "model": "Acoes.mensagemacoes",
+  "pk": 3,
+  "fields": {
+    "texto": "Aqui foi legal",
+    "data": "2025-06-21T22:32:28.917Z",
+    "usuario": [
+      "alicefc"
+    ],
+    "acao": 3,
+    "mensagem_original": null
+  }
+},
+{
+  "model": "Acoes.mensagemacoes",
+  "pk": 4,
+  "fields": {
+    "texto": "Vamos colocar!",
+    "data": "2025-06-21T22:32:36.191Z",
+    "usuario": [
+      "alicefc"
+    ],
+    "acao": 3,
+    "mensagem_original": 3
+  }
+},
+{
+  "model": "Acoes.mensagemacoes",
+  "pk": 5,
+  "fields": {
+    "texto": "MAis uma",
+    "data": "2025-06-21T22:32:43.280Z",
+    "usuario": [
+      "alicefc"
+    ],
+    "acao": 3,
+    "mensagem_original": null
+  }
+},
+{
+  "model": "Acoes.mensagemacoes",
+  "pk": 6,
+  "fields": {
+    "texto": "Foi bom!",
+    "data": "2025-06-26T15:03:40.154Z",
+    "usuario": [
+      "luizmarcos"
+    ],
+    "acao": 5,
+    "mensagem_original": null
+  }
+},
+{
+  "model": "Acoes.mensagemacoes",
+  "pk": 7,
+  "fields": {
+    "texto": "Foi mesmo",
+    "data": "2025-06-26T15:03:48.356Z",
+    "usuario": [
+      "luizmarcos"
+    ],
+    "acao": 5,
+    "mensagem_original": 6
+  }
+},
+{
+  "model": "Acoes.mensagemacoes",
+  "pk": 8,
+  "fields": {
+    "texto": "Uhuuu",
+    "data": "2025-06-26T15:03:54.317Z",
+    "usuario": [
+      "luizmarcos"
+    ],
+    "acao": 5,
+    "mensagem_original": null
+  }
+},
+{
+  "model": "acervo.acervo",
+  "pk": 1,
+  "fields": {
+    "tipo": "DissertaþÒo",
+    "titulo": "teste",
+    "descricao": "teste",
+    "autor": "teste",
+    "ano": 2024,
+    "link": null,
+    "file": "",
+    "licenca_de_uso": "Sem Licenþa",
+    "responsavel": [
+      "gabriel.oliveira.117"
+    ],
+    "data_adicao": "2025-07-24"
+  }
+},
+{
+  "model": "PlanoAula.mensagemplanoaula",
+  "pk": 10,
+  "fields": {
+    "texto": "Essa aula funciona?",
+    "data": "2024-08-15T14:12:37.586Z",
+    "usuario": [
+      "guia"
+    ],
+    "plano_aula": 1,
+    "mensagem_original": null
+  }
+},
+{
+  "model": "PlanoAula.mensagemplanoaula",
+  "pk": 11,
+  "fields": {
+    "texto": "Tem certeza?",
+    "data": "2024-08-15T14:12:47.431Z",
+    "usuario": [
+      "guia"
+    ],
+    "plano_aula": 1,
+    "mensagem_original": 10
+  }
+},
+{
+  "model": "PlanoAula.mensagemplanoaula",
+  "pk": 12,
+  "fields": {
+    "texto": "Foi isso que aconteceu\r\nQue legal!!\r\n\r\n\r\nMuito bom",
+    "data": "2025-06-16T19:02:40.496Z",
+    "usuario": [
+      "alicefc"
+    ],
+    "plano_aula": 6,
+    "mensagem_original": null
+  }
+},
+{
+  "model": "PlanoAula.mensagemplanoaula",
+  "pk": 13,
+  "fields": {
+    "texto": "Mais um. Muito bom",
+    "data": "2025-06-16T19:02:51.485Z",
+    "usuario": [
+      "alicefc"
+    ],
+    "plano_aula": 6,
+    "mensagem_original": null
+  }
+},
+{
+  "model": "PlanoAula.mensagemplanoaula",
+  "pk": 14,
+  "fields": {
+    "texto": "Resposta 1",
+    "data": "2025-06-16T19:03:01.800Z",
+    "usuario": [
+      "alicefc"
+    ],
+    "plano_aula": 6,
+    "mensagem_original": 13
+  }
+},
+{
+  "model": "PlanoAula.mensagemplanoaula",
+  "pk": 15,
+  "fields": {
+    "texto": "Outro",
+    "data": "2025-06-16T19:06:30.953Z",
+    "usuario": [
+      "alicefc"
+    ],
+    "plano_aula": 6,
+    "mensagem_original": 13
+  }
+},
+{
+  "model": "PlanoAula.mensagemplanoaula",
+  "pk": 16,
+  "fields": {
+    "texto": "Outro!!",
+    "data": "2025-06-16T19:11:26.121Z",
+    "usuario": [
+      "alicefc"
+    ],
+    "plano_aula": 6,
+    "mensagem_original": null
+  }
+},
+{
+  "model": "PlanoAula.mensagemplanoaula",
+  "pk": 17,
+  "fields": {
+    "texto": "Resposta 2",
+    "data": "2025-06-16T19:11:37.419Z",
+    "usuario": [
+      "alicefc"
+    ],
+    "plano_aula": 6,
+    "mensagem_original": 16
+  }
+},
+{
+  "model": "PlanoAula.mensagemplanoaula",
+  "pk": 18,
+  "fields": {
+    "texto": "Outro",
+    "data": "2025-06-16T19:23:05.688Z",
+    "usuario": [
+      "alicefc"
+    ],
+    "plano_aula": 6,
+    "mensagem_original": 16
+  }
+},
+{
+  "model": "PlanoAula.execucaoplanoaula",
+  "pk": 26,
+  "fields": {
+    "usuario": [
+      "alicefc"
+    ],
+    "plano_aula": 3
+  }
+},
+{
+  "model": "PlanoAula.execucaoplanoaula",
+  "pk": 44,
+  "fields": {
+    "usuario": [
+      "luizmarcos"
+    ],
+    "plano_aula": 1
+  }
+},
+{
+  "model": "PlanoAula.execucaoplanoaula",
+  "pk": 52,
+  "fields": {
+    "usuario": [
+      "luizmarcos"
+    ],
+    "plano_aula": 4
+  }
+},
+{
+  "model": "PlanoAula.execucaoplanoaula",
+  "pk": 54,
+  "fields": {
+    "usuario": [
+      "luizmarcos"
+    ],
+    "plano_aula": 9
+  }
+},
+{
+  "model": "PlanoAula.likeplanoaula",
+  "pk": 18,
+  "fields": {
+    "usuario": [
+      "alicefc"
+    ],
+    "plano_aula": 4
+  }
+},
+{
+  "model": "PlanoAula.likeplanoaula",
+  "pk": 27,
+  "fields": {
+    "usuario": [
+      "alicefc"
+    ],
+    "plano_aula": 3
+  }
+},
+{
+  "model": "PlanoAula.likeplanoaula",
+  "pk": 31,
+  "fields": {
+    "usuario": [
+      "alicefc"
+    ],
+    "plano_aula": 6
+  }
+},
+{
+  "model": "PlanoAula.likeplanoaula",
+  "pk": 53,
+  "fields": {
+    "usuario": [
+      "luizmarcos"
+    ],
+    "plano_aula": 2
+  }
+},
+{
+  "model": "PlanoAula.likeplanoaula",
+  "pk": 55,
+  "fields": {
+    "usuario": [
+      "luizmarcos"
+    ],
+    "plano_aula": 6
+  }
+},
+{
+  "model": "PlanoAula.likeplanoaula",
+  "pk": 56,
+  "fields": {
+    "usuario": [
+      "luizmarcos"
+    ],
+    "plano_aula": 3
+  }
+},
+{
+  "model": "PlanoAula.likeplanoaula",
+  "pk": 57,
+  "fields": {
+    "usuario": [
+      "luizmarcos"
+    ],
+    "plano_aula": 9
+  }
+},
+{
+  "model": "PlanoAula.planoaula",
+  "pk": 1,
+  "fields": {
+    "criador": [
+      "alicefc"
+    ],
+    "data_criacao": "2024-07-25T19:18:45.697Z",
+    "titulo": "Segunda Guerra Mundial",
+    "contextualizacao": "Cont",
+    "descricao_atividade": "Desc",
+    "avaliacao": null,
+    "robo_equipamento": null,
+    "robo_descricao": null,
+    "robo_link": null,
+    "nivel_dificuldade_montagem": "Fßcil",
+    "prog_linguagem": null,
+    "prog_descricao": null,
+    "prog_link": null,
+    "prog_codigos": "",
+    "nivel_dificuldade_programacao": "Fßcil",
+    "robo_pdf": "",
+    "status": false,
+    "conteudos": []
+  }
+},
+{
+  "model": "PlanoAula.planoaula",
+  "pk": 2,
+  "fields": {
+    "criador": [
+      "guia"
+    ],
+    "data_criacao": "2024-08-15T14:11:30.506Z",
+    "titulo": "IdentificaþÒo de cores primßrias e secundßrias com rob¾tica",
+    "contextualizacao": "O rob¶ precisa andar em um caminho identificando as cores primßrias e bla bla bla..\r\n\r\nFaþa isso e aqui\r\n\r\nAdicione mais coisa!!",
+    "descricao_atividade": "O aluno deve montar o rob¶ e programß-lo para seguir linhas coloridas no chÒo.",
+    "avaliacao": null,
+    "robo_equipamento": "Lego EV3",
+    "robo_descricao": "O rob¶ tem que ter..",
+    "robo_link": null,
+    "nivel_dificuldade_montagem": "Fßcil",
+    "prog_linguagem": "Python",
+    "prog_descricao": null,
+    "prog_link": null,
+    "prog_codigos": "plano_aula_2024-08-15_14-11-30/conference-latex-template_1.zip",
+    "nivel_dificuldade_programacao": "Fßcil",
+    "robo_pdf": "plano_aula_2024-08-15_14-11-30/hipercard__7954_fatura_2024-08_1.pdf",
+    "status": true,
+    "conteudos": [
+      1
+    ]
+  }
+},
+{
+  "model": "PlanoAula.planoaula",
+  "pk": 3,
+  "fields": {
+    "criador": [
+      "guia"
+    ],
+    "data_criacao": "2024-08-26T14:52:31Z",
+    "titulo": "IdentificaþÒo de cores 2 primßrias e secundßrias com rob¾tica",
+    "contextualizacao": "dvsdvsd",
+    "descricao_atividade": "svsvsdv",
+    "avaliacao": "",
+    "robo_equipamento": null,
+    "robo_descricao": "",
+    "robo_link": "",
+    "nivel_dificuldade_montagem": "Fßcil",
+    "prog_linguagem": null,
+    "prog_descricao": "",
+    "prog_link": "",
+    "prog_codigos": "",
+    "nivel_dificuldade_programacao": "Fßcil",
+    "robo_pdf": "",
+    "status": true,
+    "conteudos": [
+      3,
+      1
+    ]
+  }
+},
+{
+  "model": "PlanoAula.planoaula",
+  "pk": 4,
+  "fields": {
+    "criador": [
+      "guia"
+    ],
+    "data_criacao": "2024-08-26T14:53:15.560Z",
+    "titulo": "Outro",
+    "contextualizacao": "sgsdgs",
+    "descricao_atividade": "dfsgsdgs",
+    "avaliacao": null,
+    "robo_equipamento": null,
+    "robo_descricao": null,
+    "robo_link": null,
+    "nivel_dificuldade_montagem": "Fßcil",
+    "prog_linguagem": null,
+    "prog_descricao": null,
+    "prog_link": null,
+    "prog_codigos": "",
+    "nivel_dificuldade_programacao": "Fßcil",
+    "robo_pdf": "",
+    "status": true,
+    "conteudos": [
+      1,
+      2
+    ]
+  }
+},
+{
+  "model": "PlanoAula.planoaula",
+  "pk": 6,
+  "fields": {
+    "criador": [
+      "guia"
+    ],
+    "data_criacao": "2024-08-28T14:29:46Z",
+    "titulo": "Aula sobre informßtica",
+    "contextualizacao": "vsdvsdvsdv",
+    "descricao_atividade": "sdvsdzvsdvsd",
+    "avaliacao": "",
+    "robo_equipamento": null,
+    "robo_descricao": "descriþÒo",
+    "robo_link": "https://www.geeksforgeeks.org/urlfield-django-models/\r\nhttps://cursos.dankicode.com/campus/cursos",
+    "nivel_dificuldade_montagem": "Intermedißrio",
+    "prog_linguagem": null,
+    "prog_descricao": "",
+    "prog_link": "",
+    "prog_codigos": "",
+    "nivel_dificuldade_programacao": "DifÝcil",
+    "robo_pdf": "",
+    "status": true,
+    "conteudos": []
+  }
+},
+{
+  "model": "PlanoAula.planoaula",
+  "pk": 7,
+  "fields": {
+    "criador": [
+      "alicefc"
+    ],
+    "data_criacao": "2025-06-19T17:03:13.992Z",
+    "titulo": "primeira",
+    "contextualizacao": "sdmcbdjkc",
+    "descricao_atividade": "Sim",
+    "avaliacao": null,
+    "robo_equipamento": null,
+    "robo_descricao": null,
+    "robo_link": null,
+    "nivel_dificuldade_montagem": null,
+    "prog_linguagem": null,
+    "prog_descricao": null,
+    "prog_link": null,
+    "prog_codigos": "",
+    "nivel_dificuldade_programacao": null,
+    "robo_pdf": "",
+    "status": true,
+    "conteudos": [
+      7,
+      6
+    ]
+  }
+},
+{
+  "model": "PlanoAula.planoaula",
+  "pk": 8,
+  "fields": {
+    "criador": [
+      "alicefc"
+    ],
+    "data_criacao": "2025-06-19T17:03:31.508Z",
+    "titulo": "com",
+    "contextualizacao": "skjcnjskd",
+    "descricao_atividade": "smcn ks",
+    "avaliacao": null,
+    "robo_equipamento": null,
+    "robo_descricao": null,
+    "robo_link": null,
+    "nivel_dificuldade_montagem": null,
+    "prog_linguagem": null,
+    "prog_descricao": null,
+    "prog_link": null,
+    "prog_codigos": "",
+    "nivel_dificuldade_programacao": null,
+    "robo_pdf": "",
+    "status": true,
+    "conteudos": []
+  }
+},
+{
+  "model": "PlanoAula.planoaula",
+  "pk": 9,
+  "fields": {
+    "criador": [
+      "luizmarcos"
+    ],
+    "data_criacao": "2025-06-26T16:42:54.121Z",
+    "titulo": "PA",
+    "contextualizacao": "lakscn",
+    "descricao_atividade": "lkscnak",
+    "avaliacao": null,
+    "robo_equipamento": null,
+    "robo_descricao": null,
+    "robo_link": null,
+    "nivel_dificuldade_montagem": null,
+    "prog_linguagem": null,
+    "prog_descricao": null,
+    "prog_link": null,
+    "prog_codigos": "",
+    "nivel_dificuldade_programacao": null,
+    "robo_pdf": "",
+    "status": false,
+    "conteudos": [
+      4
+    ]
+  }
+},
+{
+  "model": "PlanoAula.planoaula",
+  "pk": 10,
+  "fields": {
+    "criador": [
+      "luizmarcos"
+    ],
+    "data_criacao": "2025-06-26T16:50:16.134Z",
+    "titulo": "PLAO",
+    "contextualizacao": "scklan",
+    "descricao_atividade": "jkcnadjc",
+    "avaliacao": null,
+    "robo_equipamento": null,
+    "robo_descricao": null,
+    "robo_link": null,
+    "nivel_dificuldade_montagem": null,
+    "prog_linguagem": null,
+    "prog_descricao": null,
+    "prog_link": null,
+    "prog_codigos": "",
+    "nivel_dificuldade_programacao": null,
+    "robo_pdf": "",
+    "status": false,
+    "conteudos": []
+  }
+},
+{
+  "model": "PlanoAula.planoaula",
+  "pk": 11,
+  "fields": {
+    "criador": [
+      "Ag0ds"
+    ],
+    "data_criacao": "2025-07-28T20:11:39.531Z",
+    "titulo": "teste",
+    "contextualizacao": "teste",
+    "descricao_atividade": "teste",
+    "avaliacao": null,
+    "robo_equipamento": null,
+    "robo_descricao": null,
+    "robo_link": null,
+    "nivel_dificuldade_montagem": null,
+    "prog_linguagem": null,
+    "prog_descricao": null,
+    "prog_link": null,
+    "prog_codigos": "",
+    "nivel_dificuldade_programacao": null,
+    "robo_pdf": "",
+    "status": true,
+    "conteudos": [
+      1,
+      2
+    ]
+  }
+}
+]
