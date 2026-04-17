@@ -1,0 +1,150 @@
+.wizard-header {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 1.5rem;
+}
+
+.wizard-step {
+    flex: 1 1 200px;
+    min-width: 180px;
+    border: 1px solid #dfe3e8;
+    border-radius: 14px;
+    padding: 14px 16px;
+    background: #fff;
+    transition: .2s ease;
+}
+
+.wizard-step.active {
+    border-color: #198754;
+    background: #eef9f2;
+}
+
+.wizard-step .step-number {
+    font-size: .8rem;
+    font-weight: 700;
+    color: #198754;
+    margin-bottom: 4px;
+}
+
+.wizard-step .step-title {
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.wizard-step .step-desc {
+    font-size: .9rem;
+    color: #6c757d;
+    margin: 0;
+}
+
+.step-pane {
+    display: none;
+}
+
+.step-pane.active {
+    display: block;
+}
+
+.search-content-box {
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    background: #fff;
+    overflow: hidden;
+}
+
+.search-content-box .box-header {
+    padding: 1rem;
+    border-bottom: 1px solid #eee;
+    background: #f8f9fa;
+}
+
+.content-list {
+    max-height: 380px;
+    overflow-y: auto;
+    padding: .75rem;
+    display: none;
+}
+
+.content-item {
+    border: 1px solid #e9ecef;
+    border-radius: 10px;
+    padding: .75rem;
+    margin-bottom: .65rem;
+    cursor: pointer;
+    transition: .15s ease;
+    background: #fff;
+    display: none;
+}
+
+.content-item:hover {
+    border-color: #198754;
+    background: #f8fffb;
+}
+
+.content-item.selected {
+    border-color: #198754;
+    background: #eef9f2;
+}
+
+.content-item-title {
+    font-weight: 600;
+    margin-bottom: .2rem;
+}
+
+.content-item-subtitle {
+    font-size: .9rem;
+    color: #6c757d;
+}
+
+.selected-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .5rem;
+}
+
+.selected-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    background: #eef9f2;
+    color: #146c43;
+    border: 1px solid #b7e4c7;
+    border-radius: 999px;
+    padding: .45rem .8rem;
+    font-size: .92rem;
+}
+
+.selected-chip button {
+    border: none;
+    background: transparent;
+    color: #b02a37;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.review-card {
+    border: 1px solid #dee2e6;
+    border-radius: 12px;
+    background: #fff;
+    padding: 1rem 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.review-card h6 {
+    margin-bottom: .85rem;
+    font-weight: 700;
+}
+
+.wizard-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: .75rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+#btn-voltar { order: 1; }
+#btn-proximo { order: 2; }
+#btn-submit { order: 3; }

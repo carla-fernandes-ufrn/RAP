@@ -1,236 +1,285 @@
-{% extends "Base/base.html" %} 
-{% load static %} {% load bootstrap5 %} 
-{% load crispy_forms_tags %} 
-{% block breadcrumb1 %} Plano de aula {% endblock %} 
-{% block breadcrumb2 %} Criação {% endblock %} 
+{% extends "Base/base.html" %}
+{% load static %}
+{% load bootstrap5 %}
+{% load crispy_forms_tags %}
+
+{% block breadcrumb1 %} Plano de aula {% endblock %}
+{% block breadcrumb2 %} Criação {% endblock %}
 {% block titulo %} Novo plano de aula {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'assets/css/custom/plano_aula/criar.css' %}">
+{% endblock %}
+
 {% block conteudo %}
 
-
-<div class="p-3 d-flex main justify-content-between">
-    <div>
-        <button id="btn_inf_gerais" class="btn btn-outline-success me-2" onclick="mostrar_inf_gerais()">Informações gerais</button>
-        <button id="btn_montagem_programacao" class="btn btn-outline-secondary me-2" onclick="mostrar_montagem_programacao()">Montagem e Programação</button>
-    </div>
-    <input class="btn btn-success me-2" form="form_plano_aula" type="submit" value="Cadastrar" />
-</div>
+<br>
 
 <form id="form_plano_aula" method="POST" enctype="multipart/form-data" novalidate>
     {% csrf_token %}
+    <input type="hidden" id="lista_id_conteudos" name="lista_id_conteudos" value="{{ lista_id_conteudos|default:'' }}">
 
-    <input type="hidden" id="lista_id_conteudos" name="lista_id_conteudos" value="{{ lista_id_conteudos }}">
-
-    <div>
-        <div id="div_inf_gerais">
-            <div class="row mt-4">
-                <div class="col-lg-12 col-md-12 mb-2">
-                    <div class="card">
-                        <div class="card-header pb-0 p-3">
-                            <div class="d-flex justify-content-between">
-                                <h6 class="text-uppercase text-sm">Plano de aula</h6>
-                            </div>
-                        </div>
-                        <div class="card-body p-3 overflow-auto">
-                            {{ form_inf_gerais.titulo|as_crispy_field }}
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-12">
-                                    {{ form_inf_gerais.contextualizacao|as_crispy_field }}
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-12">
-                                    {{ form_inf_gerais.descricao_atividade|as_crispy_field }}
-                                </div>
-                            </div>
-                            <!-- {% bootstrap_form form_inf_gerais %} -->
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-12 col-md-12 mb-2">
-                    <div class="card">
-                        <div class="card-header pb-0">
-                            <div class="d-flex justify-content-between">
-                                <h6 class="text-uppercase text-sm">Conteúdos selecionados</h6>
-                                <div>
-                                    <h6 id="text_nome_disciplina" class="text-uppercase text-sm">DISCIPLINAS</h6>
-                                    <a id="anchor_escolher_outra_disciplina" onclick='escolher_outra_disciplina()' 
-                                            style="display:none" class="text-xs">
-                                        Escolher outra disciplina
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="card-body overflow-auto">
-                            <div class="row">
-                                <!-- Coluna de conteúdos selecionados -->
-                                <div class="col-6" style="box-shadow: .5px 0 0 #000;">
-                                    <div id="div_conteudos_selecionados" class="row">
-                                        {% for conteudo in conteudos_selecionados %}
-                                            <a onclick="remover_conteudo({{conteudo.id}})" id="conteudo_selecionado_{{conteudo.id}}">
-                                                <i class="fas fa-minus font-weight-bolder text-danger"></i>  
-                                                {{ conteudo.disciplina }}: {{ conteudo.nome }}
-                                            </a>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                                <!-- Coluna com todos os conteúdos -->
-                                <div class="col-6" style="box-shadow: -.5px 0 0 #000;">
-                                    <div id="div_disciplinas">
-                                        <div class="row">
-                                            {% for disciplina in lista_disciplinas %}
-                                                {% if disciplina.conteudos.all|length > 0 %}
-                                                    <div class="col-lg-4 col-md-6">
-                                                        <a onclick="selecionar_conteudo('{{disciplina.nome}}')">
-                                                            <i class="text-success me-2 icon-xxs dropdown-item-icon fas fa-arrow-right"></i>
-                                                            {{ disciplina.nome }}
-                                                        </a>
-                                                        <br>
-                                                    </div>
-                                                {% endif %} 
-                                            {% endfor %}
-                                        </div>
-                                    </div>
-                                    <div id="div_conteudos" style="display: none">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+    <!-- HEADER -->
+    <div class="wizard-header">
+        <div class="wizard-step" id="indicator-passo1">
+            <div class="step-number">Passo 1</div>
+            <div class="step-title">Identidade da aula</div>
+            <p class="step-desc">Título, contextualização e conteúdos.</p>
         </div>
-
-        <div id="div_montagem_programacao" style="display: none">
-            <div class="row mt-4">
-                <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
-                    <div class="card">
-                        <div class="card-header pb-0 p-3">
-                            <div class="d-flex justify-content-between">
-                                <h6 class="text-uppercase text-sm">Montagem</h6>
-                            </div>
-                        </div>
-                        <div class="card-body p-3 overflow-auto">
-                            {% bootstrap_form form_montagem %}
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 col-md-12 mb-lg-0 mb-4">
-                    <div class="card">
-                        <div class="card-header pb-0 p-3">
-                            <div class="d-flex justify-content-between">
-                                <h6 class="text-uppercase text-sm">Programação</h6>
-                            </div>
-                        </div>
-                        <div class="card-body p-3 overflow-auto">
-                            {% bootstrap_form form_programacao %}
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="wizard-step" id="indicator-passo2">
+            <div class="step-number">Passo 2</div>
+            <div class="step-title">Execução</div>
+            <p class="step-desc">Atividade e avaliação.</p>
         </div>
-
+        <div class="wizard-step" id="indicator-passo3">
+            <div class="step-number">Passo 3</div>
+            <div class="step-title">Recursos</div>
+            <p class="step-desc">Montagem e programação.</p>
+        </div>
+        <div class="wizard-step" id="indicator-passo4">
+            <div class="step-number">Passo 4</div>
+            <div class="step-title">Revisão</div>
+            <p class="step-desc">Confira antes de cadastrar.</p>
+        </div>
     </div>
+
+    <!-- PASSO 1 -->
+    <div id="passo1" class="step-pane">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Passo 1 — Identidade da aula</h5>
+            </div>
+
+            {% if form_inf_gerais.titulo.errors or form_inf_gerais.contextualizacao.errors %}
+                <div class="px-3 pt-3">
+                    <div class="p-3 rounded border-start border-4 border-danger bg-light">
+                        <strong class="text-danger">Atenção:</strong> Revise os campos obrigatórios deste passo.
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="card-body">
+                <div class="mb-3">
+                    {{ form_inf_gerais.titulo|as_crispy_field }}
+                </div>
+
+                <div class="mb-4">
+                    {{ form_inf_gerais.contextualizacao|as_crispy_field }}
+                </div>
+
+                <div class="row g-4">
+                    <!-- BUSCA -->
+                    <div class="col-lg-7">
+                        <div class="search-content-box">
+                            <div class="box-header">
+                                <label for="busca_conteudo" class="form-label fw-semibold mb-2">
+                                    Buscar conteúdos
+                                </label>
+                                <input
+                                    type="text"
+                                    id="busca_conteudo"
+                                    class="form-control"
+                                    placeholder="Digite o nome do conteúdo ou da disciplina"
+                                >
+                            </div>
+
+                            <div id="content-search-empty" class="p-3 text-muted">
+                                Digite para buscar conteúdos.
+                            </div>
+
+                            <div id="content-list" class="content-list">
+                                {% for conteudo in lista_conteudos %}
+                                    <div
+                                        class="content-item {% for selecionado in conteudos_selecionados %}{% if selecionado.id == conteudo.id %}selected{% endif %}{% endfor %}"
+                                        data-id="{{ conteudo.id }}"
+                                        data-conteudo="{{ conteudo.nome|lower }}"
+                                        data-disciplina="{{ conteudo.disciplina.nome|lower }}"
+                                        onclick="toggleConteudo('{{ conteudo.id }}', '{{ conteudo.nome|escapejs }}', '{{ conteudo.disciplina.nome|escapejs }}')"
+                                    >
+                                        <div class="content-item-title">{{ conteudo.nome }}</div>
+                                        <div class="content-item-subtitle">{{ conteudo.disciplina.nome }}</div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- SELECIONADOS -->
+                    <div class="col-lg-5">
+                        <div class="search-content-box">
+                            <div class="box-header">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="fw-semibold">Conteúdos selecionados</span>
+                                    <span class="badge bg-success" id="selected-counter">0</span>
+                                </div>
+                            </div>
+
+                            <div class="p-3">
+                                <div id="selected-empty" class="text-muted">
+                                    Nenhum conteúdo selecionado ainda.
+                                </div>
+
+                                <div id="selected-chips" class="selected-chips">
+                                    {% for conteudo in conteudos_selecionados %}
+                                        <span class="selected-chip" id="chip-{{ conteudo.id }}">
+                                            {{ conteudo.nome }} — {{ conteudo.disciplina.nome }}
+                                            <button type="button" onclick="removeConteudo('{{ conteudo.id }}')">×</button>
+                                        </span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PASSO 2 -->
+    <div id="passo2" class="step-pane">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Passo 2 — Execução da aula</h5>
+            </div>
+
+            {% if form_inf_gerais.descricao_atividade.errors or form_inf_gerais.avaliacao.errors %}
+                <div class="px-3 pt-3">
+                    <div class="p-3 rounded border-start border-4 border-danger bg-light">
+                        <strong class="text-danger">Atenção:</strong> Revise os campos obrigatórios deste passo.
+                    </div>
+                </div>
+            {% endif %}
+
+            <div class="card-body">
+                <div class="mb-4">
+                    {{ form_inf_gerais.descricao_atividade|as_crispy_field }}
+                </div>
+
+                <div class="mb-0">
+                    {{ form_inf_gerais.avaliacao|as_crispy_field }}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PASSO 3 -->
+    <div id="passo3" class="step-pane">
+        {% if form_montagem.errors or form_programacao.errors %}
+            <div class="pb-3">
+                <div class="p-3 rounded border-start border-4 border-danger bg-light">
+                    <strong class="text-danger">Atenção:</strong> Revise os campos obrigatórios deste passo.
+                </div>
+            </div>
+        {% endif %}
+
+        <div class="row g-4">
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header"><h5>Montagem</h5></div>
+                    <div class="card-body">{{ form_montagem|crispy }}</div>
+                </div>
+            </div>
+
+            <div class="col-lg-6">
+                <div class="card h-100">
+                    <div class="card-header"><h5>Programação</h5></div>
+                    <div class="card-body">{{ form_programacao|crispy }}</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PASSO 4 -->
+    <div id="passo4" class="step-pane">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">Passo 4 — Revisão</h5>
+            </div>
+            <div class="card-body">
+
+                <div class="review-card">
+                    <h6>Identidade da aula</h6>
+                    <p><strong>Título:</strong> <span id="review_titulo">—</span></p>
+
+                    <p class="mb-2"><strong>Contextualização:</strong></p>
+                    <div id="review_contextualizacao" class="text-muted">—</div>
+                </div>
+
+                <div class="review-card">
+                    <h6>Conteúdos selecionados</h6>
+                    <div id="review_conteudos" class="text-muted">
+                        Nenhum conteúdo selecionado.
+                    </div>
+                </div>
+
+                <div class="review-card">
+                    <h6>Execução</h6>
+
+                    <p class="mb-2"><strong>Descrição da atividade:</strong></p>
+                    <div id="review_descricao_atividade" class="text-muted mb-3">—</div>
+
+                    <p class="mb-2"><strong>Avaliação:</strong></p>
+                    <div id="review_avaliacao" class="text-muted">—</div>
+                </div>
+
+                <div class="review-card">
+                    <h6>Recursos</h6>
+
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <p><strong>Dificuldade de montagem:</strong>
+                                <span id="review_nivel_montagem">—</span>
+                            </p>
+
+                            <p><strong>Equipamento:</strong>
+                                <span id="review_robo_equipamento">—</span>
+                            </p>
+
+                            <p class="mb-2"><strong>Descrição do robô:</strong></p>
+                            <div id="review_robo_descricao" class="text-muted">—</div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <p><strong>Dificuldade de programação:</strong>
+                                <span id="review_nivel_programacao">—</span>
+                            </p>
+
+                            <p><strong>Linguagem:</strong>
+                                <span id="review_prog_linguagem">—</span>
+                            </p>
+
+                            <p class="mb-2"><strong>Descrição da programação:</strong></p>
+                            <div id="review_prog_descricao" class="text-muted">—</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTÕES -->
+    <div class="wizard-actions">
+        <button type="button" class="btn btn-outline-secondary" id="btn-voltar" onclick="voltarPasso()">
+            Voltar
+        </button>
+
+        <button type="button" class="btn btn-success" id="btn-proximo" onclick="proximoPasso()">
+            Próximo
+        </button>
+
+        <button type="submit" class="btn btn-primary" id="btn-submit" style="display:none;">
+            Cadastrar plano de aula
+        </button>
+    </div>
+
 </form>
-{% endblock %} {% block scripts %}
+{% endblock %}
 
+{% block scripts %}
 <script>
-
-    var conteudos_selecionados = []
-
-    function mostrar_inf_gerais() {
-        document.getElementById("div_inf_gerais").style.display = 'block';
-        document.getElementById("div_montagem_programacao").style.display = 'none';
-        trocar_cor("btn_inf_gerais", "btn_montagem_programacao");
-    }
-
-    function mostrar_montagem_programacao() {
-        document.getElementById("div_inf_gerais").style.display = 'none';
-        document.getElementById("div_montagem_programacao").style.display = 'block';
-        trocar_cor("btn_montagem_programacao", "btn_inf_gerais");
-    }
-
-    function trocar_cor(nova, antiga1) {
-        document.getElementById(nova).classList.remove('btn-outline-secondary');
-        document.getElementById(nova).classList.add('btn-outline-success');
-        document.getElementById(antiga1).classList.remove('btn-outline-success');
-        document.getElementById(antiga1).classList.add('btn-outline-secondary');
-    }
-
-    function selecionar_conteudo(nome) {
-        document.getElementById("div_disciplinas").style.display = 'none';
-        document.getElementById("div_conteudos").style.display = 'block';
-        document.getElementById("text_nome_disciplina").innerHTML = nome;
-        document.getElementById("anchor_escolher_outra_disciplina").style.display = 'block';
-
-        tabela = document.getElementById('tabela_conteudos');
-
-        $.ajax({
-            url: "/disciplina/listar-conteudos/", // the endpoint
-            type: "GET", // http method
-            data: {
-                'nome': nome
-            },
-            success: function(response) {
-                document.getElementById("div_conteudos").innerHTML = ""
-                for (var i = 0; i < response.length; i++) {
-                    var str = " <a onclick=\"adicionar_conteudo('" + nome + "','" + response[i][1] + "')\">" +
-                        "    <i class='fas fa-plus font-weight-bolder text-success'></i> " + response[i][1] +
-                        " </a> <br>";
-                    document.getElementById("div_conteudos").innerHTML += str;
-                    document.getElementById("div_conteudos").style.display = 'block';
-                }
-            }
-        });
-    }
-
-    function escolher_outra_disciplina() {
-        document.getElementById("div_disciplinas").style.display = 'block';
-        document.getElementById("div_conteudos").style.display = 'none';
-        document.getElementById("text_nome_disciplina").innerHTML = 'Disciplinas';
-        document.getElementById("anchor_escolher_outra_disciplina").style.display = 'none';
-        $("#tabela_conteudos").find("tr:not(:first)").remove();
-    }
-
-    function adicionar_conteudo(disciplina, conteudo) {
-
-        $.ajax({
-            url: "/disciplina/ler-id-conteudo/", // the endpoint
-            type: "GET", // http method
-            data: {
-                'conteudo': conteudo,
-                'disciplina': disciplina
-            },
-            success: function(response) {
-                if (!conteudos_selecionados.includes(response['id'])) {
-                    conteudos_selecionados.push(response['id'])
-                    document.getElementById("lista_id_conteudos").value = conteudos_selecionados
-
-                    var str = "<a onclick='remover_conteudo(" + response['id'] + ")' id='conteudo_selecionado_" + response['id'] +
-                        "'> " +
-                        " <i class='fas fa-minus font-weight-bolder text-danger'></i>  " +
-                        disciplina + ": " + conteudo +
-                        " </a>";
-                    document.getElementById("div_conteudos_selecionados").innerHTML += str;
-                }
-            }
-        });
-    }
-
-    function remover_conteudo(id) {
-        const index = conteudos_selecionados.indexOf(id);
-        conteudos_selecionados.splice(index, 1);
-        document.getElementById("lista_id_conteudos").value = conteudos_selecionados
-        var elem = document.getElementById("conteudo_selecionado_" + id);
-        elem.parentNode.removeChild(elem);
-        console.log(conteudos_selecionados)
-    }
-
-    document.addEventListener("DOMContentLoaded", function() {
-        const abaSelecionada = "{{ aba|default:'inf_gerais' }}";
-        if (abaSelecionada === "montagem_programacao") {
-            mostrar_montagem_programacao();
-        } else {
-            mostrar_inf_gerais();
-        }
-    });
+    window.abaSelecionada = "{{ aba|default:'passo1' }}";
 </script>
-
+<script src="{% static 'assets/js/custom/plano_aula/criar.js' %}"></script>
 {% endblock %}
