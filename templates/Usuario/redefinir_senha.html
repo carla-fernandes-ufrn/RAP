@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+{% load static %}
+{% load widget_tweaks %}
+
+<head>
+  {% include "Base/cabecalho.html" %}
+</head>
+
+<body class="">
+  <main class="main-content mt-0">
+    <section>
+      <div class="page-header min-vh-100">
+        <div class="container">
+          <div class="row d-flex align-items-stretch">
+            <div class="col-12 col-lg-6 d-flex flex-column">
+              <div class="card card-plain">
+                <div class="card-header pb-0 text-center">
+                  <img src="{% static 'assets/img/LogoRAP-transparente.png' %}" width="40%"/>
+                  <h4 class="font-weight-bolder">Robótica para Alunos e Professores</h4>
+                  <h1 class="mb-2 mt-5">Nova Senha</h1>
+                  <h4 class="font-weight-bolder">Redefinir Senha</h4>
+                  <p class="mb-0">Crie uma nova senha forte para acessar sua conta.</p>
+                </div>
+
+                <div class="card-body">
+                  <form role="form" method="post">
+                    {% csrf_token %}
+                    
+                    {% if form.non_field_errors %}
+                      <div class="alert alert-danger text-white" role="alert">
+                        {% for error in form.non_field_errors %}
+                          {{ error }}
+                        {% endfor %}
+                      </div>
+                    {% endif %}
+
+                    {% if messages %}
+                      {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} text-white" role="alert">
+                          {{ message }}
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+
+                    {% for field in form %}
+                    <div class="mb-3">
+                        <label class="form-control-label">{{ field.label }}</label> 
+                        {% render_field field class="form-control" %}
+                        {% if field.errors %}
+                        <span class="text-sm text-danger font-weight-bold mt-1 d-block">{{ field.errors }}</span>
+                        {% endif %}
+                        {% if field.help_text %}
+                        <span class="text-xs text-muted mt-1 d-block">{{ field.help_text|safe }}</span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+
+                    <div class="text-center">
+                      <button type="submit" class="btn btn-lg btn-success btn-lg w-100 mt-4 mb-0">
+                        Salvar Nova Senha
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
+              <div id="imagem-aleatoria" class="position-relative bg-gradient-success h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden">
+                <span class="mask bg-gradient-success opacity-6"></span>
+                <div class="text-center">
+                  <img src="{% static 'assets/img/LogoRAP-transparente-branco.png' %}" width="30%"/>
+                </div>
+                <h4 class="text-white font-weight-bolder position-relative">Tudo Pronto!</h4>
+                <p class="text-white position-relative">Sua conta está segura e pronta para ser acessada com sua nova senha.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  {% include "Base/scripts.html" %}
+  <script>
+    document.addEventListener('DOMContentLoaded', _ => {
+        document.getElementById('imagem-aleatoria').style.backgroundImage = "url('{% static 'assets/img/robotica/vertical/imagem7.jpeg' %}')";
+        document.getElementById('imagem-aleatoria').style.backgroundSize = "cover";
+    });
+  </script>
+</body>
+</html>

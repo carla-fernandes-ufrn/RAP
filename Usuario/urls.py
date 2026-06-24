@@ -25,33 +25,7 @@ urlpatterns = [
     path('deletarUsuario/<int:pk>', views.DeletarUser.as_view(), name='deletar'),
     path('planos_aula/<int:pk>', views.ler_informacoes_plano_aula, name="informacoes_plano_aula"),
     path('acoes/<int:pk>', views.ler_informacoes_acoes, name="informacoes_acoes"),
-    path(
-        'esqueceu-senha/', 
-        auth_views.PasswordResetView.as_view(
-            template_name='Usuario/esqueceu_senha.html', 
-            success_url=reverse_lazy('usuario:password_reset_done')
-        ), 
-        name='password_reset'
-    ),
-    path(
-        'esqueceu-senha/enviado/', 
-        auth_views.PasswordResetDoneView.as_view(
-            template_name='Usuario/esqueceu_senha_enviado.html'
-        ), 
-        name='password_reset_done'
-    ),
-    path(
-        'reset/<uidb64>/<token>/', 
-        auth_views.PasswordResetConfirmView.as_view(
-            template_name='Usuario/reset_senha_confirm.html', 
-            success_url=reverse_lazy('usuario:password_reset_complete')
-        ), 
-        name='password_reset_confirm'
-    ),
-    path(
-        'reset/sucesso/', 
-        auth_views.PasswordResetCompleteView.as_view(
-            template_name='Usuario/reset_senha_sucesso.html'
-        ), 
-        name='password_reset_complete'),
+    path('esqueceu-senha/', views.esqueceu_senha, name='password_reset'),
+    path('esqueceu-senha/validar/', views.validar_recuperacao, name='validar_recuperacao'),
+    path('esqueceu-senha/redefinir/', views.redefinir_senha, name='redefinir_senha'),
 ]

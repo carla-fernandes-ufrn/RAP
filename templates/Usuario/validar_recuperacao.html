@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+{% load static %}
+<head>
+  {% include "Base/cabecalho.html" %}
+</head>
+
+<body class="">
+  <main class="main-content mt-0">
+    <section>
+      <div class="page-header min-vh-100">
+        <div class="container">
+          <div class="row d-flex align-items-stretch">
+            <div class="col-12 col-lg-6 d-flex flex-column">
+              <div class="card card-plain">
+                <div class="card-header pb-0 text-center">
+                  <img src="{% static 'assets/img/LogoRAP-transparente.png' %}" width="40%"/>
+                  <h4 class="font-weight-bolder">Robótica para Alunos e Professores</h4>
+                  <h1 class="mb-2 mt-5">Validar Código</h1>
+                  <h4 class="font-weight-bolder">Enviado para {{ email }}</h4>
+                  <p class="mb-0">Digite o código de 6 dígitos que enviamos para o seu e-mail.</p>
+                </div>
+
+                <div class="card-body">
+                  <form role="form" method="post">
+                    {% csrf_token %}
+                    
+                    {% if messages %}
+                      {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} text-white" role="alert">
+                          {{ message }}
+                        </div>
+                      {% endfor %}
+                    {% endif %}
+
+                    <div class="mb-3">
+                      <input type="text" name="codigo" class="form-control form-control-lg text-center" placeholder="000000" maxlength="6" style="font-size: 2rem; letter-spacing: 0.5rem;" required>
+                    </div>
+
+                    <div class="text-center">
+                      <button type="submit" class="btn btn-lg btn-primary btn-lg w-100 mt-4 mb-0">
+                        Validar Código
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="card-footer text-center pt-0 px-lg-2 px-1">
+                  <p class="mb-4 text-sm mx-auto">
+                    <a href="{% url 'usuario:login' %}" class="text-primary text-gradient font-weight-bold">Voltar para o Login</a>
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-6 d-lg-flex d-none h-100 my-auto pe-0 position-absolute top-0 end-0 text-center justify-content-center flex-column">
+              <div id="imagem-aleatoria" class="position-relative bg-gradient-primary h-100 m-3 px-7 border-radius-lg d-flex flex-column justify-content-center overflow-hidden">
+                <span class="mask bg-gradient-primary opacity-6"></span>
+                <div class="text-center">
+                  <img src="{% static 'assets/img/LogoRAP-transparente-branco.png' %}" width="30%"/>
+                </div>
+                <h4 class="text-white font-weight-bolder position-relative">Quase lá!</h4>
+                <p class="text-white position-relative">Após inserir o código, você poderá escolher uma nova senha segura para sua conta.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  {% include "Base/scripts.html" %}
+  <script>
+    document.addEventListener('DOMContentLoaded', _ => {
+        document.getElementById('imagem-aleatoria').style.backgroundImage = "url('{% static 'assets/img/robotica/vertical/imagem5.jpeg' %}')";
+        document.getElementById('imagem-aleatoria').style.backgroundSize = "cover";
+    });
+  </script>
+</body>
+</html>

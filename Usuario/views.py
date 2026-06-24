@@ -705,3 +705,87 @@ class LerInformacoesUsuario(LoginRequiredMixin, generic.ListView):
         context['usuario'] = usuario
         return context
 
+def esqueceu_senha(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+        if not email:
+            messages.error(request, 'Por favor, insira um e-mail válido.')
+            return render(request, 'Usuario/esqueceu_senha.html')
+            
+        try:
+            user = Usuario.objects.get(email=email)
+        except Usuario.DoesNotExist:
+            # Medida de segurança para não enumerar emails existentes no banco
+            messages.success(request, 'Se o e-mail estiver cadastrado, um código foi enviado.')
+            return redirect('usuario:login')
+
+        otp = str(random.randint(100000, 999999))
+        CodigoValidacao.objects.create(usuario=user, codigo=otp, tipo='RECUPERACAO')
+        
+        print(f"\n==============================================")
+        print(f"TOKEN DE RECUPERAÇÃO PARA {user.email}: {otp}")
+        print(f"==============================================\n")
+        
+        send_mail(
+            subject='Recuperação de Senha - RAP',
+            message=f'Seu código para redefinir a senha é: {otp}',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            fail_silently=True
+        )
+        
+        request.session['recuperacao_user_id'] = user.id
+        return redirect('usuario:validar_recuperacao')
+
+    return render(request, 'Usuario/esqueceu_senha.html')
+
+def validar_recuperacao(request):
+    user_id = request.session.get('recuperacao_user_id')
+    if not user_id:
+        return redirect('usuario:password_reset')
+        
+    try:
+        user = Usuario.objects.get(id=user_id)
+    except Usuario.DoesNotExist:
+        return redirect('usuario:password_reset')
+
+    if request.method == 'POST':
+        codigo = request.POST.get('codigo')
+        validacao = CodigoValidacao.objects.filter(usuario=user, codigo=codigo, tipo='RECUPERACAO', utilizado=False).last()
+        if validacao:
+            validacao.utilizado = True
+            validacao.save()
+            
+            request.session['redefinir_autorizado'] = user.id
+            return redirect('usuario:redefinir_senha')
+        else:
+            messages.error(request, 'Código inválido ou já utilizado.')
+            
+    return render(request, 'Usuario/validar_recuperacao.html', {'email': user.email})
+
+def redefinir_senha(request):
+    user_id = request.session.get('redefinir_autorizado')
+    if not user_id:
+        return redirect('usuario:login')
+        
+    try:
+        user = Usuario.objects.get(id=user_id)
+    except Usuario.DoesNotExist:
+        return redirect('usuario:login')
+
+    if request.method == 'POST':
+        form = forms.FormAdminSetPassword(user=user, data=request.POST)
+        if form.is_valid():
+            form.save()
+            
+            del request.session['redefinir_autorizado']
+            if 'recuperacao_user_id' in request.session:
+                del request.session['recuperacao_user_id']
+                
+            messages.success(request, 'Senha redefinida com sucesso! Você já pode fazer login.')
+            return redirect('usuario:login')
+    else:
+        form = forms.FormAdminSetPassword(user=user)
+
+    return render(request, 'Usuario/redefinir_senha.html', {'form': form})
+

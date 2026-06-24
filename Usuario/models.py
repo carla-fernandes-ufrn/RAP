@@ -81,10 +81,11 @@ class CodigoValidacao(models.Model):
     TIPO_CODIGO = [
         ('CADASTRO', 'Confirmação de Cadastro'),
         ('ADMIN', 'Ação Administrativa'),
+        ('RECUPERACAO', 'Recuperação de Senha'),
     ]
     usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='codigos_validacao')
     codigo = models.CharField(max_length=6)
-    tipo = models.CharField(max_length=10, choices=TIPO_CODIGO)
+    tipo = models.CharField(max_length=11, choices=TIPO_CODIGO)
     criado_em = models.DateTimeField(auto_now_add=True)
     utilizado = models.BooleanField(default=False)
 
