@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+{% load static %}
+{% load widget_tweaks %}
+
+<head>
+  {% include "Base/cabecalho.html" %}
+</head>
+
+<body class="">
+  <main class="main-content  mt-0">
+    <section>
+      <div class="page-header min-vh-100">
+        <div class="container">
+          <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-5">
+              <div class="card shadow-lg border-0 rounded-lg">
+                  <div class="card-header bg-gradient-success text-white text-center py-4">
+                      <h4 class="mb-0 font-weight-bold text-white">Ativação de Conta</h4>
+                  </div>
+                  <div class="card-body p-5">
+                      <p class="text-center text-muted mb-4">Enviamos um código de 6 dígitos para o e-mail: <strong>{{ email }}</strong></p>
+                      <form method="post">
+                          {% csrf_token %}
+                          <div class="mb-4">
+                              <label class="form-label font-weight-bold text-dark">Código de Verificação</label>
+                              <input type="text" name="codigo" class="form-control form-control-lg text-center fw-bold" placeholder="000000" maxlength="6" required>
+                          </div>
+                          <button class="btn bg-gradient-success w-100 py-3 mt-2 font-weight-bold text-white text-uppercase" type="submit">Ativar Conta</button>
+                      </form>
+                  </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  {% include "Base/scripts.html" %}
+</body>
+</html>

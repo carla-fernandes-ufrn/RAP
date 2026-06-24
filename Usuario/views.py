@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.forms import PasswordChangeForm
 from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 from django.contrib.auth.hashers import make_password
 
 from django.views import generic
@@ -14,6 +15,7 @@ from django.contrib import messages
 
 from django.http import JsonResponse
 from django.core import serializers
+from django.db.models import RestrictedError
 
 from Usuario import forms
 from Usuario import filters as filter_usuarios
@@ -24,11 +26,33 @@ from PlanoAula import filters as filter_plano_aula
 from Acoes.models import Acoes
 from Acoes import filters as filter_acoes
 
-class ListarAtivos(LoginRequiredMixin, generic.ListView):
+import random
+import time
+from django.core.mail import send_mail
+from django.conf import settings
+from Usuario.models import CodigoValidacao
+from Usuario.decorators import admin_otp_required
+
+def is_admin_check(user):
+    try:
+        tipo = user.usuario.tipo_usuario
+        return tipo in ['Administrador', 'Root'] or user.is_superuser
+    except:
+        return user.is_superuser
+
+@method_decorator(admin_otp_required, name='dispatch')
+class ListarAtivos(LoginRequiredMixin, UserPassesTestMixin, generic.ListView):
     model = Usuario
     template_name = 'Usuario/listar.html'
     context_object_name = 'lista_usuarios'
     paginate_by = 10
+
+    def test_func(self):
+        try:
+            tipo = self.request.user.usuario.tipo_usuario
+            return tipo in ['Administrador', 'Root'] or self.request.user.is_superuser
+        except:
+            return self.request.user.is_superuser
 
     def get_queryset(self):
         qs = super().get_queryset()
@@ -45,6 +69,8 @@ class ListarAtivos(LoginRequiredMixin, generic.ListView):
         return context
 
 @login_required
+@admin_otp_required
+@user_passes_test(is_admin_check)
 def listar_ativos(request):
 
     usuarios_filtrado = filter_usuarios.UsuarioFiltro(request.GET, queryset=Usuario.objects.filter(is_active=True))
@@ -73,6 +99,8 @@ def listar_ativos(request):
     return render(request, "Usuario/listar.html", informacoes)
 
 @login_required
+@admin_otp_required
+@user_passes_test(is_admin_check)
 def listar_inativos(request):
     lista_usuarios = Usuario.objects.filter(is_active=False)
     
@@ -83,18 +111,83 @@ def listar_inativos(request):
 
     return render(request, "Usuario/listar.html", informacoes)
 
+@require_POST
 @login_required
+@admin_otp_required
+@user_passes_test(is_admin_check)
 def mudar_status(request, pk):
+    if str(pk) == str(request.user.pk):
+        messages.error(request, "Você não pode desativar sua própria conta.")
+        return redirect('usuario:listar_ativos')
+        
     usuario = Usuario.objects.get(pk=pk)
+    
+    # Root protection: Admin cannot deactivate Root
+    req_is_root = False
+    try:
+        req_is_root = request.user.usuario.tipo_usuario == 'Root' or request.user.is_superuser
+    except:
+        req_is_root = request.user.is_superuser
+        
+    obj_is_root = False
+    try:
+        obj_is_root = usuario.tipo_usuario == 'Root' or usuario.is_superuser
+    except:
+        obj_is_root = usuario.is_superuser
+        
+    if obj_is_root and not req_is_root:
+        messages.error(request, "Administradores não podem desativar usuários Root.")
+        return redirect('usuario:listar_ativos')
+        
     usuario.is_active = not usuario.is_active
     usuario.save()
 
     return redirect('usuario:listar_ativos')
 
+@require_POST
 @login_required
+@admin_otp_required
+@user_passes_test(is_admin_check)
 def mudar_status_admin(request, pk):
+    if str(pk) == str(request.user.pk):
+        messages.error(request, "Você não pode alterar o cargo da sua própria conta.")
+        return redirect('usuario:listar_ativos')
+        
     usuario = Usuario.objects.get(pk=pk)
-    usuario.is_superuser = not usuario.is_superuser
+    
+    # Root protection: Admin cannot demote Root
+    req_is_root = False
+    try:
+        req_is_root = request.user.usuario.tipo_usuario == 'Root' or request.user.is_superuser
+    except:
+        req_is_root = request.user.is_superuser
+        
+    obj_is_root = False
+    try:
+        obj_is_root = usuario.tipo_usuario == 'Root' or usuario.is_superuser
+    except:
+        obj_is_root = usuario.is_superuser
+        
+    if obj_is_root and not req_is_root:
+        messages.error(request, "Administradores não podem rebaixar usuários Root.")
+        return redirect('usuario:listar_ativos')
+        
+    tipos = ['Aluno', 'Professor', 'Administrador']
+    if req_is_root:
+        tipos.append('Root')
+        
+    try:
+        idx = tipos.index(usuario.tipo_usuario)
+    except ValueError:
+        idx = 0
+        
+    usuario.tipo_usuario = tipos[(idx + 1) % len(tipos)]
+    
+    if usuario.tipo_usuario in ['Administrador', 'Root']:
+        usuario.is_superuser = True
+    else:
+        usuario.is_superuser = False
+        
     usuario.save()
     
     return redirect('usuario:listar_ativos')
@@ -102,7 +195,103 @@ def mudar_status_admin(request, pk):
 class Cadastrar(generic.CreateView):
     form_class = forms.FormCriarUsuario
     template_name = 'Usuario/cadastrar.html'
-    success_url = reverse_lazy('usuario:login')
+    
+    def form_valid(self, form):
+        user = form.save(commit=False)
+        user.is_active = False
+        user.save()
+        
+        otp = str(random.randint(100000, 999999))
+        CodigoValidacao.objects.create(usuario=user, codigo=otp, tipo='CADASTRO')
+        
+        print(f"\n==============================================")
+        print(f"TOKEN DE CADASTRO PARA {user.email}: {otp}")
+        print(f"==============================================\n")
+        
+        send_mail(
+            subject='Confirmação de Cadastro - RAP',
+            message=f'Seu código de confirmação é: {otp}',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            fail_silently=True
+        )
+        
+        self.request.session['ativacao_user_id'] = user.id
+        return redirect('usuario:ativar_email')
+
+def ativar_email(request):
+    user_id = request.session.get('ativacao_user_id')
+    if not user_id:
+        return redirect('usuario:login')
+        
+    try:
+        user = Usuario.objects.get(id=user_id)
+    except Usuario.DoesNotExist:
+        return redirect('usuario:login')
+
+    if request.method == 'POST':
+        codigo = request.POST.get('codigo')
+        validacao = CodigoValidacao.objects.filter(usuario=user, codigo=codigo, tipo='CADASTRO', utilizado=False).last()
+        if validacao:
+            validacao.utilizado = True
+            validacao.save()
+            
+            user.is_active = True
+            user.save()
+            messages.success(request, 'Email confirmado com sucesso! Você pode fazer login agora.')
+            del request.session['ativacao_user_id']
+            return redirect('usuario:login')
+        else:
+            messages.error(request, 'Código inválido ou já utilizado.')
+            
+    return render(request, 'Usuario/ativar_email.html', {'email': user.email})
+
+@login_required
+def validar_admin(request):
+    user = request.user
+    try:
+        usuario_obj = user.usuario
+    except:
+        usuario_obj = Usuario.objects.get(pk=user.pk)
+        
+    if request.method == 'GET':
+        otp = str(random.randint(100000, 999999))
+        CodigoValidacao.objects.create(usuario=usuario_obj, codigo=otp, tipo='ADMIN')
+        
+        print(f"\n==============================================")
+        print(f"TOKEN ADMIN (SUDO) PARA {user.email}: {otp}")
+        print(f"==============================================\n")
+        
+        send_mail(
+            subject='Código de Acesso Administrativo - RAP',
+            message=f'Seu código para acessar áreas sensíveis do sistema é: {otp}. Válido por 1 hora.',
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[user.email],
+            fail_silently=True
+        )
+        messages.info(request, f'Enviamos um código de 6 dígitos para o seu e-mail ({user.email}).')
+        
+    if request.method == 'POST':
+        codigo = request.POST.get('codigo')
+        validacao = CodigoValidacao.objects.filter(
+            usuario=usuario_obj, 
+            codigo=codigo, 
+            tipo='ADMIN', 
+            utilizado=False
+        ).last()
+        
+        if validacao:
+            validacao.utilizado = True
+            validacao.save()
+            
+            request.session['admin_otp_valido_ate'] = time.time() + 3600
+            
+            next_url = request.GET.get('next', 'home')
+            return redirect(next_url)
+        else:
+            messages.error(request, 'Código incorreto.')
+            
+    return render(request, 'Usuario/validar_admin.html')
 
 @login_required
 def completar_cadastro(request):
@@ -290,13 +479,30 @@ def alterar_senha_ajax(request):
 #     def get_success_url(self):
 #         return reverse_lazy('usuario:perfil')
 
+@method_decorator(admin_otp_required, name='dispatch')
 class Editar(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
     model = Usuario
     form_class = forms.FormEditarUsuario
     template_name = 'Usuario/editar.html'
 
     def test_func(self):
-        return self.request.user.id == self.get_object().id or self.request.user.is_superuser
+        try:
+            is_admin = self.request.user.usuario.tipo_usuario == 'Administrador' or self.request.user.is_superuser
+        except:
+            is_admin = self.request.user.is_superuser
+        return is_admin
+
+    def get_form(self, form_class=None):
+        form = super().get_form(form_class)
+        try:
+            is_root = self.request.user.usuario.tipo_usuario == 'Root' or self.request.user.is_superuser
+        except:
+            is_root = self.request.user.is_superuser
+            
+        if not is_root:
+            if 'tipo_usuario' in form.fields:
+                del form.fields['tipo_usuario']
+        return form
 
     def get_success_url(self):
         return reverse_lazy("usuario:perfil")
@@ -305,12 +511,11 @@ class Editar(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
         self.object = self.get_object()
 
         form = self.get_form()
-        form_senha = forms.FormEditarSenha(user=request.user, data=request.POST)
+        form_senha = forms.FormAdminSetPassword(user=self.object, data=request.POST)
 
         if 'new_password1' in request.POST and 'new_password2' in request.POST:
             if form_senha.is_valid():
                 user = form_senha.save()
-                update_session_auth_hash(request, user)
                 messages.success(request, 'Senha atualizada com sucesso.')
                 return self.form_valid(form)
             else:
@@ -326,7 +531,7 @@ class Editar(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form_senha'] = forms.FormEditarSenha(user=self.request.user)
+        context['form_senha'] = forms.FormAdminSetPassword(user=self.get_object())
         return context
 
 @login_required
@@ -361,10 +566,66 @@ class Detalhes(LoginRequiredMixin, generic.DetailView):
     # usuario
     # object
 
-class DeletarUser(LoginRequiredMixin, generic.DeleteView):
+@method_decorator(admin_otp_required, name='dispatch')
+class DeletarUser(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
      model = Usuario
      template_name = 'Usuario/deletar.html'
      success_url = reverse_lazy('usuario:listar_ativos')
+
+     def test_func(self):
+         try:
+             tipo = self.request.user.usuario.tipo_usuario
+             return tipo in ['Administrador', 'Root'] or self.request.user.is_superuser
+         except:
+             return self.request.user.is_superuser
+
+     def dispatch(self, request, *args, **kwargs):
+         obj = self.get_object()
+         if str(obj.pk) == str(request.user.pk):
+             messages.error(request, "Você não pode excluir sua própria conta.")
+             return redirect('usuario:listar_ativos')
+             
+         req_is_root = False
+         try:
+             req_is_root = request.user.usuario.tipo_usuario == 'Root' or request.user.is_superuser
+         except:
+             req_is_root = request.user.is_superuser
+             
+         obj_is_root = False
+         try:
+             obj_is_root = obj.tipo_usuario == 'Root' or obj.is_superuser
+         except:
+             obj_is_root = obj.is_superuser
+             
+         if obj_is_root and not req_is_root:
+             messages.error(request, "Administradores não podem excluir usuários Root.")
+             return redirect('usuario:listar_ativos')
+             
+         return super().dispatch(request, *args, **kwargs)
+         
+     def post(self, request, *args, **kwargs):
+         # O método genérico 'delete' é chamado pelo post na DeleteView
+         return self.delete(request, *args, **kwargs)
+         
+     def delete(self, request, *args, **kwargs):
+         obj = self.get_object()
+         
+         # Limpar dependências inofensivas que não deveriam bloquear a exclusão
+         obj.interesses_usuario.all().delete()
+         
+         if hasattr(obj, 'likes_plano_aula'):
+             obj.likes_plano_aula.all().delete()
+             
+         if hasattr(obj, 'execucoes_plano_aula'):
+             obj.execucoes_plano_aula.all().delete()
+         
+         try:
+             response = super().delete(request, *args, **kwargs)
+             messages.success(request, "Usuário excluído com sucesso.")
+             return response
+         except RestrictedError:
+             messages.error(request, "Não é possível excluir este usuário pois ele é autor de conteúdos importantes (Planos de Aula, Ações, etc). Recomendamos apenas inativá-lo.")
+             return redirect('usuario:listar_inativos')
 
 @login_required
 def ler_informacoes_plano_aula(request, pk):

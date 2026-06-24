@@ -44,6 +44,13 @@
                                 {% bootstrap_field form.estado %}
                             </div>
                         </div>
+                        {% if form.tipo_usuario %}
+                        <div class="row">
+                            <div class="col-6">
+                                {% bootstrap_field form.tipo_usuario %}
+                            </div>
+                        </div>
+                        {% endif %}
                         <input type="hidden" name="next" value="{{ request.GET.next }}">
                         <div class="text-right">
                             <input type="submit" class="btn btn-success pull-right" value="Atualizar"></input>
@@ -53,8 +60,8 @@
                     <div class="mb-6">
                         <h6 class="mb-1">Alteração de senha</h6>
                         <form method="post">
-                            {% bootstrap_field form_senha.password1 %}
-                            {% bootstrap_field form_senha.password2 %}
+                            {% bootstrap_field form_senha.new_password1 %}
+                            {% bootstrap_field form_senha.new_password2 %}
 
                             <input type="hidden" name="next" value="{{ request.GET.next }}">
                             <div class="text-right">

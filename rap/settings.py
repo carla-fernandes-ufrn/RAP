@@ -16,11 +16,15 @@ DEBUG = os.getenv("DEBUG", "True") == "True"
 
 
 ALLOWED_HOSTS = [
+    "rap.natalnet.br",
+    "10.3.226.120",
     "localhost",
     "127.0.0.1",
     "0.0.0.0",
-    ".ngrok-free.dev",
 ]
+
+# Avisa ao Django para confiar no HTTPS gerado pelo Nginx do servidor
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 INSTALLED_APPS = [
     'whitenoise.runserver_nostatic',
@@ -86,7 +90,10 @@ DATABASES = {
 }
 
 AUTH_PASSWORD_VALIDATORS = [
-    # {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator', 'OPTIONS': {'min_length': 8}},
+    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
+    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
 LANGUAGE_CODE = 'pt-br'
@@ -118,6 +125,9 @@ EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "")
 DEFAULT_FROM_EMAIL = os.getenv("DEFAULT_FROM_EMAIL", "Projeto RAP <no-reply@example.com>")
 CSRF_TRUSTED_ORIGINS = [
-    "https://*.ngrok-free.dev",
+    "https://rap.natalnet.br",
     "http://localhost:8000",
 ]
+
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG

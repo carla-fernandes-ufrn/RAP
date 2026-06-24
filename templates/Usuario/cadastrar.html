@@ -34,10 +34,21 @@
                   </div>
                   <div class="card-body">
                     <form role="form" method="post">
-                        {% csrf_token %} {% for field in form %}
+                        {% csrf_token %}
+                        {% if form.non_field_errors %}
+                          <div class="alert alert-danger text-white" role="alert">
+                            {% for error in form.non_field_errors %}
+                              {{ error }}
+                            {% endfor %}
+                          </div>
+                        {% endif %}
+                        
+                        {% for field in form %}
                         <div class="mb-3">
                             <label class="form-control-label">{{ field.label }}</label> {% render_field field class="form-control" %}
-                            <span class="text-sm opacity-8">{{ field.errors }}</span>
+                            {% if field.errors %}
+                            <span class="text-sm text-danger font-weight-bold mt-1 d-block">{{ field.errors }}</span>
+                            {% endif %}
                         </div>
                         {% endfor %}
                         <div class="text-center">

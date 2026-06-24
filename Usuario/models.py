@@ -31,10 +31,18 @@ ESTADOS = [
     ('TO', 'Tocantins')
 ]
 
+TIPO_USUARIO = [
+    ('Aluno', 'Aluno'),
+    ('Professor', 'Professor'),
+    ('Administrador', 'Administrador'),
+    ('Root', 'Root'),
+]
+
 class Usuario(User):
     cidade = models.CharField(max_length=100, verbose_name='Cidade')
     estado = models.CharField(max_length=20, choices=ESTADOS, default='AC', verbose_name='Estado')
     avatar = models.ImageField(upload_to='profile-pic/', default='profile-pic/default.jpeg')
+    tipo_usuario = models.CharField(max_length=20, choices=TIPO_USUARIO, default='Aluno', verbose_name='Tipo de Usuário')
     interesses = models.ManyToManyField('Disciplina.Disciplina', through='Interesses')
 
     def __str__(self):
@@ -68,3 +76,17 @@ class Interesses(models.Model):
         ordering = ['usuario', 'disciplina']
         verbose_name = "Interesse"
         verbose_name_plural = "Interesses"
+
+class CodigoValidacao(models.Model):
+    TIPO_CODIGO = [
+        ('CADASTRO', 'Confirmação de Cadastro'),
+        ('ADMIN', 'Ação Administrativa'),
+    ]
+    usuario = models.ForeignKey(Usuario, on_delete=models.CASCADE, related_name='codigos_validacao')
+    codigo = models.CharField(max_length=6)
+    tipo = models.CharField(max_length=10, choices=TIPO_CODIGO)
+    criado_em = models.DateTimeField(auto_now_add=True)
+    utilizado = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f"{self.usuario.username} - {self.tipo} - {self.codigo}"

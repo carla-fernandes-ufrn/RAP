@@ -2,10 +2,17 @@
 from django.contrib.auth import forms as auth_forms
 from django import forms
 from django.forms import ModelForm
-from django.contrib.auth.forms import PasswordChangeForm
+from django.contrib.auth.forms import PasswordChangeForm, SetPasswordForm
 
 from Usuario.models import Usuario, Interesses
 from Disciplina.models import Disciplina
+
+class FormAdminSetPassword(SetPasswordForm):
+    def __init__(self, user, *args, **kwargs):
+        super(FormAdminSetPassword, self).__init__(user, *args, **kwargs)
+        for field in self.fields.values():
+            field.help_text = ''
+            field.widget.attrs['class'] = 'form-control'
 
 
 class FormCriarUsuario(auth_forms.UserCreationForm):
@@ -50,7 +57,7 @@ class FormAtualizarInteresses(ModelForm):
 class FormEditarUsuario(forms.ModelForm):
     class Meta:
         model = Usuario
-        fields = ['username', 'email', 'first_name', 'last_name', 'estado', 'cidade']
+        fields = ['username', 'email', 'first_name', 'last_name', 'estado', 'cidade', 'tipo_usuario']
 
     def __init__(self, *args, **kwargs):
         super(FormEditarUsuario, self).__init__(*args, **kwargs)

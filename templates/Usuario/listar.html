@@ -41,15 +41,49 @@
             </div>
         </div>
         <div id="main_div" class="col-md-8 col-lg-8">
+            <div class="nav-wrapper position-relative end-0 mb-4">
+                <ul class="nav nav-pills nav-fill p-1 bg-white border-radius-lg" role="tablist">
+                    <li class="nav-item">
+                        <a class="nav-link mb-0 px-0 py-1 {% if ativos != False %}active{% endif %}" href="{% url 'usuario:listar_ativos' %}" role="tab">
+                            <i class="fa fa-check-circle me-2"></i> Usuários Ativos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link mb-0 px-0 py-1 {% if ativos == False %}active{% endif %}" href="{% url 'usuario:listar_inativos' %}" role="tab">
+                            <i class="fa fa-ban me-2"></i> Usuários Inativos
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            
             {% for usuario in lista_usuarios %}
                 <div class="card" id="card_usuario_{{usuario.id}}">
                     <div class="card-header bg-gradient-success pb-0 p-3">
                         <span class="text-sm mb-0 text-uppercase text-white font-weight-bold">{{usuario}}</span>
-                        {% if user.is_superuser %}
-                            <div class="float-end">
-                                <a href="{% url 'usuario:editar' pk=usuario.pk %}" class="text-white">
+                        {% if user.is_authenticated and user.usuario.tipo_usuario == 'Administrador' or user.is_superuser %}
+                            <div class="float-end d-flex gap-2">
+                                {% if usuario.pk != request.user.pk %}
+                                <form action="{% url 'usuario:mudar_status_admin' pk=usuario.pk %}" method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-link p-0 m-0 text-white me-2" title="Promover/Rebaixar Usuário">
+                                        <i class="fa fa-refresh"></i>
+                                    </button>
+                                </form>
+                                <form action="{% url 'usuario:mudar_status' pk=usuario.pk %}" method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-link p-0 m-0 text-white me-2" title="Ativar/Desativar Usuário">
+                                        {% if usuario.is_active %}<i class="fa fa-ban"></i>{% else %}<i class="fa fa-check"></i>{% endif %}
+                                    </button>
+                                </form>
+                                <a href="{% url 'usuario:editar' pk=usuario.pk %}" class="text-white" title="Editar">
                                     <i class="fa fa-pencil"></i>
                                 </a>
+                                <a href="{% url 'usuario:deletar' pk=usuario.pk %}" class="text-white ms-2" title="Excluir">
+                                    <i class="fa fa-trash text-danger"></i>
+                                </a>
+                                {% else %}
+                                <span class="badge bg-secondary">Sua Conta</span>
+                                {% endif %}
                             </div>
                         {% endif %}
                     </div>

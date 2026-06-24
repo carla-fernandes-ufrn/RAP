@@ -1,15 +1,33 @@
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Excluir</title>
-</head>
-<body>
-    <h1>Deletar usuario</h1>
-    <form method="post">{% csrf_token %}
-    <p>Tem certeza de que deseja excluir"{{ object }}"?</p>
-    <input type="submit" value="Confirm">
-</form>
-</body>
-</html>
+{% extends 'Base/base.html' %}
+{% load static %}
+
+{% block titulo %}Excluir Usuário{% endblock %}
+
+{% block conteudo %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow border-0 rounded-lg">
+                <div class="card-header bg-gradient-danger text-white text-center py-4">
+                    <h4 class="mb-0 font-weight-bold text-white"><i class="fa fa-exclamation-triangle me-2 text-white"></i> Zona de Perigo</h4>
+                </div>
+                <div class="card-body p-5 text-center">
+                    {% if object.avatar %}
+                    <img src="{{ object.avatar.url }}" alt="Avatar" class="rounded-circle mb-3" style="width: 100px; height: 100px; object-fit: cover;">
+                    {% endif %}
+                    <h5 class="font-weight-bold text-dark">{{ object }}</h5>
+                    <p class="text-muted mb-4">Você tem certeza absoluta de que deseja excluir permanentemente este usuário? Esta ação não pode ser desfeita e todos os dados associados serão perdidos.</p>
+                    
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="d-flex justify-content-between mt-4 gap-3">
+                            <a href="{% url 'usuario:listar_ativos' %}" class="btn btn-secondary w-50 py-2 font-weight-bold text-uppercase">Cancelar</a>
+                            <button type="submit" class="btn bg-gradient-danger w-50 py-2 font-weight-bold text-white text-uppercase">Sim, Excluir</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

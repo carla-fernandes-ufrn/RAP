@@ -32,11 +32,13 @@
       <!--   </a>-->
       <!-- </li>-->
 
+      {% if request.user.is_authenticated and request.user.usuario.tipo_usuario == 'Administrador' or request.user.is_superuser %}
       <li class="nav-item px-3 d-flex align-items-center">
         <a href="{% url 'usuario:listar_ativos' %}" class="nav-link font-weight-bold px-0 text-white">
           Usuários
         </a>
       </li>
+      {% endif %}
       <li class="nav-item px-3 d-flex align-items-center">
         <a href="{% url 'acoes:listar' %}" class="nav-link font-weight-bold px-0 text-white">
           Ações

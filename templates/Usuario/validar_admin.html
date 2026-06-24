@@ -1,0 +1,29 @@
+{% extends 'Base/base.html' %}
+{% load static %}
+
+{% block titulo %}Verificação de Segurança{% endblock %}
+
+{% block conteudo %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow border-0 rounded-lg">
+                <div class="card-header bg-gradient-warning text-white text-center py-4">
+                    <h4 class="mb-0 font-weight-bold text-white"><i class="fa fa-lock me-2 text-white"></i> Área Sensível</h4>
+                </div>
+                <div class="card-body p-5">
+                    <p class="text-center text-muted mb-4">Para sua segurança, precisamos validar sua sessão administrativa. Verifique o código enviado ao seu e-mail.</p>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="mb-4">
+                            <label class="form-label font-weight-bold text-dark">Código PIN (6 dígitos)</label>
+                            <input type="text" name="codigo" class="form-control form-control-lg text-center fw-bold text-dark" placeholder="000000" maxlength="6" required>
+                        </div>
+                        <button class="btn bg-gradient-warning w-100 py-3 mt-2 font-weight-bold text-white text-uppercase" type="submit">Autenticar Sessão</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
