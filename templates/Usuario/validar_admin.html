@@ -12,7 +12,12 @@
                     <h4 class="mb-0 font-weight-bold text-white"><i class="fa fa-lock me-2 text-white"></i> Área Sensível</h4>
                 </div>
                 <div class="card-body p-5">
-                    <p class="text-center text-muted mb-4">Para sua segurança, precisamos validar sua sessão administrativa. Verifique o código enviado ao seu e-mail.</p>
+                  <h1 class="mb-2 mt-5">Área Restrita</h1>
+                  <h4 class="font-weight-bolder">Verificação de Segurança</h4>
+                  <p class="mb-0">Digite o código de 6 dígitos que enviamos para o seu e-mail administrativo.</p>
+                  <div class="alert alert-warning text-white mt-3" style="font-size: 0.9rem;" role="alert">
+                    <i class="fa fa-exclamation-triangle me-2"></i> Não encontrou o e-mail? <strong>Verifique sua caixa de Spam ou Lixo Eletrônico.</strong>
+                  </div>
                     <form method="post">
                         {% csrf_token %}
                         <div class="mb-4">

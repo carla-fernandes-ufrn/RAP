@@ -208,12 +208,32 @@ class Cadastrar(generic.CreateView):
         print(f"TOKEN DE CADASTRO PARA {user.email}: {otp}")
         print(f"==============================================\n")
         
+        html_message = f"""
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+            <div style="background-color: #28a745; padding: 20px; text-align: center;">
+                <h2 style="color: white; margin: 0;">Robótica para Alunos e Professores</h2>
+            </div>
+            <div style="padding: 30px; text-align: center;">
+                <h3 style="color: #333;">Confirmação de Cadastro</h3>
+                <p style="color: #555; font-size: 16px;">Seu código de confirmação é:</p>
+                <div style="background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin: 25px 0;">
+                    <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #333;">{otp}</span>
+                </div>
+                <p style="color: #777; font-size: 14px;">Se você não se cadastrou no nosso sistema, por favor ignore este e-mail.</p>
+            </div>
+            <div style="background-color: #f8f9fa; padding: 15px; text-align: center; border-top: 1px solid #e0e0e0;">
+                <p style="color: #999; font-size: 12px; margin: 0;">Equipe Projeto RAP © 2026</p>
+            </div>
+        </div>
+        """
+        
         send_mail(
             subject='Confirmação de Cadastro - RAP',
             message=f'Seu código de confirmação é: {otp}',
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[user.email],
-            fail_silently=True
+            fail_silently=True,
+            html_message=html_message
         )
         
         self.request.session['ativacao_user_id'] = user.id
@@ -262,12 +282,32 @@ def validar_admin(request):
         print(f"TOKEN ADMIN (SUDO) PARA {user.email}: {otp}")
         print(f"==============================================\n")
         
+        html_message = f"""
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+            <div style="background-color: #dc3545; padding: 20px; text-align: center;">
+                <h2 style="color: white; margin: 0;">Robótica para Alunos e Professores</h2>
+            </div>
+            <div style="padding: 30px; text-align: center;">
+                <h3 style="color: #333;">Acesso Administrativo</h3>
+                <p style="color: #555; font-size: 16px;">Seu código para acessar áreas sensíveis do sistema é:</p>
+                <div style="background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin: 25px 0;">
+                    <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #333;">{otp}</span>
+                </div>
+                <p style="color: #777; font-size: 14px;">Este código é válido por 1 hora. Se você não solicitou, verifique a segurança da sua conta.</p>
+            </div>
+            <div style="background-color: #f8f9fa; padding: 15px; text-align: center; border-top: 1px solid #e0e0e0;">
+                <p style="color: #999; font-size: 12px; margin: 0;">Equipe Projeto RAP © 2026</p>
+            </div>
+        </div>
+        """
+        
         send_mail(
             subject='Código de Acesso Administrativo - RAP',
             message=f'Seu código para acessar áreas sensíveis do sistema é: {otp}. Válido por 1 hora.',
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[user.email],
-            fail_silently=True
+            fail_silently=True,
+            html_message=html_message
         )
         messages.info(request, f'Enviamos um código de 6 dígitos para o seu e-mail ({user.email}).')
         
@@ -726,12 +766,32 @@ def esqueceu_senha(request):
         print(f"TOKEN DE RECUPERAÇÃO PARA {user.email}: {otp}")
         print(f"==============================================\n")
         
+        html_message = f"""
+        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
+            <div style="background-color: #0d6efd; padding: 20px; text-align: center;">
+                <h2 style="color: white; margin: 0;">Robótica para Alunos e Professores</h2>
+            </div>
+            <div style="padding: 30px; text-align: center;">
+                <h3 style="color: #333;">Recuperação de Senha</h3>
+                <p style="color: #555; font-size: 16px;">Seu código para redefinir a senha é:</p>
+                <div style="background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin: 25px 0;">
+                    <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #333;">{otp}</span>
+                </div>
+                <p style="color: #777; font-size: 14px;">Se você não solicitou a redefinição de senha, por favor ignore este e-mail.</p>
+            </div>
+            <div style="background-color: #f8f9fa; padding: 15px; text-align: center; border-top: 1px solid #e0e0e0;">
+                <p style="color: #999; font-size: 12px; margin: 0;">Equipe Projeto RAP © 2026</p>
+            </div>
+        </div>
+        """
+        
         send_mail(
             subject='Recuperação de Senha - RAP',
             message=f'Seu código para redefinir a senha é: {otp}',
             from_email=settings.DEFAULT_FROM_EMAIL,
             recipient_list=[user.email],
-            fail_silently=True
+            fail_silently=True,
+            html_message=html_message
         )
         
         request.session['recuperacao_user_id'] = user.id
