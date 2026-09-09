@@ -26,6 +26,7 @@ from Acoes import filters as filter_acoes
 
 import secrets
 import time
+import logging
 from datetime import timedelta
 from django.core.mail import send_mail
 from django.conf import settings
@@ -33,6 +34,50 @@ from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 from Usuario.models import CodigoValidacao
 from Usuario.decorators import admin_otp_required
+
+logger = logging.getLogger(__name__)
+
+
+def _novo_codigo(usuario, tipo):
+    otp = f"{secrets.randbelow(900000) + 100000:06d}"
+    validacao = CodigoValidacao.objects.create(
+        usuario=usuario, codigo=otp, tipo=tipo
+    )
+    return otp, validacao
+
+
+def _enviar_email_codigo(*, usuario, tipo, assunto, mensagem, html):
+    """Envia um OTP sem ocultar falhas e sem registrar código ou credenciais."""
+    otp, validacao = _novo_codigo(usuario, tipo)
+    try:
+        send_mail(
+            subject=assunto,
+            message=mensagem.format(otp=otp),
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            recipient_list=[usuario.email],
+            fail_silently=False,
+            html_message=html.format(otp=otp),
+        )
+    except Exception:
+        # Um código que nunca foi entregue não deve permanecer válido.
+        validacao.delete()
+        logger.exception(
+            "Falha ao enviar e-mail de código; tipo=%s usuario_id=%s",
+            tipo,
+            usuario.pk,
+        )
+        return None
+
+    # Somente o código efetivamente enviado permanece válido.
+    CodigoValidacao.objects.filter(
+        usuario=usuario, tipo=tipo, utilizado=False
+    ).exclude(pk=validacao.pk).update(utilizado=True)
+    logger.info(
+        "E-mail de código aceito pelo backend; tipo=%s usuario_id=%s",
+        tipo,
+        usuario.pk,
+    )
+    return validacao
 
 def is_admin_check(user):
     try:
@@ -201,10 +246,7 @@ class Cadastrar(generic.CreateView):
         user = form.save(commit=False)
         user.is_active = False
         user.save()
-        
-        otp = f"{secrets.randbelow(900000) + 100000:06d}"
-        CodigoValidacao.objects.create(usuario=user, codigo=otp, tipo='CADASTRO')
-        
+
         html_message = f"""
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
             <div style="background-color: #28a745; padding: 20px; text-align: center;">
@@ -214,7 +256,7 @@ class Cadastrar(generic.CreateView):
                 <h3 style="color: #333;">Confirmação de Cadastro</h3>
                 <p style="color: #555; font-size: 16px;">Seu código de confirmação é:</p>
                 <div style="background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin: 25px 0;">
-                    <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #333;">{otp}</span>
+                    <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #333;">{{otp}}</span>
                 </div>
                 <p style="color: #777; font-size: 14px;">Se você não se cadastrou no nosso sistema, por favor ignore este e-mail.</p>
             </div>
@@ -224,16 +266,19 @@ class Cadastrar(generic.CreateView):
         </div>
         """
         
-        send_mail(
-            subject='Confirmação de Cadastro - RAP',
-            message=f'Seu código de confirmação é: {otp}',
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[user.email],
-            fail_silently=True,
-            html_message=html_message
-        )
-        
         self.request.session['ativacao_user_id'] = user.id
+        enviado = _enviar_email_codigo(
+            usuario=user,
+            tipo='CADASTRO',
+            assunto='Confirmação de Cadastro - RAP',
+            mensagem='Seu código de confirmação é: {otp}',
+            html=html_message,
+        )
+        if enviado is None:
+            messages.error(
+                self.request,
+                'Não foi possível enviar o código agora. Sua conta foi mantida; tente reenviar.',
+            )
         return redirect('usuario:ativar_email')
 
 def ativar_email(request):
@@ -247,6 +292,26 @@ def ativar_email(request):
         return redirect('usuario:login')
 
     if request.method == 'POST':
+        if request.POST.get('acao') == 'reenviar':
+            html_message = """
+            <h2>Confirmação de Cadastro</h2>
+            <p>Seu novo código de confirmação é:</p>
+            <p><strong>{otp}</strong></p>
+            <p>Se você não se cadastrou no RAP, ignore este e-mail.</p>
+            """
+            enviado = _enviar_email_codigo(
+                usuario=user,
+                tipo='CADASTRO',
+                assunto='Confirmação de Cadastro - RAP',
+                mensagem='Seu código de confirmação é: {otp}',
+                html=html_message,
+            )
+            if enviado:
+                messages.success(request, 'Um novo código foi enviado.')
+            else:
+                messages.error(request, 'Não foi possível enviar o código agora. Tente novamente mais tarde.')
+            return redirect('usuario:ativar_email')
+
         codigo = request.POST.get('codigo')
         validacao = CodigoValidacao.objects.filter(
             usuario=user,
@@ -278,9 +343,6 @@ def validar_admin(request):
         usuario_obj = Usuario.objects.get(pk=user.pk)
         
     if request.method == 'GET':
-        otp = f"{secrets.randbelow(900000) + 100000:06d}"
-        CodigoValidacao.objects.create(usuario=usuario_obj, codigo=otp, tipo='ADMIN')
-        
         html_message = f"""
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
             <div style="background-color: #dc3545; padding: 20px; text-align: center;">
@@ -290,9 +352,9 @@ def validar_admin(request):
                 <h3 style="color: #333;">Acesso Administrativo</h3>
                 <p style="color: #555; font-size: 16px;">Seu código para acessar áreas sensíveis do sistema é:</p>
                 <div style="background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin: 25px 0;">
-                    <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #333;">{otp}</span>
+                    <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #333;">{{otp}}</span>
                 </div>
-                <p style="color: #777; font-size: 14px;">Este código é válido por 1 hora. Se você não solicitou, verifique a segurança da sua conta.</p>
+                <p style="color: #777; font-size: 14px;">Este código é válido por 15 minutos. Se você não solicitou, verifique a segurança da sua conta.</p>
             </div>
             <div style="background-color: #f8f9fa; padding: 15px; text-align: center; border-top: 1px solid #e0e0e0;">
                 <p style="color: #999; font-size: 12px; margin: 0;">Equipe Projeto RAP © 2026</p>
@@ -300,15 +362,17 @@ def validar_admin(request):
         </div>
         """
         
-        send_mail(
-            subject='Código de Acesso Administrativo - RAP',
-            message=f'Seu código para acessar áreas sensíveis do sistema é: {otp}. Válido por 1 hora.',
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[user.email],
-            fail_silently=True,
-            html_message=html_message
+        enviado = _enviar_email_codigo(
+            usuario=usuario_obj,
+            tipo='ADMIN',
+            assunto='Código de Acesso Administrativo - RAP',
+            mensagem='Seu código para acessar áreas sensíveis do sistema é: {otp}. Válido por 15 minutos.',
+            html=html_message,
         )
-        messages.info(request, f'Enviamos um código de 6 dígitos para o seu e-mail ({user.email}).')
+        if enviado:
+            messages.info(request, 'Enviamos um código de 6 dígitos para o e-mail cadastrado.')
+        else:
+            messages.error(request, 'Não foi possível enviar o código administrativo agora.')
         
     if request.method == 'POST':
         codigo = request.POST.get('codigo')
@@ -740,15 +804,11 @@ def esqueceu_senha(request):
         request.session.pop('recuperacao_user_id', None)
         request.session['recuperacao_solicitada'] = True
 
-        try:
-            user = Usuario.objects.get(email=email)
-        except Usuario.DoesNotExist:
+        user = Usuario.objects.filter(email__iexact=email).first()
+        if user is None:
             messages.success(request, 'Se o e-mail estiver cadastrado, um código foi enviado.')
             return redirect('usuario:validar_recuperacao')
 
-        otp = f"{secrets.randbelow(900000) + 100000:06d}"
-        CodigoValidacao.objects.create(usuario=user, codigo=otp, tipo='RECUPERACAO')
-        
         html_message = f"""
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
             <div style="background-color: #0d6efd; padding: 20px; text-align: center;">
@@ -758,7 +818,7 @@ def esqueceu_senha(request):
                 <h3 style="color: #333;">Recuperação de Senha</h3>
                 <p style="color: #555; font-size: 16px;">Seu código para redefinir a senha é:</p>
                 <div style="background-color: #f8f9fa; border-radius: 8px; padding: 20px; margin: 25px 0;">
-                    <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #333;">{otp}</span>
+                    <span style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #333;">{{otp}}</span>
                 </div>
                 <p style="color: #777; font-size: 14px;">Se você não solicitou a redefinição de senha, por favor ignore este e-mail.</p>
             </div>
@@ -768,16 +828,15 @@ def esqueceu_senha(request):
         </div>
         """
         
-        send_mail(
-            subject='Recuperação de Senha - RAP',
-            message=f'Seu código para redefinir a senha é: {otp}',
-            from_email=settings.DEFAULT_FROM_EMAIL,
-            recipient_list=[user.email],
-            fail_silently=True,
-            html_message=html_message
+        enviado = _enviar_email_codigo(
+            usuario=user,
+            tipo='RECUPERACAO',
+            assunto='Recuperação de Senha - RAP',
+            mensagem='Seu código para redefinir a senha é: {otp}',
+            html=html_message,
         )
-        
-        request.session['recuperacao_user_id'] = user.id
+        if enviado:
+            request.session['recuperacao_user_id'] = user.id
         messages.success(request, 'Se o e-mail estiver cadastrado, um código foi enviado.')
         return redirect('usuario:validar_recuperacao')
 

@@ -6,6 +6,8 @@ COMPOSE_FILE="${PROJECT_DIR}/docker-compose.yml"
 EXPECTED_DB_VOLUME="public_pgdata"
 BACKUP_DIR="/home/gabrielnatalnet/rap-backups"
 COMPOSE=(docker-compose -p public -f "${COMPOSE_FILE}")
+ENV_STATE_DIR="/home/gabrielnatalnet/.rap-deploy"
+ENV_STATE_FILE="${ENV_STATE_DIR}/web-env.sha256"
 REBUILD=false
 
 fail() {
@@ -25,6 +27,13 @@ cd "${PROJECT_DIR}"
 
 echo "[OK] Projeto canonico: ${PROJECT_DIR}"
 command -v docker-compose >/dev/null || fail "docker-compose legado nao encontrado"
+docker --version
+compose_version=$(docker-compose version --short 2>/dev/null || docker-compose --version)
+echo "[INFO] docker-compose: ${compose_version}"
+if [[ "${compose_version}" == 1.29.2* ]]; then
+    echo "[AVISO] Docker Compose v1.29.2 esta obsoleto e pode falhar com ContainerConfig no Docker Engine atual."
+    echo "[AVISO] O deploy nao usara --force-recreate. Solicite Compose v2 ao administrador quando possivel."
+fi
 "${COMPOSE[@]}" config -q || fail "docker-compose.yml invalido"
 
 db_id=$("${COMPOSE[@]}" ps -q db)
@@ -44,6 +53,19 @@ db_volume=$(docker inspect --format '{{range .Mounts}}{{if eq .Destination "/var
 echo "[OK] PostgreSQL saudavel"
 echo "[OK] Volume de producao: ${EXPECTED_DB_VOLUME}"
 echo "[OK] Banco nao sera recriado durante este deploy"
+
+[[ -f "${PROJECT_DIR}/.env" ]] || fail ".env de producao nao encontrado"
+current_env_hash=$(sha256sum "${PROJECT_DIR}/.env" | awk '{print $1}')
+if [[ -f "${ENV_STATE_FILE}" ]]; then
+    deployed_env_hash=$(<"${ENV_STATE_FILE}")
+    if [[ "${current_env_hash}" != "${deployed_env_hash}" && "${REBUILD}" != "true" ]]; then
+        echo "[AVISO] Alteracao de ambiente detectada."
+        fail "E necessario recriar somente o web: ./scripts/recreate-web-production.sh"
+    fi
+else
+    echo "[AVISO] Ainda nao existe referencia segura do .env carregado pelo web."
+    echo "[AVISO] Se o .env mudou, use recreate-web-production.sh; o conteudo nao foi exibido."
+fi
 
 if [[ "${REBUILD}" == "true" ]]; then
     echo "[INFO] Construindo somente a imagem web; o web atual continua ativo"
@@ -105,8 +127,8 @@ echo "[INFO] Coletando arquivos estaticos"
 "${COMPOSE[@]}" run --rm --no-deps -T web python manage.py collectstatic --noinput
 
 if [[ "${REBUILD}" == "true" ]]; then
-    echo "[INFO] Recriando somente o servico web com a imagem validada"
-    "${COMPOSE[@]}" up -d --no-deps --force-recreate web
+    echo "[INFO] Recriando somente o servico web pelo fluxo compativel com Compose v1"
+    "${PROJECT_DIR}/scripts/recreate-web-production.sh"
 else
     echo "[INFO] Reiniciando somente o servico web"
     "${COMPOSE[@]}" restart web

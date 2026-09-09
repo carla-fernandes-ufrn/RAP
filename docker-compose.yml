@@ -55,4 +55,8 @@ volumes:
     external: true
     name: public_pgdata
   staticfiles:
+    external: true
+    name: public_staticfiles
   media:
+    external: true
+    name: public_media

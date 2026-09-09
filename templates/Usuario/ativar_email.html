@@ -34,6 +34,15 @@
                           </div>
                           <button class="btn bg-gradient-success w-100 py-3 mt-2 font-weight-bold text-white text-uppercase" type="submit">Ativar Conta</button>
                       </form>
+                      <form method="post" class="mt-3">
+                          {% csrf_token %}
+                          <button class="btn btn-outline-secondary w-100" type="submit" name="acao" value="reenviar">Reenviar código</button>
+                      </form>
+                      {% if messages %}
+                        {% for message in messages %}
+                          <div class="alert alert-{{ message.tags }} mt-3" role="alert">{{ message }}</div>
+                        {% endfor %}
+                      {% endif %}
                   </div>
               </div>
             </div>

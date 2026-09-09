@@ -72,6 +72,17 @@ class AuthenticationCriticalTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertNotIn("_auth_user_id", self.client.session)
 
+    def test_login_recusa_usuario_inativo(self):
+        user = self.create_user()
+        user.is_active = False
+        user.save(update_fields=["is_active"])
+        response = self.client.post(
+            reverse("usuario:login"),
+            {"username": user.username, "password": self.password},
+        )
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn("_auth_user_id", self.client.session)
+
     def test_area_protegida_exige_login(self):
         protected_url = reverse("disciplina:listar")
         response = self.client.get(protected_url)
@@ -154,6 +165,46 @@ class AuthenticationCriticalTests(TestCase):
         validation.refresh_from_db()
         self.assertTrue(user.is_active)
         self.assertTrue(validation.utilizado)
+
+    def test_reenvio_de_cadastro_invalida_codigo_anterior(self):
+        self.client.post(reverse("usuario:cadastrar"), self.registration_data())
+        user = Usuario.objects.get(username="novoaluno")
+        old_code = CodigoValidacao.objects.get(usuario=user, tipo="CADASTRO")
+        mail.outbox.clear()
+
+        response = self.client.post(
+            reverse("usuario:ativar_email"), {"acao": "reenviar"}
+        )
+        self.assertRedirects(response, reverse("usuario:ativar_email"))
+        old_code.refresh_from_db()
+        new_code = CodigoValidacao.objects.get(
+            usuario=user, tipo="CADASTRO", utilizado=False
+        )
+        self.assertTrue(old_code.utilizado)
+        self.assertNotEqual(old_code.pk, new_code.pk)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn(new_code.codigo, mail.outbox[0].body)
+
+    @override_settings(
+        EMAIL_BACKEND="django.core.mail.backends.dummy.EmailBackend"
+    )
+    def test_falha_smtp_mantem_usuario_inativo_e_remove_codigo_nao_entregue(self):
+        from unittest.mock import patch
+
+        with patch("Usuario.views.send_mail", side_effect=OSError("SMTP indisponível")):
+            response = self.client.post(
+                reverse("usuario:cadastrar"), self.registration_data()
+            )
+
+        self.assertRedirects(response, reverse("usuario:ativar_email"))
+        user = Usuario.objects.get(username="novoaluno")
+        self.assertFalse(user.is_active)
+        self.assertFalse(
+            CodigoValidacao.objects.filter(usuario=user, tipo="CADASTRO").exists()
+        )
+        self.assertTrue(
+            any("Não foi possível enviar o código" in message for message in self.messages(response))
+        )
 
     def test_cadastro_valida_campos_obrigatorios_e_email(self):
         for field, value in (("username", ""), ("email", ""), ("password1", ""), ("email", "invalido")):
