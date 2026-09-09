@@ -4,6 +4,7 @@ __pycache__/
 *.pyd
 *.sqlite3
 .env
+dump*.json
 .git
 .gitignore
 staticfiles/

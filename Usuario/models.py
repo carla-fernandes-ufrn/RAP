@@ -90,4 +90,4 @@ class CodigoValidacao(models.Model):
     utilizado = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.usuario.username} - {self.tipo} - {self.codigo}"
+        return f"{self.usuario.username} - {self.tipo} - ******"

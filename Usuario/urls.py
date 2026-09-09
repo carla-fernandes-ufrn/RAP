@@ -16,7 +16,6 @@ urlpatterns = [
     path('completar-cadastro/', views.completar_cadastro, name="completar_cadastro"),
     path('editar/<int:pk>', views.Editar.as_view(), name = 'editar'),
     path('alterar-avatar/<int:pk>/<int:novo>', views.alterar_avatar, name = 'alterar_avatar'),
-    path('alterar-senha/<int:pk>', views.AlterarSenha.as_view(), name = 'alterar_senha'),
     path('listar-ativos/', views.ListarAtivos.as_view(), name='listar_ativos'),
     path('listar-inativos/', views.listar_inativos, name='listar_inativos'),
     path('detalhes/<int:pk>', views.Detalhes.as_view(), name='detalhes'),

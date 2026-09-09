@@ -10,7 +10,7 @@ def sugestao_planos_aula(usuario, quantidade):
     # Encontra planos de aula das disciplinas de interesse
     # Ordena os planos de aula
     lista_disciplinas_interesse = disciplinas_interesse(usuario.id, [])
-    lista = PlanoAula.objects.all().exclude(responsavel=usuario)
+    lista = PlanoAula.objects.all().exclude(criador=usuario)
     executados = ExecucaoPlanoAula.objects.filter(usuario=usuario).values_list('plano_aula')
     lista_pa_pre_requisitos = [x for x in lista if x not in executados]
     planos_aula_c1 = encontrar_planos_aula_por_disciplina(lista_disciplinas_interesse, quantidade, lista_pa_pre_requisitos)

@@ -2,22 +2,26 @@ services:
   db:
     image: postgres:16
     environment:
-      POSTGRES_DB: appdb
-      POSTGRES_USER: appuser
-      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: ${POSTGRES_DB:-appdb}
+      POSTGRES_USER: ${POSTGRES_USER:-appuser}
+      # O fallback preserva a credencial legada na primeira transicao. A troca
+      # de senha deve ser planejada separadamente com o administrador da UFRN.
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-secret}
     volumes:
       - pgdata:/var/lib/postgresql/data
+    # Mantido por compatibilidade com o ambiente atual. Remover somente após
+    # confirmar com a UFRN que não existem integrações externas com o banco.
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U appuser -d appdb"]
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
       interval: 5s
       timeout: 5s
       retries: 10
+    restart: unless-stopped
 
   web:
     build: .
-    user: "root"
     command: ./entrypoint.sh
     env_file: .env
     depends_on:
@@ -26,11 +30,29 @@ services:
     ports:
       - "8000:8000"
     volumes:
+      # O servidor atual usa este bind mount; uploads SFTP aparecem em /app.
       - .:/app
       - staticfiles:/app/staticfiles
       - media:/app/media
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - >-
+          import urllib.request;
+          urllib.request.urlopen(urllib.request.Request('http://127.0.0.1:8000/health/', headers={'Host': 'rap.natalnet.br', 'X-Forwarded-Proto': 'https'}), timeout=5)
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+    restart: unless-stopped
+    init: true
+    stop_grace_period: 30s
 
 volumes:
   pgdata:
+    external: true
+    name: public_pgdata
   staticfiles:
   media:

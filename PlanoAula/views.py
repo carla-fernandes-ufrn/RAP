@@ -516,7 +516,7 @@ class ListarPlanosAula(LoginRequiredMixin, FilterView):
 
 @login_required
 def listar_usuario(request, pk):
-    lista_aulas = PlanoAula.objects.filter(responsavel__pk=pk, status=True)
+    lista_aulas = PlanoAula.objects.filter(criador__pk=pk, status=True)
 
     informacoes = {
         'lista_aulas': lista_aulas

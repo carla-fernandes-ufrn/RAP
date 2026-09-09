@@ -25,8 +25,15 @@ class FormCriarUsuario(auth_forms.UserCreationForm):
         super().__init__(*args, **kwargs)
         self.fields['username'].label = 'Nome de usuário'
         self.fields['email'].label = 'E-mail'
+        self.fields['email'].required = True
         self.fields['password1'].label = 'Senha'
         self.fields['password2'].label = 'Confirmar senha'
+
+    def clean_email(self):
+        email = self.cleaned_data['email'].strip().lower()
+        if Usuario.objects.filter(email__iexact=email).exists():
+            raise forms.ValidationError('Já existe uma conta com este e-mail.')
+        return email
 
 class FormCompletarCadastro(ModelForm):
 
@@ -63,6 +70,20 @@ class FormEditarUsuario(forms.ModelForm):
         super(FormEditarUsuario, self).__init__(*args, **kwargs)
         for field in self.fields.values():
             field.required = True  # Torna todos obrigatórios
+            field.widget.attrs['class'] = 'form-control'
+
+
+class FormEditarPerfil(forms.ModelForm):
+    """Campos que o próprio usuário pode editar sem elevar privilégios."""
+
+    class Meta:
+        model = Usuario
+        fields = ['username', 'email', 'first_name', 'last_name', 'estado', 'cidade']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.required = True
             field.widget.attrs['class'] = 'form-control'
 
 

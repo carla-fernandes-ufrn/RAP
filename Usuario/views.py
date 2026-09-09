@@ -5,9 +5,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.forms import PasswordChangeForm
 from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
-from django.contrib.auth.hashers import make_password
 
 from django.views import generic
 from django.contrib.auth import update_session_auth_hash
@@ -26,10 +24,13 @@ from PlanoAula import filters as filter_plano_aula
 from Acoes.models import Acoes
 from Acoes import filters as filter_acoes
 
-import random
+import secrets
 import time
+from datetime import timedelta
 from django.core.mail import send_mail
 from django.conf import settings
+from django.utils import timezone
+from django.utils.http import url_has_allowed_host_and_scheme
 from Usuario.models import CodigoValidacao
 from Usuario.decorators import admin_otp_required
 
@@ -201,12 +202,8 @@ class Cadastrar(generic.CreateView):
         user.is_active = False
         user.save()
         
-        otp = str(random.randint(100000, 999999))
+        otp = f"{secrets.randbelow(900000) + 100000:06d}"
         CodigoValidacao.objects.create(usuario=user, codigo=otp, tipo='CADASTRO')
-        
-        print(f"\n==============================================")
-        print(f"TOKEN DE CADASTRO PARA {user.email}: {otp}")
-        print(f"==============================================\n")
         
         html_message = f"""
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
@@ -251,7 +248,13 @@ def ativar_email(request):
 
     if request.method == 'POST':
         codigo = request.POST.get('codigo')
-        validacao = CodigoValidacao.objects.filter(usuario=user, codigo=codigo, tipo='CADASTRO', utilizado=False).last()
+        validacao = CodigoValidacao.objects.filter(
+            usuario=user,
+            codigo=codigo,
+            tipo='CADASTRO',
+            utilizado=False,
+            criado_em__gte=timezone.now() - timedelta(minutes=15),
+        ).last()
         if validacao:
             validacao.utilizado = True
             validacao.save()
@@ -275,12 +278,8 @@ def validar_admin(request):
         usuario_obj = Usuario.objects.get(pk=user.pk)
         
     if request.method == 'GET':
-        otp = str(random.randint(100000, 999999))
+        otp = f"{secrets.randbelow(900000) + 100000:06d}"
         CodigoValidacao.objects.create(usuario=usuario_obj, codigo=otp, tipo='ADMIN')
-        
-        print(f"\n==============================================")
-        print(f"TOKEN ADMIN (SUDO) PARA {user.email}: {otp}")
-        print(f"==============================================\n")
         
         html_message = f"""
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
@@ -317,7 +316,8 @@ def validar_admin(request):
             usuario=usuario_obj, 
             codigo=codigo, 
             tipo='ADMIN', 
-            utilizado=False
+            utilizado=False,
+            criado_em__gte=timezone.now() - timedelta(minutes=15),
         ).last()
         
         if validacao:
@@ -326,7 +326,13 @@ def validar_admin(request):
             
             request.session['admin_otp_valido_ate'] = time.time() + 3600
             
-            next_url = request.GET.get('next', 'home')
+            next_url = request.GET.get('next', '')
+            if not url_has_allowed_host_and_scheme(
+                next_url,
+                allowed_hosts={request.get_host()},
+                require_https=request.is_secure(),
+            ):
+                next_url = reverse_lazy('home')
             return redirect(next_url)
         else:
             messages.error(request, 'Código incorreto.')
@@ -410,7 +416,7 @@ class CompletarCadastro(LoginRequiredMixin, generic.UpdateView):
 class Perfil(LoginRequiredMixin, generic.UpdateView):
     model = Usuario
     template_name = 'Usuario/perfil.html'
-    form_class = forms.FormEditarUsuario
+    form_class = forms.FormEditarPerfil
     context_object_name = 'usuario'
 
     def get_object(self):
@@ -438,17 +444,9 @@ class Perfil(LoginRequiredMixin, generic.UpdateView):
         form = self.get_form()
         form_senha = forms.FormEditarSenha(user=request.user, data=request.POST)
 
-        print("Entrou no post")
-
         # Verifica se é um POST de alteração de senha
         if request.POST.get('form_tipo') == 'senha':
-            print("Entrou na senha")
-            print("Old password:", request.POST.get('old_password'))
-            print("New password1:", request.POST.get('new_password1'))
-            print("New password2:", request.POST.get('new_password2'))
             if form_senha.is_valid():
-                
-                print("Válido")
                 if not request.user.check_password(form_senha.cleaned_data['old_password']):
                     messages.error(request, 'Senha atual incorreta.')
                     context = self.get_context_data(form=form, form_senha=form_senha)
@@ -462,15 +460,12 @@ class Perfil(LoginRequiredMixin, generic.UpdateView):
                 return redirect(self.get_success_url())
 
             else:
-                print("erro")
-                print("Erros do formulário:", form_senha.errors.as_data())
                 messages.error(request, 'Erro ao atualizar a senha.')
                 context = self.get_context_data(form=form, form_senha=form_senha)
                 return self.render_to_response(context)
 
         elif request.POST.get('form_tipo') == 'perfil':
             
-            print("Entrou no perfil")
             if form.is_valid():
                 form.save()
                 messages.success(request, 'Perfil atualizado com sucesso.')
@@ -487,7 +482,8 @@ class Perfil(LoginRequiredMixin, generic.UpdateView):
     def get_success_url(self):
         return reverse_lazy('usuario:perfil')
 
-@method_decorator(csrf_exempt, name='dispatch')
+@require_POST
+@login_required
 def alterar_senha_ajax(request):
     if request.method == 'POST':
         form = PasswordChangeForm(user=request.user, data=request.POST)
@@ -500,7 +496,7 @@ def alterar_senha_ajax(request):
             erros = form.errors.as_json()
             return JsonResponse({'status': 'error', 'erros': erros})
 
-    return JsonResponse({'status': 'error', 'mensagem': 'Método não permitido.'})
+    return JsonResponse({'status': 'error', 'mensagem': 'Método não permitido.'}, status=405)
 
 # class Perfil(LoginRequiredMixin, generic.UpdateView):
 #     model = Usuario
@@ -574,8 +570,11 @@ class Editar(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
         context['form_senha'] = forms.FormAdminSetPassword(user=self.get_object())
         return context
 
+@require_POST
 @login_required
 def alterar_avatar(request, pk, novo):
+    if request.user.pk != pk:
+        raise PermissionDenied()
     if (novo == 0):
         usuario = Usuario.objects.get(pk=pk)
         usuario.avatar = 'profile-pic/default.jpeg'
@@ -583,22 +582,6 @@ def alterar_avatar(request, pk, novo):
         return redirect('usuario:editar', pk=pk)
     else:
         pass
-
-@login_required
-def alterar_senha(request, pk, senha):
-    usuario = Usuario.objects.get(pk=pk)
-    usuario.password = make_password(senha)
-    usuario.save()
-    return redirect('usuario:editar', pk=pk)
-
-class AlterarSenha(LoginRequiredMixin, generic.UpdateView):
-    model = Usuario
-    form_class = forms.FormEditarSenha
-    template_name = 'Usuario/alterar_senha.html'
-
-    def get_success_url(self):
-           pk = self.kwargs["pk"]
-           return reverse_lazy("usuario:editar", kwargs={"pk": pk})
 
 class Detalhes(LoginRequiredMixin, generic.DetailView):
     model = Usuario
@@ -752,19 +735,19 @@ def esqueceu_senha(request):
             messages.error(request, 'Por favor, insira um e-mail válido.')
             return render(request, 'Usuario/esqueceu_senha.html')
             
+        # A pagina seguinte deve ser indistinguivel para contas existentes e
+        # inexistentes. Limpa um ID antigo para nao reaproveitar outra tentativa.
+        request.session.pop('recuperacao_user_id', None)
+        request.session['recuperacao_solicitada'] = True
+
         try:
             user = Usuario.objects.get(email=email)
         except Usuario.DoesNotExist:
-            # Medida de segurança para não enumerar emails existentes no banco
             messages.success(request, 'Se o e-mail estiver cadastrado, um código foi enviado.')
-            return redirect('usuario:login')
+            return redirect('usuario:validar_recuperacao')
 
-        otp = str(random.randint(100000, 999999))
+        otp = f"{secrets.randbelow(900000) + 100000:06d}"
         CodigoValidacao.objects.create(usuario=user, codigo=otp, tipo='RECUPERACAO')
-        
-        print(f"\n==============================================")
-        print(f"TOKEN DE RECUPERAÇÃO PARA {user.email}: {otp}")
-        print(f"==============================================\n")
         
         html_message = f"""
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden;">
@@ -795,23 +778,29 @@ def esqueceu_senha(request):
         )
         
         request.session['recuperacao_user_id'] = user.id
+        messages.success(request, 'Se o e-mail estiver cadastrado, um código foi enviado.')
         return redirect('usuario:validar_recuperacao')
 
     return render(request, 'Usuario/esqueceu_senha.html')
 
 def validar_recuperacao(request):
+    if not request.session.get('recuperacao_solicitada'):
+        return redirect('usuario:password_reset')
+
     user_id = request.session.get('recuperacao_user_id')
-    if not user_id:
-        return redirect('usuario:password_reset')
-        
-    try:
-        user = Usuario.objects.get(id=user_id)
-    except Usuario.DoesNotExist:
-        return redirect('usuario:password_reset')
+    user = Usuario.objects.filter(id=user_id).first() if user_id else None
 
     if request.method == 'POST':
         codigo = request.POST.get('codigo')
-        validacao = CodigoValidacao.objects.filter(usuario=user, codigo=codigo, tipo='RECUPERACAO', utilizado=False).last()
+        validacao = None
+        if user:
+            validacao = CodigoValidacao.objects.filter(
+                usuario=user,
+                codigo=codigo,
+                tipo='RECUPERACAO',
+                utilizado=False,
+                criado_em__gte=timezone.now() - timedelta(minutes=15),
+            ).last()
         if validacao:
             validacao.utilizado = True
             validacao.save()
@@ -821,7 +810,7 @@ def validar_recuperacao(request):
         else:
             messages.error(request, 'Código inválido ou já utilizado.')
             
-    return render(request, 'Usuario/validar_recuperacao.html', {'email': user.email})
+    return render(request, 'Usuario/validar_recuperacao.html')
 
 def redefinir_senha(request):
     user_id = request.session.get('redefinir_autorizado')
@@ -841,6 +830,7 @@ def redefinir_senha(request):
             del request.session['redefinir_autorizado']
             if 'recuperacao_user_id' in request.session:
                 del request.session['recuperacao_user_id']
+            request.session.pop('recuperacao_solicitada', None)
                 
             messages.success(request, 'Senha redefinida com sucesso! Você já pode fazer login.')
             return redirect('usuario:login')
@@ -848,4 +838,3 @@ def redefinir_senha(request):
         form = forms.FormAdminSetPassword(user=user)
 
     return render(request, 'Usuario/redefinir_senha.html', {'form': form})
-

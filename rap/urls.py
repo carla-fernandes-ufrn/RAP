@@ -24,6 +24,7 @@ from PlanoAula import views as plano_aula_views
 from rap import views
 
 urlpatterns = [
+    path('health/', views.health, name='health'),
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     path('buscar/', views.buscar, name='buscar'),

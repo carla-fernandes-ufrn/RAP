@@ -3,6 +3,7 @@ from django.contrib.auth.decorators import login_required
 from django.views.generic import TemplateView, View
 from django.http import JsonResponse
 from django.db.models import Q
+from django.db import connection
 from django.utils import timezone
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
@@ -11,6 +12,17 @@ from Usuario.models import Usuario
 from Disciplina.models import Disciplina, Conteudo
 from PlanoAula.models import PlanoAula, LikePlanoAula, ExecucaoPlanoAula
 from Acoes.models import Acoes
+
+
+def health(request):
+    """Healthcheck simples para Docker e para o proxy reverso."""
+    try:
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT 1")
+            cursor.fetchone()
+    except Exception:
+        return JsonResponse({"status": "unhealthy"}, status=503)
+    return JsonResponse({"status": "ok"})
 
 @login_required
 def home(request):

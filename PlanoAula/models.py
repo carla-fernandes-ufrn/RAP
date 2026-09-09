@@ -6,7 +6,7 @@ from Usuario.models import Usuario
 from Disciplina.models import Conteudo
 
 def user_directory_path(instance, filename):
-    return 'user_{0}/plano_aula_{1}/{2}'.format(instance.responsavel.id, instance.data_criacao, filename)
+    return 'user_{0}/plano_aula_{1}/{2}'.format(instance.criador.id, instance.data_criacao, filename)
 
 def diretorio_plano_aula(instance, filename):
     return 'plano_aula_{0}_{1}/{2}'.format(instance.data_criacao.date(), instance.data_criacao.strftime("%H-%M-%S"), filename)

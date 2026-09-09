@@ -37,5 +37,10 @@ env/
 *.sqlite3
 db.sqlite3
 
+# Dados gerados e cópias de banco nunca devem ser versionados
+dump*.json
+media/
+staticfiles/
+
 # Arquivos de sistema
 .DS_Store

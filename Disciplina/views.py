@@ -9,13 +9,14 @@ from django.views import generic
 from django.urls import reverse_lazy
 
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import user_passes_test
+from django.views.decorators.http import require_POST
 
 from Disciplina.models import Disciplina, Conteudo, SugestaoDisciplina, SugestaoConteudo
 from PlanoAula.models import PlanoAula
 from rap.views import encontrar_planos_aula_disciplina
 from Usuario.models import Usuario
+from Usuario.decorators import admin_otp_required, is_admin_check
 
 # class CriarDisciplina(generic.CreateView):
 #     model = Disciplina
@@ -49,23 +50,22 @@ def listar_conteudos(request):
     )
 
 @login_required
+@admin_otp_required
+@user_passes_test(is_admin_check)
 def listar_sugestoes(request):
-    if (request.user.is_superuser):
-        sugestoes_disciplina = SugestaoDisciplina.objects.filter(status="A")
-        sugestoes_conteudo = SugestaoConteudo.objects.filter(status="A")
-        disciplinas = Disciplina.objects.filter(status="Ativo")
-        conteudos = Conteudo.objects.filter(status="Ativo")
+    sugestoes_disciplina = SugestaoDisciplina.objects.filter(status="A")
+    sugestoes_conteudo = SugestaoConteudo.objects.filter(status="A")
+    disciplinas = Disciplina.objects.filter(status="Ativo")
+    conteudos = Conteudo.objects.filter(status="Ativo")
 
-        informacoes = {
-            'sugestoes_disciplina': sugestoes_disciplina,
-            'sugestoes_conteudo': sugestoes_conteudo,
-            'lista_disciplinas': disciplinas,
-            'lista_conteudos': conteudos,
-        }
+    informacoes = {
+        'sugestoes_disciplina': sugestoes_disciplina,
+        'sugestoes_conteudo': sugestoes_conteudo,
+        'lista_disciplinas': disciplinas,
+        'lista_conteudos': conteudos,
+    }
 
-        return render(request, "Disciplina/listar_sugestoes.html", informacoes)
-    else:
-        raise PermissionDenied()
+    return render(request, "Disciplina/listar_sugestoes.html", informacoes)
 
 @login_required
 def listar_sugestoes_usuario(request, pk):
@@ -91,8 +91,10 @@ def listar_sugestoes_usuario(request, pk):
     else:
         raise PermissionDenied()
 
-@csrf_exempt
+@require_POST
 @login_required
+@admin_otp_required
+@user_passes_test(is_admin_check)
 def analisar_sugestoes_disciplina(request):
     lista_disciplinas_aceitas = request.POST.getlist('lista_disciplinas_aceitas[]')
     lista_disciplinas_negadas = request.POST.getlist('lista_disciplinas_negadas[]')
@@ -125,8 +127,10 @@ def analisar_sugestoes_disciplina(request):
 
     return redirect('disciplina:listar_sugestoes')
 
-@csrf_exempt
+@require_POST
 @login_required
+@admin_otp_required
+@user_passes_test(is_admin_check)
 def analisar_sugestoes_conteudo(request):
     lista_conteudos_aceitos = request.POST.getlist('lista_conteudos_aceitos[]')
     lista_conteudos_negados = request.POST.getlist('lista_conteudos_negados[]')
@@ -162,7 +166,7 @@ def analisar_sugestoes_conteudo(request):
 
     return redirect('disciplina:listar_sugestoes')
 
-@csrf_exempt
+@require_POST
 @login_required
 def sugerir_disciplina(request):
     nome = request.POST.get('nome')
@@ -175,7 +179,7 @@ def sugerir_disciplina(request):
         content_type="application/json"
     )
 
-@csrf_exempt
+@require_POST
 @login_required
 def sugerir_conteudo(request):
     nome = request.POST.get('nome')
@@ -191,25 +195,27 @@ def sugerir_conteudo(request):
     )
 
 @login_required
+@admin_otp_required
+@user_passes_test(is_admin_check)
+@require_POST
 def definir_status_sugestao_disciplina(request, aceitar, id):
-    if (request.user.is_superuser):
-        sugestao_disciplina = SugestaoDisciplina.objects.get(id=id)
+    sugestao_disciplina = SugestaoDisciplina.objects.get(id=id)
 
-        if (aceitar == 1):
-            sugestao_disciplina.status = "B"
-            sugestao_disciplina.save()
+    if (aceitar == 1):
+        sugestao_disciplina.status = "B"
+        sugestao_disciplina.save()
 
-            disciplina = Disciplina(nome = sugestao_disciplina.nome)
-            disciplina.save()
-        else:
-            sugestao_disciplina.status = "C"
-            sugestao_disciplina.save()
-
-        return redirect('disciplina:listar_sugestoes')
+        disciplina = Disciplina(nome=sugestao_disciplina.nome)
+        disciplina.save()
     else:
-        raise PermissionDenied()
+        sugestao_disciplina.status = "C"
+        sugestao_disciplina.save()
+
+    return redirect('disciplina:listar_sugestoes')
 
 @login_required
+@admin_otp_required
+@user_passes_test(is_admin_check)
 def ler_numero_sugestoes(request):
     qnt_sugestoes_disciplina = len(SugestaoDisciplina.objects.filter(status = 'A'))
     qnt_sugestoes_conteudo = len(SugestaoConteudo.objects.filter(status = 'A'))
@@ -218,6 +224,8 @@ def ler_numero_sugestoes(request):
     return JsonResponse({"qnt":resposta}, status = 200)
 
 @login_required
+@admin_otp_required
+@user_passes_test(is_admin_check)
 def editar_disciplina(request, pk):
     disciplina = get_object_or_404(Disciplina, pk=pk)
 
@@ -243,6 +251,8 @@ def editar_disciplina(request, pk):
     })
 
 @login_required
+@admin_otp_required
+@user_passes_test(is_admin_check)
 def editar_conteudo(request, pk):
     conteudo = get_object_or_404(Conteudo, pk=pk)
 
@@ -274,14 +284,20 @@ def editar_conteudo(request, pk):
         'disciplina': conteudo.disciplina.nome
     })
 
+@require_POST
 @login_required
+@admin_otp_required
+@user_passes_test(is_admin_check)
 def inativar_disciplina(request, pk):
     disciplina = get_object_or_404(Disciplina, pk=pk)
     disciplina.status = 'Inativo'
     disciplina.save()
     return JsonResponse({'success': True})
 
+@require_POST
 @login_required
+@admin_otp_required
+@user_passes_test(is_admin_check)
 def inativar_conteudo(request, pk):
     conteudo = get_object_or_404(Conteudo, pk=pk)
     conteudo.status = 'Inativo'

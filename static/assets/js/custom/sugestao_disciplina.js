@@ -55,7 +55,8 @@ $("#form_disciplina").submit(function (e) {
         url : "/disciplina/analisar-disciplinas/",
         method : "POST",
         data : { lista_disciplinas_aceitas : lista_disciplinas_aceitas,
-            lista_disciplinas_negadas : lista_disciplinas_negadas },
+            lista_disciplinas_negadas : lista_disciplinas_negadas,
+            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").first().val() },
         success: function (returndata) {
             window.location.href = '/disciplina/listar-sugestoes/'; 
         }
@@ -70,7 +71,8 @@ $("#form_conteudo").submit(function (e) {
         url : "/disciplina/analisar-conteudos/",
         method : "POST",
         data : { lista_conteudos_aceitos : lista_conteudos_aceitos,
-            lista_conteudos_negados : lista_conteudos_negados },
+            lista_conteudos_negados : lista_conteudos_negados,
+            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").first().val() },
         success: function (returndata) {
             window.location.href = '/disciplina/listar-sugestoes/'; 
         }

@@ -35,7 +35,7 @@ class PlanoAulaTests(TestCase):
         # Criando 3 planos de aula
 
         plano_aula_1 = PlanoAula.objects.create(
-            responsavel=usuario1,
+            criador=usuario1,
             titulo="Plano de aula 1",
             contextualizacao = "Como vai ser",
             descricao_atividade = "Como vai ser",
@@ -45,7 +45,7 @@ class PlanoAulaTests(TestCase):
             prog_descricao = "nada a declarar"
         )
         plano_aula_2 = PlanoAula.objects.create(
-            responsavel=usuario1,
+            criador=usuario1,
             titulo="Plano de aula 2",
             contextualizacao = "Como vai ser",
             descricao_atividade = "Como vai ser",
@@ -55,7 +55,7 @@ class PlanoAulaTests(TestCase):
             prog_descricao = "nada a declarar"
         )
         plano_aula_3 = PlanoAula.objects.create(
-            responsavel=usuario2,
+            criador=usuario2,
             titulo="Plano de aula 3",
             contextualizacao = "Como vai ser",
             descricao_atividade = "Como vai ser",
@@ -65,7 +65,7 @@ class PlanoAulaTests(TestCase):
             prog_descricao = "nada a declarar"
         )
         plano_aula_4 = PlanoAula.objects.create(
-            responsavel=usuario2,
+            criador=usuario2,
             titulo="Plano de aula 4",
             contextualizacao = "Como vai ser",
             descricao_atividade = "Como vai ser",
